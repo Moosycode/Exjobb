@@ -20,9 +20,37 @@ plt.rcParams['font.family'] = 'monospace'
 mpl.rcParams['axes.prop_cycle'] = mpl.cycler(color=['k','r','g','b']) 
 plt.rcParams['figure.autolayout'] = True
 #------------------------------------------------------------------------------
-import ImportData as ID
+#import ImportData as ID
 #------------------------------------------------------------------------------
-
+#------------------------------------------------------------------------------
+class ASCIIfile():
+#------------------------------------------------------------------------------
+    def __init__( self, filename, lines_in_header=0, lines_in_footer=0, delim=None ,encoding=None ):
+        self.header = list()
+        self.footer = list()
+        self.data   = list()
+        self.name  = os.path.splitext(os.path.basename(filename))[0]
+        self.filename = filename
+        self.lines_in_header = lines_in_header
+        self.lines_in_footer = lines_in_footer
+    # read the file contents into a list
+        datalist = list()
+        if encoding: file = open(filename, 'r', encoding=encoding)
+        else: file = open(filename, 'r')
+        for line in file:
+            if delim: temp = line.strip('\n').split(delim)
+            else: temp = line.strip('\n').split()
+            datalist.append(temp)
+        file.close()
+    # seperate the data
+        if lines_in_header > 0: self.header = datalist[0:lines_in_header]
+        if lines_in_footer > 0: self.footer = datalist[len(datalist)-(lines_in_footer+1):len(datalist)-1]
+        for row in datalist[lines_in_header:len(datalist)-(lines_in_footer)]:
+            try:
+                self.data.append([float(s) for s in row])
+            except:
+                print(f'could not convert line {row} to data')
+        self.data = np.array(self.data)
 
 
 #------------------------------------------------------------------------------
@@ -186,7 +214,7 @@ def read_profiles( folder_path, sample_keys, profile_keys, beam_keys, rebin=Fals
 								if verbose: print('...... '+dp)
 								
 								# --- read the profile data ----
-								pdata = ID.ASCIIfile( dp_path+dp, lines_in_header=0, delim=None ).data 	# read in the profile data
+								pdata = ASCIIfile( dp_path+dp, lines_in_header=0, delim=None ).data 	# read in the profile data
 								x = pdata[:,0]
 								c = pdata[:,3]
 								
@@ -287,7 +315,7 @@ def fit_profile_slop( start, stop, x, c, func ):
 #------------------------------------------------------------------------------
 #------------------------------------------------------------------------------
 
-in_folder = basepath+'work-UU/DATA_ANALYSIS/analysis_ToF-ERDA/ToF-ERDA-KrXeTa-ALL/'
+in_folder = '/Users/niwi9751/potku/requests/'
 
 SAVE_FIGURE = False
 PLOT_FIGURE = False
