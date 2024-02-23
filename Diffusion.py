@@ -1,18 +1,18 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
+
 # Parameters
-L = 3   # Length in micrometer
-T = 500   # Total time in seconds
+L = 3 # Length in micrometer
+T = 500  # Total time in seconds
 Nx = 100  # Number of spatial points
 Nt = 500 # Number of time steps
-D0 = 0.0001  # Diffusion coefficient
-Ea = 2.8 #Activation energy for diffusion
+D0 = 2e-4  # Diffusion coefficient inital value
+Ea = 2.5 #Activation energy for diffusion in eV
 dx = L / (Nx - 1) # Spatial step size
 dt = T / Nt # Time step size
-k = 8.6e-5 # boltzmann constant in J/K
-Tin = 300 # Initial temp in K
-Tfin = 2000 # Final temp in K
+k = 8.6e-5 # boltzmann constant in eV/K
+Temp = 2000 #Temperature in K
 root = '/Users/niwi9751/Srim_Results/Fe_in_ZrO2.txt'
 
 #/Users/niwi9751/Srim_Results/Fe_in_ZrO2.txt
@@ -43,6 +43,7 @@ def fit_gauss(data, plot = False):
     x = np.linspace(min(data), max(data),60)
     x = x*0.0001 #rescale to micrometer
     y = n
+    y = 100*y/len(data) #rescale to atomic %
     popt, pcov = curve_fit(gaussian,x,y)
     if plot:
         plt.plot(x,gaussian(x,*popt))
@@ -55,9 +56,6 @@ x = np.linspace(0, L, Nx)
 # Initialize solution matrix
 C = np.zeros((Nt, Nx))
 
-# Initialize temp grid
-Temp = np.linspace(Tin, Tfin, Nt)
-
 # Apply initial condition
 data = read_columns(root)
 popt = fit_gauss(data[1])
@@ -69,7 +67,7 @@ for n in range(0, Nt - 1):
     C[n+1, -1] = 0
     # Update interior points using forward difference in time and central difference in space
     for i in range(1, Nx - 1):
-        C[n+1, i] = C[n, i] + D(D0, Ea, Temp[i]) * dt / dx**2 * (C[n, i+1] - 2*C[n, i] + C[n, i-1])
+        C[n+1, i] = C[n, i] + D(D0, Ea, Temp) * dt / dx**2 * (C[n, i+1] - 2*C[n, i] + C[n, i-1])
         # Apply Neumann boundary condition to LHS
         C[n+1, 0] = C[n+1, 1]
 
@@ -78,9 +76,9 @@ plt.figure(figsize=(8, 6))
 for n in range(0, Nt, Nt//10):
     plt.plot(x, C[n, :], label=f"t={n*dt:.2f}")
 
-plt.title('1D Diffusion of Concentration')
+plt.title('Diffusion of Concentration')
 plt.xlabel('Position [micrometer]')
-plt.ylabel('Concentration [tbd]')
+plt.ylabel('Concentration [At. %]')
 plt.legend()
 plt.grid(True)
 plt.show()
