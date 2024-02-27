@@ -170,7 +170,7 @@ def get_loss_2( Ap, Zp, Ar1, Zr1, Ar2, Zr2, E, co_A, co_B, verbose=False ):
 
 
 #------------------------------------------------------------------------------
-def read_profiles( folder_path, sample_keys, profile_keys, beam_keys, rebin=False, renorm=False, verbose=False, plot=False ):
+def read_profiles( folder_path, sample_keys, profile_keys, beam_keys, rebin=False, renorm=False, verbose=True, plot=False ):
 	
 	dp_list=[]
 	if verbose: print('\n starting !!!!!!!!!')
@@ -214,10 +214,10 @@ def read_profiles( folder_path, sample_keys, profile_keys, beam_keys, rebin=Fals
 								if verbose: print('...... '+dp)
 								
 								# --- read the profile data ----
-								pdata = ASCIIfile( dp_path+dp, lines_in_header=0, delim=None ).data 	# read in the profile data
-								x = pdata[:,0]
-								c = pdata[:,3]
-								
+								pdata = ASCIIfile( dp_path+dp, lines_in_header=0, delim=None ).data# read in the profile data
+								if len(pdata) > 0:
+									x = pdata[:,0]
+									c = pdata[:,3]
 								# --- assign label for the ion ----
 								#ion_label = f'$^{element[Sion]["A"]}${Sion}'
 								ion_zorder = element[Sion]["A"]
@@ -285,6 +285,7 @@ def fit_profile_slop( start, stop, x, c, func ):
 	
 	x_ = []
 	c_ = []
+	
 	for i in range(len(x)):
 		if c[i] > 0:
 			x_.append(x[i])
@@ -315,7 +316,7 @@ def fit_profile_slop( start, stop, x, c, func ):
 #------------------------------------------------------------------------------
 #------------------------------------------------------------------------------
 
-in_folder = '/Users/niwi9751/potku/requests/'
+in_folder = '/Users/niwi9751/potku/requests/ToF-ERDA-KrXeTa-Cl24MeV.potku'
 
 SAVE_FIGURE = False
 PLOT_FIGURE = False
