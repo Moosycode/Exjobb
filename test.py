@@ -1,23 +1,24 @@
 import numpy as np
-import matplotlib.pyplot as plt
 
-L = 1
-Lprime = 4 
-Nx = 5 # Number of spatial points
-Nt = 4
+def find_row_with_hyphen(filename):
+    try:
+        with open(filename, 'r', encoding='utf-8') as file:
+            for i, line in enumerate(file, 1):
+                if '--' in line:
+                    # Check if the line contains a hyphen
+                    return i  # Return the index (line number) if found
+    except Exception as e:
+        print("An error occurred while reading the file:", e)
+        return None
 
-x = np.linspace(0, Lprime, 4*Nx)
+# Example usage
+root = '/Users/niwi9751/Srim_Results/Fe_inZrO2_300keV.txt'
+matching_row_index = find_row_with_hyphen(root)
+if matching_row_index:
+    print("Found row containing a hyphen at index:", matching_row_index)
+else:
+    print("No row containing a hyphen found.")
+    
+# num, depth = np.loadtxt(root, usecols=(0,1),unpack=True,skiprows=18)
+# print(num)
 
-# Initialize solution matrix
-C = np.zeros((Nt, Nx))
-print(C)
-# Apply initial condition
-
-C[0, :] = [1, 2 ,3, 4, 5]
-print(C)
-
-newC = np.hstack((C, np.zeros((Nt,(-L+Lprime)*Nx))))
-print(newC)
-
-plt.plot(x,newC[0,:])
-plt.show()

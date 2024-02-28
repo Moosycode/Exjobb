@@ -3,15 +3,14 @@ import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
 
 # Parameters
-L = 3 # Studied region [micrometer]
+L = 3# Studied region [micrometer]
 studyL = 1 #Region of intrest [micrometer] (HAS TO BE SAME LENGTH AS IN SRIM SIM)
-
-T = 30000  # Total time [seconds]
+T = 30000 # Total time [seconds]
 Nx = 100  # Number of spatial points
 Nt = 30000 # Number of time steps
 D0 = 5.3e-3  # Diffusion coefficient inital value [cm^2/s]
 Ea = 1.08 #Activation energy for diffusion in kJ/mole or eV depending on choise of k
-dx = L / (Nx - 1) # Spatial step size
+dx = L / (L*Nx - 1) # Spatial step size
 dt = T / Nt # Time step size
 #k = 8.3e-3 # boltzmann constant [kJ/(mol*K)]
 k = 8.6e-5 # boltzmann constant [ev/K]
@@ -20,7 +19,7 @@ root = '/Users/niwi9751/Srim_Results/Fe_inZrO2_300keV.txt'
 
 rho = 5.68 # density of target [g/cm^3]
 m_a = 123.218 # molar mass of target in [g/mole]
-Na = 6.022e22 # avogadros number 
+Na = 6.022e22 # avogadros number [atoms/mole]
 n_atoms = rho*Na/m_a*10**-4 # atomic density of target [atoms/cm^3]
 fluence = 1e17 # Input fluence of implantation [atoms/cm^2]
 
@@ -36,6 +35,18 @@ def  read_columns(root): #Use np.loadtxt instead.
                     columns.append([])
                 columns[i].append(float(column_data.strip()))
     return columns
+
+def find_start(filename):
+    try:
+        with open(filename, 'r', encoding='utf-8') as file:
+            for i, line in enumerate(file, 1):
+                if '--' in line:
+                    # Check if the line contains a hyphen
+                    return i  # Return the index (line number) if found
+    except Exception as e:
+        print("An error occurred while reading the file:", e)
+        return None
+
 
 # Diffusion coefficient dependant on temperature
 def D(D0, Ea, Temp):
@@ -58,7 +69,10 @@ def histog(data, length):
 
 # Fit data to gaussian
 def fit_gauss(data, plot = False):
-    x,y = histog(data)
+    n, bins, patches = plt.hist(data, bins = 60)
+    x = np.linspace(min(data), max(data),60)
+    x = x*0.0001 #rescale to micrometer
+    y = n/0.11
     popt, pcov = curve_fit(gaussian,x,y)
     if plot:
         plt.figure('Initial data and gaussian fit')
@@ -69,13 +83,11 @@ def fit_gauss(data, plot = False):
 
 def hist_integral(n, width):
     return sum(n*width)
-    
 
 # Create spatial grid
 x = np.linspace(0, L, L*Nx)
 
 # Initialize solution matrix
-
 C = np.zeros((Nt, Nx))
 
 # Apply initial condition
@@ -85,17 +97,16 @@ y = y_hist*fluence/(3*n_atoms/100)
 C[0, :] = y
 C = np.hstack((C, np.zeros((Nt,(L-studyL)*Nx))))
 
-Nx = 3*Nx
 # Time-stepping loop
 for n in range(0, Nt - 1):
-    # Apply direchlet boundary condition to RHS
+    
     
     # Update interior points using forward difference in time and central difference in space
-    for i in range(1, Nx - 1):
+    for i in range(1, L*Nx - 1):
         C[n+1, i] = C[n, i] + D(D0, Ea, Temp) * dt / dx**2 * (C[n, i+1] - 2*C[n, i] + C[n, i-1])
-        # Apply Neumann boundary condition to LHS
+        # Apply Neumann boundary condition to boundaries
         C[n+1, 0] = C[n+1, 1]
-        C[n+1, -1] =C[n+1,-2]
+        C[n+1, -1] = C[n+1,-2]
 
 # Plot the results
 plt.figure(figsize=(8, 6))
@@ -111,10 +122,15 @@ plt.grid(True)
 plt.show()
 I1 = hist_integral(C[0,:],binwidth)
 I2 = hist_integral(C[-1,:], binwidth)
-print(C[-1,:])
-
+I3 = hist_integral(C[-1,0:100], binwidth)
+I4 = hist_integral(C[-1,100:200], binwidth)
+I5 = hist_integral(C[-1,200:300], binwidth)
 print(I1)
 print(I2)
+print(I3)
+print(I4)
+print(I5)
+print(I1/I2)
 
 
 
