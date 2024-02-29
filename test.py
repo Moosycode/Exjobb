@@ -1,24 +1,21 @@
 import numpy as np
 
-def find_row_with_hyphen(filename):
-    try:
-        with open(filename, 'r', encoding='utf-8') as file:
-            for i, line in enumerate(file, 1):
-                if '--' in line:
-                    # Check if the line contains a hyphen
-                    return i  # Return the index (line number) if found
-    except Exception as e:
-        print("An error occurred while reading the file:", e)
-        return None
+L = 4# Studied region [micrometer]
+studyL = 1 #Region of intrest [micrometer] (HAS TO BE SAME LENGTH AS IN SRIM SIM)
+T = 30000 # Total time [seconds]
+Nx = 100  # Number of spatial points per micrometer
+Nt = 6000 # Number of time steps
+D0 = 5.3e-3  # Diffusion coefficient inital value [cm^2/s]
+Ea = 1.08 #Activation energy for diffusion in kJ/mole or eV depending on choise of k
+dx = L / (L*Nx - 1) # Spatial step size
+dt = T / Nt # Time step size
+k = 8.6e-5 # boltzmann constant [ev/K]
+Temp = 2000 #Temperature [K]
 
-# Example usage
-root = '/Users/niwi9751/Srim_Results/Fe_inZrO2_300keV.txt'
-matching_row_index = find_row_with_hyphen(root)
-if matching_row_index:
-    print("Found row containing a hyphen at index:", matching_row_index)
-else:
-    print("No row containing a hyphen found.")
-    
-# num, depth = np.loadtxt(root, usecols=(0,1),unpack=True,skiprows=18)
-# print(num)
 
+def D(D0, Ea, Temp):
+    D = D0*np.exp(-Ea/(k*Temp))
+    return D
+
+val = D(D0,Ea, Temp)*dt/(dx**2)
+print(val)

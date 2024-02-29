@@ -3,11 +3,11 @@ import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
 
 # Parameters
-L = 3# Studied region [micrometer]
+L = 4# Studied region [micrometer]
 studyL = 1 #Region of intrest [micrometer] (HAS TO BE SAME LENGTH AS IN SRIM SIM)
-T = 30000 # Total time [seconds]
-Nx = 100  # Number of spatial points
-Nt = 30000 # Number of time steps
+T = 300 # Total time [seconds]
+Nx = 100  # Number of spatial points per micrometer
+Nt = 300 # Number of time steps
 D0 = 5.3e-3  # Diffusion coefficient inital value [cm^2/s]
 Ea = 1.08 #Activation energy for diffusion in kJ/mole or eV depending on choise of k
 dx = L / (L*Nx - 1) # Spatial step size
@@ -47,7 +47,6 @@ def find_start(filename):
         print("An error occurred while reading the file:", e)
         return None
 
-
 # Diffusion coefficient dependant on temperature
 def D(D0, Ea, Temp):
     D = D0*np.exp(-Ea/(k*Temp))
@@ -67,7 +66,7 @@ def histog(data, length):
     y = n/sum(n) #Normalize
     return width,y
 
-# Fit data to gaussian
+# Fit data to gaussian, NOT USED IN THIS VERSION
 def fit_gauss(data, plot = False):
     n, bins, patches = plt.hist(data, bins = 60)
     x = np.linspace(min(data), max(data),60)
@@ -90,23 +89,42 @@ x = np.linspace(0, L, L*Nx)
 # Initialize solution matrix
 C = np.zeros((Nt, Nx))
 
-# Apply initial condition
+# Initialize initial condition
 data = read_columns(root)
 binwidth,y_hist = histog(data[1], studyL)
 y = y_hist*fluence/(3*n_atoms/100)
+
+# Apply initial condition 
 C[0, :] = y
-C = np.hstack((C, np.zeros((Nt,(L-studyL)*Nx))))
+C = np.hstack((C, np.zeros((Nt,(L-studyL)*Nx)))) #Add zeros to desired length
 
 # Time-stepping loop
 for n in range(0, Nt - 1):
-    
-    
     # Update interior points using forward difference in time and central difference in space
     for i in range(1, L*Nx - 1):
         C[n+1, i] = C[n, i] + D(D0, Ea, Temp) * dt / dx**2 * (C[n, i+1] - 2*C[n, i] + C[n, i-1])
         # Apply Neumann boundary condition to boundaries
         C[n+1, 0] = C[n+1, 1]
         C[n+1, -1] = C[n+1,-2]
+
+#Integrate over intresting areas in steps of 1 micrometer
+I_interval = []
+for i in range(L):
+    Integral = hist_integral(C[-1,i*100:(i+1)*100],binwidth)
+    I_interval.append(Integral)
+    print(f'Integral between {i} and {i+1}: {Integral}')
+    print('----------------------')
+
+#Integrate over total length
+I_inital = hist_integral(C[0,:],binwidth)
+I_diffused = hist_integral(C[-1,:], binwidth)
+ratio = I_inital/I_diffused
+print(f'Total integral of inital concentration at length {L} micrometer: ')
+print(I_inital)
+print(f'Total integral of diffused concentration at length {L} micrometer: ')
+print(I_diffused)
+print(f'Ratio between total integrals: ')
+print(ratio)
 
 # Plot the results
 plt.figure(figsize=(8, 6))
@@ -120,17 +138,7 @@ plt.ylabel('Concentration [at. %]')
 plt.legend()
 plt.grid(True)
 plt.show()
-I1 = hist_integral(C[0,:],binwidth)
-I2 = hist_integral(C[-1,:], binwidth)
-I3 = hist_integral(C[-1,0:100], binwidth)
-I4 = hist_integral(C[-1,100:200], binwidth)
-I5 = hist_integral(C[-1,200:300], binwidth)
-print(I1)
-print(I2)
-print(I3)
-print(I4)
-print(I5)
-print(I1/I2)
+
 
 
 
