@@ -5,6 +5,7 @@ from scipy.optimize import curve_fit
 x_ = []
 C_diffused = []
 length = [1,4]
+Temps = [25000, 30000, 36000, 43200]
 
 for L in length:
 
