@@ -4,8 +4,9 @@ from scipy.optimize import curve_fit
 Times_in = [3, 6, 9, 12, 24]#Times in hours
 Times = [T*3600 for T in Times_in]#Convert to seconds
 Concentrations = []#Result list
-root = '/Users/niwi9751/Srim_Results/Zr_in_UN.txt'
-
+root = '/Users/niwi9751/Srim_Results/Fe_inZrO2_300keV.txt'
+# D0 = 2.69e-4 #For Zr in U
+# Ea = 0.521 # For Zr in U   
 for T in Times:
     # Parameters
     L = 4# Studied region [micrometer]
@@ -14,33 +15,19 @@ for T in Times:
     Nt = 1 # Number of time steps, can be anything really, code finds this for you, START LOW
     D0 = 5.3e-3  # Diffusion coefficient inital value [cm^2/s]
     Ea = 1.08# Activation energy for diffusion in kJ/mole or eV depending on choise of k
-    D0 = 2.69e-4 #For Zr in U
-    Ea = 0.521 # For Zr in U
     dx = L / (L*Nx - 1) # Spatial step size
     dt = T / Nt # Time step size
-    #k = 8.3e-3 # boltzmann constant [kJ/(mol*K)]
     k = 8.6e-5 # boltzmann constant [ev/K]
-    Temp = 1873 #Temperature [K]
-
-    rho = 14 # density of target [g/cm^3]
-    m_a = 518.078 # molar mass of target in [g/mole]
+    Temp_fin = 1873 #Temperature [K]
+    Temp_in = 300 #Initial temperature [K]
+    Temp = 300
+    rho = 5.68 # density of target [g/cm^3]
+    m_a = 123.218# molar mass of target in [g/mole]
     Na = 6.022e22 # avogadros number [atoms/mole]
     n_atoms = rho*Na/m_a #atomic density of target [atoms/cm^3]
+    at_in_mol = 3 # Number of atoms in each molecule 
     fluence = 1e17 # Input fluence of implantation [atoms/cm^2]
-
-    #/Users/niwi9751/Srim_Results/Fe_in_ZrO2.txt
-    def  read_columns(root): #Use np.loadtxt instead. NOT USED IN THIS VERSION
-        columns =  []
-        with open(root,'r') as file:
-            lines = file.readlines()
-            for line in lines:
-                column_data = line.split()
-                for i,  column_data in enumerate(column_data):
-                    if len(columns) <= i:
-                        columns.append([])
-                    columns[i].append(float(column_data.strip()))
-        return columns
-
+    
     def find_start(filename):
         try:
             with open(filename, 'r', encoding='cp437') as file:
@@ -88,13 +75,13 @@ for T in Times:
         return sum(n*width)#Definition of integrals :))
 
     #Check stability
-    stability_cond = D(D0,Ea, Temp)*dt/(dx**2)
+    stability_cond = D(D0,Ea, Temp_fin)*dt/(dx**2)
     if stability_cond > 0.5:
         print('Not stable, increasing number of timesteps')
-        while stability_cond > 0.5:
+        while stability_cond > 0.33:
             Nt = Nt+1
             dt = T/Nt
-            stability_cond = D(D0,Ea, Temp)*dt/(dx**2)
+            stability_cond = D(D0,Ea, Temp_fin)*dt/(dx**2)
         print(f'Continuing with new number of timesteps: {Nt}')
 
     # Create spatial grid
@@ -104,24 +91,45 @@ for T in Times:
     C = np.zeros((Nt, Nx))
 
     # # Initialize initial condition
-    # data = read_columns(root)
     start = find_start(root)
+    if start == None:
+        start = 0
+    
     data = np.loadtxt(root,skiprows=start,usecols=1,unpack=True,encoding='cp437')
     binwidth,y_hist = histog(data, studyL)
-    y = y_hist*fluence/(2*n_atoms*1e-6) # Atoms/cm^2 DIVIDED BY atoms/cm^3 * thickness (USE THICKNESS OF BIN)
+    y = y_hist*fluence/(at_in_mol*n_atoms*1e-6) # Atoms/cm^2 DIVIDED BY atoms/cm^3 * thickness (USE THICKNESS OF BIN)
 
     # Apply initial condition 
     C[0, :] = y
     C = np.hstack((C, np.zeros((Nt,(L-studyL)*Nx)))) #Add zeros to desired length
-
+    Current_min = 0
+    Fin_min = 0
     # Time-stepping loop
     for n in range(0, Nt - 1):
         # Update interior points using forward difference in time and central difference in space
+        second = T/Nt*n
+        min = int(second/60)
+        if min != Current_min:  # Check if minute has changed
+            #print("A minute has passed at", second, "seconds.")
+            Current_min = min  # Update current minute
+            if Temp <= 1000:
+                Temp = Temp + 10
+                #print('Temp increasing! ')
+                # print(Temp)
+            elif Temp < Temp_fin and Temp > 1000:
+                Temp = Temp + 5
+                Fin_min = Current_min
+                #print('Temp increasing! ')
+                # print(Temp)
         for i in range(1, L*Nx - 1):
             C[n+1, i] = C[n, i] + D(D0, Ea, Temp) * dt / dx**2 * (C[n, i+1] - 2*C[n, i] + C[n, i-1])
             # Apply Neumann boundary condition to boundaries
             C[n+1, 0] = C[n+1, 1]
             C[n+1, -1] = C[n+1,-2]
+
+    #Tell time
+    print(f'Time to reach max temp: {Fin_min} minutes')
+    print(f'Time at maxtemp: {min -Fin_min} minutes')
 
     #Integrate over intresting areas in steps of 1 micrometer
     I_interval = []
@@ -141,6 +149,7 @@ for T in Times:
     print(I_diffused)
     print(f'Ratio between total integrals: ')
     print(ratio)
+    print()
     Int_x = np.linspace(1,L,L)
     Concentrations.append(C[-1,:])
 
