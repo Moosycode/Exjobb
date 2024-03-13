@@ -1,16 +1,33 @@
-time_seconds = [
-    10026, 10034, 10041, 10049, 10057, 10065, 10072, 10080, 10088, 10095,
-    10103, 10111, 10119, 10126, 10134, 10142, 10150, 10157, 10165, 10173,
-    10181, 10188, 10196, 10204, 10212, 10219, 10227, 10235, 10242, 10250,
-    10258, 10266, 10273, 10281, 10289, 10297, 10304, 10312, 10320, 10328,
-    10335, 10343, 10351, 10359, 10366, 10374, 10382, 10389, 10397, 10405,
-    10413, 10420, 10428, 10436, 10444, 10451, 10459, 10467, 10475, 10482,
-    10490, 10498, 10506, 10513, 10521, 10529, 10536, 10544, 10552, 10560,
-    10567, 10575, 10583, 10591, 10598, 10606, 10614, 10622, 10629
-]
-current_minute = -1  # Initialize current minute
-for seconds in time_seconds:
-    minute = seconds // 60  # Calculate current minute
-    if minute != current_minute:  # Check if minute has changed
-        print("A minute has passed at", seconds, "seconds.")
-        current_minute = minute  # Update current minute
+import numpy as np
+import matplotlib.pyplot as plt
+
+root = '/Users/niwi9751/verticalfurnaceupto1600.txt'
+data = np.loadtxt(root,usecols=1,unpack=True, dtype='U25', )
+
+def remove_before_semi(text_list):
+    result = []
+    for item in text_list:
+        semicolon_index = item.find(';')
+        if semicolon_index != -1:  # If a semicolon is found
+            number_part = item[semicolon_index + 1:].strip()  # Extract the part after semicolon and remove leading/trailing whitespace
+            if number_part.isdigit():  # Check if the remaining part is a valid integer
+                result.append(int(number_part))
+    return result
+
+def remove_text_until_zero_and_convert_to_int(text_list):
+    result = []
+    for item in text_list:
+        semicolon_index = item.find(';')
+        if semicolon_index != -1:  # If a semicolon is found
+            text_before_semicolon = item[:semicolon_index]  # Extract text before semicolon
+            zero_index = text_before_semicolon.find('0')  # Find index of first '0'
+            if zero_index != -1:  # If '0' is found before semicolon
+                number_part = text_before_semicolon[:zero_index].strip()  # Extract the part before '0' and remove leading/trailing whitespace
+                if number_part.isdigit():  # Check if the remaining part is a valid integer
+                    result.append(int(number_part))
+    return result
+
+print(remove_before_semi(data))
+x_vals = np.linspace(0,len(data),len(data))
+
+print(x_vals)

@@ -112,11 +112,11 @@ for T in Times:
         if min != Current_min:  # Check if minute has changed
             #print("A minute has passed at", second, "seconds.")
             Current_min = min  # Update current minute
-            if Temp <= 1000:
+            if Temp <= 1273:
                 Temp = Temp + 10
                 #print('Temp increasing! ')
                 # print(Temp)
-            elif Temp < Temp_fin and Temp > 1000:
+            elif Temp < Temp_fin and Temp > 1273:
                 Temp = Temp + 5
                 Fin_min = Current_min
                 #print('Temp increasing! ')
