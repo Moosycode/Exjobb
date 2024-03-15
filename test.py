@@ -16,15 +16,14 @@ def excel_time_to_hours(excel_time):
     hours = int(time_delta.total_seconds() // 3600)
     minutes = int((time_delta.total_seconds() % 3600) // 60)
     seconds = int(time_delta.total_seconds() % 60)
-    return hours + minutes/60 + seconds/3600
+    return hours*60 + minutes + seconds/60
 
 time = [t.replace(',','.') for t in time]
 time = np.array(time, dtype=float)
 time = [excel_time_to_hours(t) for t in time] 
-time = [t - time[0] for t in time]
+time = [int(t - time[0]) for t in time]
 data = [d.replace(',','.') for d in data]
 data = np.array(data, dtype=float)
-
-
+print(time)
 plt.plot(time,data)
 plt.show()

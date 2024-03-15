@@ -1,12 +1,75 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
-Times_in = [3, 6, 9, 12, 24]#Times in hours
-Times = [T*3600 for T in Times_in]#Convert to seconds
-Concentrations = []#Result list
-root = '/Users/niwi9751/Srim_Results/Fe_inZrO2_300keV.txt'
+import datetime
+  
+def find_start(filename):
+    try:
+        with open(filename, 'r', encoding='cp437') as file:
+            for i, line in enumerate(file, 1):
+                if '-------  ----------- ----------- -----------' in line:
+                    # Check if the line contains a hyphen
+                    return i  # Return the index (line number) if found
+    except Exception as e:
+        print("An error occurred while reading the file:", e)
+        return 0
+
+# Diffusion coefficient dependant on temperature
+def D(D0, Ea, Temp):
+    D = D0*np.exp(-Ea/(k*Temp))
+    return D
+
+def excel_time_to_hours(excel_time):
+    # Extracting the integer part as days
+    days = int(excel_time)
+    # Extracting the fractional part as seconds
+    seconds = (excel_time - days) * 24 * 3600
+    # Converting to timedelta
+    time_delta = datetime.timedelta(seconds=seconds)
+    # Extracting hours, minutes, and seconds
+    hours = int(time_delta.total_seconds() // 3600)
+    minutes = int((time_delta.total_seconds() % 3600) // 60)
+    seconds = int(time_delta.total_seconds() % 60)
+    return hours*60 + minutes + seconds/60
+
+    # Gaussian
+def gaussian(x,amp,mu,sigma):
+    return amp*np.exp(-(x-mu)**2/(2*sigma**2))
+
+def histog(data, length):
+    L = length*10000 #Make sure unit is correct
+    n, bins = np.histogram(data, bins = 100)
+    width = bins[1]-bins[0]
+    # x = np.linspace(min(data), L,100)
+    # x = x*0.0001 #rescale to micrometer, if file is in Å
+    y = n/sum(n) #Normalize
+    return width,y
+
+    # Fit data to gaussian, NOT USED IN THIS VERSION
+def fit_gauss(data, plot = False):
+    n, bins, patches = plt.hist(data, bins = 60)
+    x = np.linspace(min(data), max(data),60)
+    x = x*0.0001 #rescale to micrometer
+    y = n/0.11 #sketchy normalization, not correct...
+    popt, pcov = curve_fit(gaussian,x,y)
+    if plot:
+        plt.figure('Initial data and gaussian fit')
+        plt.plot(x,gaussian(x,*popt))
+        plt.plot(x,y)
+        plt.show()
+    return popt
+
+def hist_integral(n, width):
+    return sum(n*width)#Definition of integrals :))
+
 # D0 = 2.69e-4 #For Zr in U
-# Ea = 0.521 # For Zr in U   
+# Ea = 0.521 # For Zr in U 
+Times_h = [18, 24]#Times in hours
+Times = [T*3600 for T in Times_h]#Convert to seconds
+Concentrations = []#Result list
+root = '/Users/nilsw/Srim Results/Fe_in_ZrO2_300keV.txt'
+furnace_root = '/Users/nilsw/Python/Exjobb/verticalfurnaceupto1600.txt'
+
 for T in Times:
     # Parameters
     L = 4# Studied region [micrometer]
@@ -27,53 +90,11 @@ for T in Times:
     n_atoms = rho*Na/m_a #atomic density of target [atoms/cm^3]
     at_in_mol = 3 # Number of atoms in each molecule 
     fluence = 1e17 # Input fluence of implantation [atoms/cm^2]
+    heat = True
+    cool = False
+    cool_time = 563 #Cooling time in minutes
+
     
-    def find_start(filename):
-        try:
-            with open(filename, 'r', encoding='cp437') as file:
-                for i, line in enumerate(file, 1):
-                    if '-------  ----------- ----------- -----------' in line:
-                        # Check if the line contains a hyphen
-                        return i  # Return the index (line number) if found
-        except Exception as e:
-            print("An error occurred while reading the file:", e)
-            return 0
-
-    # Diffusion coefficient dependant on temperature
-    def D(D0, Ea, Temp):
-        D = D0*np.exp(-Ea/(k*Temp))
-        return D
-
-    # Gaussian
-    def gaussian(x,amp,mu,sigma):
-        return amp*np.exp(-(x-mu)**2/(2*sigma**2))
-
-    def histog(data, length):
-        L = length*10000 #Make sure unit is correct
-        n, bins = np.histogram(data, bins = 100,range=(0,L))
-        width = bins[1]-bins[0]
-        # x = np.linspace(min(data), L,100)
-        # x = x*0.0001 #rescale to micrometer, if file is in Å
-        y = n/sum(n) #Normalize
-        return width,y
-
-    # Fit data to gaussian, NOT USED IN THIS VERSION
-    def fit_gauss(data, plot = False):
-        n, bins, patches = plt.hist(data, bins = 60)
-        x = np.linspace(min(data), max(data),60)
-        x = x*0.0001 #rescale to micrometer
-        y = n/0.11 #sketchy normalization, not correct...
-        popt, pcov = curve_fit(gaussian,x,y)
-        if plot:
-            plt.figure('Initial data and gaussian fit')
-            plt.plot(x,gaussian(x,*popt))
-            plt.plot(x,y)
-            plt.show()
-        return popt
-
-    def hist_integral(n, width):
-        return sum(n*width)#Definition of integrals :))
-
     #Check stability
     stability_cond = D(D0,Ea, Temp_fin)*dt/(dx**2)
     if stability_cond > 0.5:
@@ -95,7 +116,9 @@ for T in Times:
     if start == None:
         start = 0
     
-    data = np.loadtxt(root,skiprows=start,usecols=1,unpack=True,encoding='cp437')
+    data = np.loadtxt(root,skiprows=start,usecols=1,unpack=True,encoding='cp437', dtype= 'U25')
+    data = [d.replace(",","") for d in data]
+    data = [float(d) for d in data]
     binwidth,y_hist = histog(data, studyL)
     y = y_hist*fluence/(at_in_mol*n_atoms*1e-6) # Atoms/cm^2 DIVIDED BY atoms/cm^3 * thickness (USE THICKNESS OF BIN)
 
@@ -104,23 +127,48 @@ for T in Times:
     C = np.hstack((C, np.zeros((Nt,(L-studyL)*Nx)))) #Add zeros to desired length
     Current_min = 0
     Fin_min = 0
+
+    time, cool_curve = np.loadtxt(furnace_root,usecols=(0,1),unpack=True, dtype= 'U25')
+    time = [t.replace(',','.') for t in time]
+    cool_curve = [c.replace(',','.') for c in cool_curve]
+    time = np.array(time, dtype=float)
+    time = [excel_time_to_hours(t) for t in time] 
+    time = [int(t - time[0]) for t in time]
+    cool_curve = np.array(cool_curve, dtype=float)
+
     # Time-stepping loop
     for n in range(0, Nt - 1):
         # Update interior points using forward difference in time and central difference in space
         second = T/Nt*n
         min = int(second/60)
-        if min != Current_min:  # Check if minute has changed
-            #print("A minute has passed at", second, "seconds.")
-            Current_min = min  # Update current minute
-            if Temp <= 1273:
-                Temp = Temp + 10
-                #print('Temp increasing! ')
-                # print(Temp)
-            elif Temp < Temp_fin and Temp > 1273:
-                Temp = Temp + 5
-                Fin_min = Current_min
-                #print('Temp increasing! ')
-                # print(Temp)
+        hour = min/60
+        time_left = T/60-min
+        if heat:
+            if min != Current_min:  # Check if minute has changed
+                #print("A minute has passed at", second, "seconds.")
+                Current_min = min  # Update current minute
+                if Temp <= 1273:
+                    Temp = Temp + 10
+                    #print('Temp increasing! ')
+                    # print(Temp)
+                elif Temp < Temp_fin and Temp > 1273:
+                    Temp = Temp + 5
+                    Fin_min = Current_min
+                    #print('Temp increasing! ')
+                    # print(Temp)
+                else:
+                    heat = False
+                
+        if (time_left - cool_time == 0):
+            cool = True
+        if cool:
+            if min != Current_min:  # Check if minute has changed
+                #print("A minute has passed at", second, "seconds.")
+                Current_min = min  # Update current minute
+                time_temp =int(cool_time - time_left)
+                index = time.index(time_temp)
+                Temp = cool_curve[index]+273
+        print(Temp)
         for i in range(1, L*Nx - 1):
             C[n+1, i] = C[n, i] + D(D0, Ea, Temp) * dt / dx**2 * (C[n, i+1] - 2*C[n, i] + C[n, i-1])
             # Apply Neumann boundary condition to boundaries
@@ -158,7 +206,7 @@ plt.figure(figsize=(8, 6))
 plt.plot(x,C[0,:], label = 'Initial distribution')
 i = 0
 for C in Concentrations:        
-    plt.plot(x,C, label = f'Distribution after {Times_in[i]} hours')
+    plt.plot(x,C, label = f'Distribution after {Times_h[i]} hours')
     i = i + 1
 plt.title('Diffusion of Concentration')
 plt.xlabel('Position [micrometer]')
