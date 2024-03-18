@@ -2,12 +2,136 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
 import datetime
+import json
+import os
+import re
 
-Times_in = [18, 24]#Times in hours
+
+def  read_columns(root):
+    columns =  []
+    with open(root,'r') as depthprofiles:
+        lines = depthprofiles.readlines()
+        for line in lines:
+            column_data = line.split()
+            for i,  column_data in enumerate(column_data):
+                if len(columns) <= i:
+                    columns.append([])
+                columns[i].append(float(column_data.strip()))
+    return columns
+
+#Finding profiles
+def Initialize_Profile(folder_path):
+    if '.potku' in folder_path:                     #Check if potku is in the path name
+        print('Folder is compatible, proceeding')   
+        files = os.listdir(folder_path)
+        possible_files = [folder_path] #Make list of folders in the request
+    else:                                           
+        print('Searching directory for potku files') #Search for potku files
+        possible_files = [file for file in os.listdir(folder_path) if '.potku' in file] #make list of possible files
+        
+    if len(possible_files) == 0:                #if none are found, tell you
+        print('Could not find .potku file, please try again')
+    
+    elif len(possible_files) > 1:
+        print('Found compatible files: ')       
+        [print(str(i + 1) + '.' + possible_files[i]) for i in range(len(possible_files))] #print list of possible files
+        choise = possible_files[int(input('Chose the file you want (1 - ' + str(len(possible_files)) + ')'))-1]
+        folder_path = folder_path + choise #chose one of them
+    
+    dict = {'Beam':{}, 'Samples':{}, 'Settings':{}} #Create dictionary
+    
+    try:
+        beamdata = json.load(open(folder_path +'/Default/Default.measurement')) #Load info from folders
+        beamprofile = json.load(open(folder_path+'/Default/Default.profile'))
+        dict['Beam']['Ion'] = re.sub(r'\d+', '', beamdata['beam']['ion']) #Assign data
+        dict['Beam']['Mass'] = re.sub(r'[a-zA-z]',  '' , beamdata['beam']['ion'])
+        dict['Beam']['Energy'] = beamdata['beam']['energy']
+        dict['Settings']['Num_step'] = beamprofile['depth_profiles']['number_of_depth_steps']
+        dict['Settings']['Stop_step'] = beamprofile['depth_profiles']['depth_step_for_stopping']
+        dict['Settings']['Out_step'] = beamprofile['depth_profiles']['depth_step_for_output']
+    except:
+        print('Corrupt Default.profile or Default.measurement file, please check them')
+    
+    for root, dirs, files in os.walk(folder_path):#Check all files in folder path
+        for file in files:
+            if file.endswith('.info'): #If infofile, we are in the right directory, keep looking here!!!
+                currentsample = file.removesuffix('.info')
+                dict['Samples'][currentsample] = {}  #Make it a sample
+            if file.startswith('depth.') and 'total' not  in file: #Find the corresponding depht profiles, and save them.
+                newroot = root.replace(os.path.sep,  '/') + '/' + file
+                depthprofile = file.removeprefix('depth.')
+                columns =  read_columns(newroot)
+                if len(columns)== 7:
+                    dict['Samples'][currentsample][depthprofile] = {'x': columns[0], 'C': columns[3],'NoNormC': columns[4],'N': columns[6]}
+    return dict
+
+
+
+def find_start(filename):
+    try:
+        with open(filename, 'r', encoding='cp437') as file:
+            for i, line in enumerate(file, 1):
+                if '-------  ----------- ----------- -----------' in line:
+                    # Check if the line contains a hyphen
+                    return i  # Return the index (line number) if found
+    except Exception as e:
+        print("An error occurred while reading the file:", e)
+        return 0
+
+# Diffusion coefficient dependant on temperature
+def D(D0, Ea, Temp):
+    D = D0*np.exp(-Ea/(k*Temp))
+    return D
+    
+def excel_time_to_hours(excel_time):
+    # Extracting the integer part as days
+    days = int(excel_time)
+    # Extracting the fractional part as seconds
+    seconds = (excel_time - days) * 24 * 3600
+    # Converting to timedelta
+    time_delta = datetime.timedelta(seconds=seconds)
+    # Extracting hours, minutes, and seconds
+    hours = int(time_delta.total_seconds() // 3600)
+    minutes = int((time_delta.total_seconds() % 3600) // 60)
+    seconds = int(time_delta.total_seconds() % 60)
+    return hours*60 + minutes + seconds/60
+
+# Gaussian
+def gaussian(x,amp,mu,sigma):
+    return amp*np.exp(-(x-mu)**2/(2*sigma**2))
+
+def histog(data, length):
+    L = length*10000 #Make sure unit is correct
+    n, bins = np.histogram(data, bins = 100,range=(0,L))
+    width = bins[1]-bins[0]
+    # x = np.linspace(min(data), L,100)
+    # x = x*0.0001 #rescale to micrometer, if file is in Å
+    y = n/sum(n) #Normalize
+    return width,y
+
+# Fit data to gaussian, NOT USED IN THIS VERSION
+def fit_gauss(data, plot = False):
+    n, bins, patches = plt.hist(data, bins = 60)
+    x = np.linspace(min(data), max(data),60)
+    x = x*0.0001 #rescale to micrometer
+    y = n/0.11 #sketchy normalization, not correct...
+    popt, pcov = curve_fit(gaussian,x,y)
+    if plot:
+        plt.figure('Initial data and gaussian fit')
+        plt.plot(x,gaussian(x,*popt))
+        plt.plot(x,y)
+        plt.show()
+    return popt
+
+def hist_integral(n, width):
+    return sum(n*width)#Definition of integrals :))
+
+Times_in = [12,24,28]#Times in hours
 Times = [T*3600 for T in Times_in]#Convert to seconds
 Concentrations = []#Result list
 root = '/Users/niwi9751/Srim_Results/Fe_inZrO2_300keV.txt'
 furnace_root = '/Users/niwi9751/furnanceData.txt'
+potku_path = '/Users/niwi9751/potku/requests/20240304-KrXe-In-ZrO2.potku'
 # D0 = 2.69e-4 #For Zr in U
 # Ea = 0.521 # For Zr in U   
 for T in Times:
@@ -26,7 +150,7 @@ for T in Times:
     Temp = 300
     rho = 5.68 # density of target [g/cm^3]
     m_a = 123.218# molar mass of target in [g/mole]
-    Na = 6.022e22 # avogadros number [atoms/mole]
+    Na = 6.022e23 # avogadros number [atoms/mole]
     n_atoms = rho*Na/m_a #atomic density of target [atoms/cm^3]
     at_in_mol = 3 # Number of atoms in each molecule 
     fluence = 1e17 # Input fluence of implantation [atoms/cm^2]
@@ -34,65 +158,6 @@ for T in Times:
     cool = False
     cool_time = 563 #Cooling time in minutes
     
-    def find_start(filename):
-        try:
-            with open(filename, 'r', encoding='cp437') as file:
-                for i, line in enumerate(file, 1):
-                    if '-------  ----------- ----------- -----------' in line:
-                        # Check if the line contains a hyphen
-                        return i  # Return the index (line number) if found
-        except Exception as e:
-            print("An error occurred while reading the file:", e)
-            return 0
-
-    # Diffusion coefficient dependant on temperature
-    def D(D0, Ea, Temp):
-        D = D0*np.exp(-Ea/(k*Temp))
-        return D
-    
-    def excel_time_to_hours(excel_time):
-        # Extracting the integer part as days
-        days = int(excel_time)
-        # Extracting the fractional part as seconds
-        seconds = (excel_time - days) * 24 * 3600
-        # Converting to timedelta
-        time_delta = datetime.timedelta(seconds=seconds)
-        # Extracting hours, minutes, and seconds
-        hours = int(time_delta.total_seconds() // 3600)
-        minutes = int((time_delta.total_seconds() % 3600) // 60)
-        seconds = int(time_delta.total_seconds() % 60)
-        return hours*60 + minutes + seconds/60
-
-    # Gaussian
-    def gaussian(x,amp,mu,sigma):
-        return amp*np.exp(-(x-mu)**2/(2*sigma**2))
-
-    def histog(data, length):
-        L = length*10000 #Make sure unit is correct
-        n, bins = np.histogram(data, bins = 100,range=(0,L))
-        width = bins[1]-bins[0]
-        # x = np.linspace(min(data), L,100)
-        # x = x*0.0001 #rescale to micrometer, if file is in Å
-        y = n/sum(n) #Normalize
-        return width,y
-
-    # Fit data to gaussian, NOT USED IN THIS VERSION
-    def fit_gauss(data, plot = False):
-        n, bins, patches = plt.hist(data, bins = 60)
-        x = np.linspace(min(data), max(data),60)
-        x = x*0.0001 #rescale to micrometer
-        y = n/0.11 #sketchy normalization, not correct...
-        popt, pcov = curve_fit(gaussian,x,y)
-        if plot:
-            plt.figure('Initial data and gaussian fit')
-            plt.plot(x,gaussian(x,*popt))
-            plt.plot(x,y)
-            plt.show()
-        return popt
-
-    def hist_integral(n, width):
-        return sum(n*width)#Definition of integrals :))
-
     #Check stability
     stability_cond = D(D0,Ea, Temp_fin)*dt/(dx**2)
     if stability_cond > 0.5:
@@ -146,12 +211,12 @@ for T in Times:
                 if Temp <= 1273:
                     Temp = Temp + 10
                     #print('Temp increasing! ')
-                    # print(Temp)
+                    #print(Temp)
                 elif Temp < Temp_fin and Temp > 1273:
                     Temp = Temp + 5
                     Fin_min = Current_min
                     #print('Temp increasing! ')
-                    # print(Temp)
+                    #print(Temp)
                 else:
                     heat = False
                 
@@ -164,16 +229,17 @@ for T in Times:
                 time_temp =int(cool_time - time_left)
                 index = time.index(time_temp)
                 Temp = cool_curve[index]+273
-        print(Temp)
+                #print('Temp decreasing! ')
+                #print(Temp)
         for i in range(1, L*Nx - 1):
             C[n+1, i] = C[n, i] + D(D0, Ea, Temp) * dt / dx**2 * (C[n, i+1] - 2*C[n, i] + C[n, i-1])
             # Apply Neumann boundary condition to boundaries
             C[n+1, 0] = C[n+1, 1]
             C[n+1, -1] = C[n+1,-2]
 
-    #Tell time
+    #Tell time to reach maxtemp
     print(f'Time to reach max temp: {Fin_min} minutes')
-    print(f'Time at maxtemp: {min -Fin_min} minutes')
+    print(f'Time at maxtemp: {min -Fin_min-cool_time} minutes')
 
     #Integrate over intresting areas in steps of 1 micrometer
     I_interval = []
@@ -201,15 +267,26 @@ for T in Times:
 plt.figure(figsize=(8, 6))
 plt.plot(x,C[0,:], label = 'Initial distribution')
 i = 0
-for C in Concentrations:        
-    plt.plot(x,C, label = f'Distribution after {Times_in[i]} hours')
+for C_ in Concentrations:        
+    plt.plot(x,C_, label = f'Distribution after {Times_in[i]} hours')
     i = i + 1
+
+#Measured plot
+potku_data = Initialize_Profile(potku_path)
+x_pot = potku_data['Samples']['Fe-Imp']['Fe']['x']
+x_pot = [at_in_mol*1e18*x/(n_atoms) for x in x_pot] #Convert to micrometer
+c_pot = potku_data['Samples']['Fe-Imp']['Fe']['C']
+plt.plot(x_pot,c_pot, label = 'Measured distribution')
 plt.title('Diffusion of Concentration')
 plt.xlabel('Position [micrometer]')
-plt.ylabel('Concentration [at. %]')
+plt.ylabel('Concentration [at. fraction]')
 plt.legend()
 plt.grid(True)
 plt.show()
+
+
+
+
 
 
 
