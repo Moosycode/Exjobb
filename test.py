@@ -2,7 +2,7 @@ import numpy as np
 import datetime
 import matplotlib.pyplot as plt
 
-root = '/Users/niwi9751/furnanceData.txt'
+root = '/Users/nilsw/Python/Exjobb/verticalfurnaceupto1600.txt'
 time, data = np.loadtxt(root,usecols=(0,1),unpack=True, dtype= 'U25')
 
 def excel_time_to_hours(excel_time):

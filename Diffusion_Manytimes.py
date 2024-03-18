@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
 import datetime
 
-Times_in = [3, 6, 9, 12, 24]#Times in hours
+Times_in = [18, 24]#Times in hours
 Times = [T*3600 for T in Times_in]#Convert to seconds
 Concentrations = []#Result list
 root = '/Users/niwi9751/Srim_Results/Fe_inZrO2_300keV.txt'
