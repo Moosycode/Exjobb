@@ -1,10 +1,13 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
+import datetime
+
 Times_in = [3, 6, 9, 12, 24]#Times in hours
 Times = [T*3600 for T in Times_in]#Convert to seconds
 Concentrations = []#Result list
 root = '/Users/niwi9751/Srim_Results/Fe_inZrO2_300keV.txt'
+furnace_root = '/Users/niwi9751/furnanceData.txt'
 # D0 = 2.69e-4 #For Zr in U
 # Ea = 0.521 # For Zr in U   
 for T in Times:
@@ -27,6 +30,9 @@ for T in Times:
     n_atoms = rho*Na/m_a #atomic density of target [atoms/cm^3]
     at_in_mol = 3 # Number of atoms in each molecule 
     fluence = 1e17 # Input fluence of implantation [atoms/cm^2]
+    heat = True
+    cool = False
+    cool_time = 563 #Cooling time in minutes
     
     def find_start(filename):
         try:
@@ -43,6 +49,19 @@ for T in Times:
     def D(D0, Ea, Temp):
         D = D0*np.exp(-Ea/(k*Temp))
         return D
+    
+    def excel_time_to_hours(excel_time):
+        # Extracting the integer part as days
+        days = int(excel_time)
+        # Extracting the fractional part as seconds
+        seconds = (excel_time - days) * 24 * 3600
+        # Converting to timedelta
+        time_delta = datetime.timedelta(seconds=seconds)
+        # Extracting hours, minutes, and seconds
+        hours = int(time_delta.total_seconds() // 3600)
+        minutes = int((time_delta.total_seconds() % 3600) // 60)
+        seconds = int(time_delta.total_seconds() % 60)
+        return hours*60 + minutes + seconds/60
 
     # Gaussian
     def gaussian(x,amp,mu,sigma):
@@ -104,23 +123,48 @@ for T in Times:
     C = np.hstack((C, np.zeros((Nt,(L-studyL)*Nx)))) #Add zeros to desired length
     Current_min = 0
     Fin_min = 0
+    
+    time, cool_curve = np.loadtxt(furnace_root,usecols=(0,1),unpack=True, dtype= 'U25')
+    time = [t.replace(',','.') for t in time]
+    cool_curve = [c.replace(',','.') for c in cool_curve]
+    time = np.array(time, dtype=float)
+    time = [excel_time_to_hours(t) for t in time] 
+    time = [int(t - time[0]) for t in time]
+    cool_curve = np.array(cool_curve, dtype=float)
+    
     # Time-stepping loop
     for n in range(0, Nt - 1):
         # Update interior points using forward difference in time and central difference in space
         second = T/Nt*n
         min = int(second/60)
-        if min != Current_min:  # Check if minute has changed
-            #print("A minute has passed at", second, "seconds.")
-            Current_min = min  # Update current minute
-            if Temp <= 1273:
-                Temp = Temp + 10
-                #print('Temp increasing! ')
-                # print(Temp)
-            elif Temp < Temp_fin and Temp > 1273:
-                Temp = Temp + 5
-                Fin_min = Current_min
-                #print('Temp increasing! ')
-                # print(Temp)
+        hour = min/60
+        time_left = T/60-min
+        if heat:
+            if min != Current_min:  # Check if minute has changed
+                #print("A minute has passed at", second, "seconds.")
+                Current_min = min  # Update current minute
+                if Temp <= 1273:
+                    Temp = Temp + 10
+                    #print('Temp increasing! ')
+                    # print(Temp)
+                elif Temp < Temp_fin and Temp > 1273:
+                    Temp = Temp + 5
+                    Fin_min = Current_min
+                    #print('Temp increasing! ')
+                    # print(Temp)
+                else:
+                    heat = False
+                
+        if (time_left - cool_time == 0):
+            cool = True
+        if cool:
+            if min != Current_min:  # Check if minute has changed
+                #print("A minute has passed at", second, "seconds.")
+                Current_min = min  # Update current minute
+                time_temp =int(cool_time - time_left)
+                index = time.index(time_temp)
+                Temp = cool_curve[index]+273
+        print(Temp)
         for i in range(1, L*Nx - 1):
             C[n+1, i] = C[n, i] + D(D0, Ea, Temp) * dt / dx**2 * (C[n, i+1] - 2*C[n, i] + C[n, i-1])
             # Apply Neumann boundary condition to boundaries
