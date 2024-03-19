@@ -6,7 +6,6 @@ import json
 import os
 import re
 
-
 def  read_columns(root):
     columns =  []
     with open(root,'r') as depthprofiles:
@@ -65,8 +64,6 @@ def Initialize_Profile(folder_path):
                     dict['Samples'][currentsample][depthprofile] = {'x': columns[0], 'C': columns[3],'NoNormC': columns[4],'N': columns[6]}
     return dict
 
-
-
 def find_start(filename):
     try:
         with open(filename, 'r', encoding='cp437') as file:
@@ -104,8 +101,6 @@ def histog(data, length):
     L = length*10000 #Make sure unit is correct
     n, bins = np.histogram(data, bins = 100,range=(0,L))
     width = bins[1]-bins[0]
-    # x = np.linspace(min(data), L,100)
-    # x = x*0.0001 #rescale to micrometer, if file is in Å
     y = n/sum(n) #Normalize
     return width,y
 
@@ -129,31 +124,37 @@ def hist_integral(n, width):
 Times_in = [12,24,28]#Times in hours
 Times = [T*3600 for T in Times_in]#Convert to seconds
 Concentrations = []#Result list
-root = '/Users/niwi9751/Srim_Results/Fe_inZrO2_300keV.txt'
+root = '/Users/niwi9751/Srim_Results/Kr300keV_in_ZrO2.txt'
 furnace_root = '/Users/niwi9751/furnanceData.txt'
-potku_path = '/Users/niwi9751/potku/requests/20240304-KrXe-In-ZrO2.potku'
-# D0 = 2.69e-4 #For Zr in U
-# Ea = 0.521 # For Zr in U   
+#potku_path = '/Users/niwi9751/potku/requests/20240304-KrXe-In-ZrO2.potku'
+elementdict = {
+    'Fe_ZrO2':{'D0':5.3e-3,'Ea':1.08, 'rho':5.68, 'Ma': 123.218, 'N_at':3},
+    'Zr_UN':{'D0':2.69e-4,'Ea':0.521, 'rho':13.9, 'Ma': 518.078, 'N_at':2},
+    'Kr_ZrO2':{'D0':8.11e-7,'Ea':3.04, 'rho':5.68, 'Ma': 123.218, 'N_at':3}
+}
+
 for T in Times:
     # Parameters
     L = 4# Studied region [micrometer]
     studyL = 1 #Region of intrest, where SRIM starts/ends [micrometer] (HAS TO BE SAME LENGTH AS IN SRIM SIM)
     Nx = 100  # Number of spatial points per micrometer
     Nt = 1 # Number of time steps, can be anything really, code finds this for you, START LOW
-    D0 = 5.3e-3  # Diffusion coefficient inital value [cm^2/s]
-    Ea = 1.08# Activation energy for diffusion in kJ/mole or eV depending on choise of k
     dx = L / (L*Nx - 1) # Spatial step size
     dt = T / Nt # Time step size
     k = 8.6e-5 # boltzmann constant [ev/K]
-    Temp_fin = 1873 #Temperature [K]
-    Temp_in = 300 #Initial temperature [K]
-    Temp = 300
-    rho = 5.68 # density of target [g/cm^3]
-    m_a = 123.218# molar mass of target in [g/mole]
+    Temp_fin = 1873 #Target emperature [K] 
+    Temp = 300#Initial temperature [K]
     Na = 6.022e23 # avogadros number [atoms/mole]
+    fluence = 1e17# Input fluence of implantation [atoms/cm^2]
+    
+    element = 'Fe_ZrO2'
+    D0 = elementdict[element]['D0']# Diffusion coefficient inital value [cm^2/s]
+    Ea = elementdict[element]['Ea']# Activation energy for diffusion in kJ/mole or eV depending on choise of k
+    rho = elementdict[element]['rho']# density of target [g/cm^3]
+    m_a = elementdict[element]['Ma']# molar mass of target in [g/mole]
+    at_in_mol = elementdict[element]['N_at']# Number of atoms in each molecule 
+    
     n_atoms = rho*Na/m_a #atomic density of target [atoms/cm^3]
-    at_in_mol = 3 # Number of atoms in each molecule 
-    fluence = 1e17 # Input fluence of implantation [atoms/cm^2]
     heat = True
     cool = False
     cool_time = 563 #Cooling time in minutes
@@ -238,8 +239,8 @@ for T in Times:
             C[n+1, -1] = C[n+1,-2]
 
     #Tell time to reach maxtemp
-    print(f'Time to reach max temp: {Fin_min} minutes')
-    print(f'Time at maxtemp: {min -Fin_min-cool_time} minutes')
+    #print(f'Time to reach max temp: {Fin_min} minutes')
+    #print(f'Time at maxtemp: {min -Fin_min-cool_time} minutes')
 
     #Integrate over intresting areas in steps of 1 micrometer
     I_interval = []
@@ -272,11 +273,11 @@ for C_ in Concentrations:
     i = i + 1
 
 #Measured plot
-potku_data = Initialize_Profile(potku_path)
-x_pot = potku_data['Samples']['Fe-Imp']['Fe']['x']
-x_pot = [at_in_mol*1e18*x/(n_atoms) for x in x_pot] #Convert to micrometer
-c_pot = potku_data['Samples']['Fe-Imp']['Fe']['C']
-plt.plot(x_pot,c_pot, label = 'Measured distribution')
+# potku_data = Initialize_Profile(potku_path)
+# x_pot = potku_data['Samples']['Fe-Imp']['Fe']['x']
+# x_pot = [at_in_mol*1e18*x/(n_atoms) for x in x_pot] #Convert to micrometer
+# c_pot = potku_data['Samples']['Fe-Imp']['Fe']['C']
+# plt.plot(x_pot,c_pot, label = 'Measured distribution')
 plt.title('Diffusion of Concentration')
 plt.xlabel('Position [micrometer]')
 plt.ylabel('Concentration [at. fraction]')
