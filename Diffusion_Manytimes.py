@@ -122,15 +122,15 @@ def fit_gauss(data, plot = False):
 def hist_integral(n, width):
     return sum(n*width)#Definition of integrals :))
 
-Times_in = [2,10]#Times in hours
+Times_in = [4,8,12]#Times in hours
 Times = [T*3600 for T in Times_in]#Convert to seconds
 Concentrations = []#Result list
-#root = '/Users/niwi9751/Srim_Results/Fe_inZrO2_300keV.txt'
-root = '/Users/niwi9751/Srim_Results/B300keV_in_Si.txt'
+root = '/Users/niwi9751/Srim_Results/Fe_inZrO2_300keV.txt'
+#root = '/Users/niwi9751/Srim_Results/B300keV_in_Si.txt'
 furnace_root = '/Users/niwi9751/furnanceData.txt'
 #potku_path = '/Users/niwi9751/potku/requests/20240304-KrXe-In-ZrO2.potku'
 elementdict = {
-    'Fe_ZrO2':{'D0':1.13e-7*1e8,'Ea':2.7, 'rho':5.68, 'Ma': 123.218, 'N_at':3},
+    'Fe_ZrO2':{'D0':2.26e-6*1e8,'Ea':2.3, 'rho':5.68, 'Ma': 123.218, 'N_at':3},
     'Zr_UN':{'D0':2.69e-4,'Ea':0.521, 'rho':13.9, 'Ma': 518.078, 'N_at':2},
     'Kr_ZrO2':{'D0':8.11e-7,'Ea':3.04, 'rho':5.68, 'Ma': 123.218, 'N_at':3},
     'B_Si':{'D0':0.76*1e8,'Ea':3.46, 'rho':2.33, 'Ma': 28.09, 'N_at':1}
@@ -138,21 +138,21 @@ elementdict = {
 
 for T in Times:
     # Parameters
-    L = 2# Studied region [micrometer]
+    L = 3# Studied region [micrometer]
     studyL = 1 #Region of intrest, where SRIM starts/ends [micrometer] (HAS TO BE SAME LENGTH AS IN SRIM SIM)
     Nx = 100  # Number of spatial points per micrometer
-    Nt = 1 # Number of time steps, can be anything really, code finds this for you, START LOW
+    Nt = 100 # Number of time steps, can be anything really, code finds this for you, START LOW
     dx = L / (L*Nx - 1) # Spatial step size
     dt = T / Nt # Time step size
     k = 8.6e-5 # boltzmann constant [ev/K]
-    Temp_fin = 1273.15 #Target emperature [K] 
-    Temp = 1273.15#Initial temperature [K]
+    Temp_fin = 1673.15 #Target emperature [K] 
+    Temp = 300#Initial temperature [K]
     Na = 6.022e23 # avogadros number [atoms/mole]
     fluence = 1e17# Input fluence of implantation [atoms/cm^2]
     temps = []
     cooltemps = []
     
-    element = 'B_Si'
+    element = 'Fe_ZrO2'
     D0 = elementdict[element]['D0']# Diffusion coefficient inital value [cm^2/s]
     Ea = elementdict[element]['Ea']# Activation energy for diffusion in kJ/mole or eV depending on choise of k
     rho = elementdict[element]['rho']# density of target [g/cm^3]
@@ -160,7 +160,7 @@ for T in Times:
     at_in_mol = elementdict[element]['N_at']# Number of atoms in each molecule 
     
     n_atoms = rho*Na/m_a #atomic density of target [atoms/cm^3]
-    heat = False
+    heat = True
     cool = False
     cool_time = 563 #Cooling time in minutes
     
@@ -168,7 +168,7 @@ for T in Times:
     stability_cond = D(D0,Ea, Temp_fin)*dt/(dx**2)
     if stability_cond > 0.5:
         print('Not stable, increasing number of timesteps')
-        while stability_cond > 0.5:
+        while stability_cond > 0.4:
             Nt = Nt+1
             dt = T/Nt
             stability_cond = D(D0,Ea, Temp_fin)*dt/(dx**2)
@@ -217,7 +217,7 @@ for T in Times:
                 if Temp <= 1273:
                     temps.append(Temp)
                     Temp = Temp + 10
-                    check = D(D0, Ea, Temp)
+                    check = D(D0, Ea, Temp)*dt / dx**2
                     if check > 1:
                         print(check)
                         print('Heat check')
@@ -227,9 +227,10 @@ for T in Times:
                     temps.append(Temp)
                     Temp = Temp + 5
                     Fin_min = Current_min
-                    check = D(D0, Ea, Temp)
+                    check = D(D0, Ea, Temp)*dt / dx**2
                     if check > 1:
                         print(check)
+                        print(C[n,:])
                         print('Heat check')
                     #print('Temp increasing! ')
                     #print(Temp)
@@ -301,4 +302,6 @@ plt.grid(True)
 plt.legend()
 plt.show()
 
+print(temps)
+print(cooltemps)
 

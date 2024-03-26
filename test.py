@@ -20,7 +20,7 @@ def excel_time_to_hours(excel_time):
     return hours*60 + minutes + seconds/60
     
 # Read the CSV file
-filename = '/Users/niwi9751/SRIM_Results/test2.txt'  # Replace 'your_file.csv' with the path to your file
+filename = '/Users/niwi9751/SRIM_Results/test4.txt'  # Replace 'your_file.csv' with the path to your file
 with open(filename, 'r') as file:
      lines = file.readlines()
 
@@ -45,7 +45,7 @@ elementdict = {
     'Fe_ZrO2':{'D0':1.13e-7*1e8,'Ea':2.7, 'rho':5.68, 'Ma': 123.218, 'N_at':3},
     'Zr_UN':{'D0':2.69e-4,'Ea':0.521, 'rho':13.9, 'Ma': 518.078, 'N_at':2},
     'Kr_ZrO2':{'D0':8.11e-7,'Ea':3.04, 'rho':5.68, 'Ma': 123.218, 'N_at':3},
-    'B_Si':{'D0':0.76*1e8,'Ea':3.46, 'rho':2.33, 'Ma': 28.09, 'N_at':1}
+    'B_Si':{'D0':0.7*1e8,'Ea':3.46, 'rho':2.33, 'Ma': 28.09, 'N_at':1}
 }
 
 
@@ -114,10 +114,10 @@ for T in Times:
             
 # Plot the results
 plt.figure(figsize=(8, 6))
-plt.plot(x,C[0,:], label = 'Initial distribution')
+plt.plot(x,C[0,:], label = 'Nils code, 0 hours')
 i = 0
 for C_ in Concentrations:        
-    plt.plot(x,C_, label = f'Distribution after {Times_in[i]} hours')
+    plt.plot(x,C_, label = f'Nils code, {Times_in[i]} hours')
     i = i + 1
 
 #Measured plot
@@ -131,10 +131,10 @@ plt.xlabel('Position [micrometer]')
 plt.ylabel('Concentration [at. fraction]')
 plt.grid(True)
 plt.legend()
-plt.figure('Din mam')
 # Read the CSV file
 filenames = ['/Users/niwi9751/SRIM_Results/test.txt','/Users/niwi9751/SRIM_Results/test2.txt','/Users/niwi9751/SRIM_Results/test3.txt']  # Replace 'your_file.csv' with the path to your file
 i = 0
+times = [0,2,10]
 for filename in filenames:
     with open(filename, 'r') as file:
         lines = file.readlines()
@@ -149,7 +149,7 @@ for filename in filenames:
             column2.append(float(parts[1]))
 
     # Plot the data
-    plt.plot(column1, column2, label = i)
+    plt.plot(column1, column2, label = f'Cleanroom code, {times[i]} hours')
     i = i +1
 
 
