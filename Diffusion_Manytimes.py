@@ -5,7 +5,6 @@ import datetime
 import json
 import os
 import re
-import time as timemamma
 
 def  read_columns(root):
     columns =  []
@@ -124,10 +123,10 @@ def hist_integral(n, width):
 
 
 #GENERAL DATA, INPUT URSELF
-root = '/Users/niwi9751/Dropbox/Nils_files/Srim_Results/Fe300keV_in_ZrO2.txt'
+root = '/Users/niwi9751/Dropbox/Nils_files/Srim_Results/Zr300keV_in_UN_range.txt'
 furnace_root = '/Users/niwi9751/Dropbox/Nils_files/furnanceDataTest.txt'
 #potku_path = '/Users/niwi9751/potku/requests/20240304-KrXe-In-ZrO2.potku'
-Times_in = [12,14,16]#Times in hours
+Times_in = [2]#Times in hours
 Integrate = False
 
 time, cool_curve = np.loadtxt(furnace_root,usecols=(0,1),unpack=True, dtype= 'U25') #Fix data format
@@ -144,7 +143,7 @@ MaxT_Times = []
 #Dictionary with needed values of each element
 elementdict = {
     'Fe_ZrO2':{'D0':2.26e-6,'Ea':2.3, 'rho':5.68, 'Ma': 123.218, 'N_at':3}, #Data from Springer
-    'Zr_UN':{'D0':2.69e-4,'Ea':0.521, 'rho':13.9, 'Ma': 518.078, 'N_at':2}, 
+    'Zr_UN':{'D0':2.26e-6,'Ea':2.3, 'rho':14.05, 'Ma': 252.036, 'N_at':2}, 
     'Kr_ZrO2':{'D0':8.11e-7,'Ea':3.04, 'rho':5.68, 'Ma': 123.218, 'N_at':3},
     'B_Si':{'D0':0.76*1e8,'Ea':3.46, 'rho':2.33, 'Ma': 28.09, 'N_at':1}
 }
@@ -165,8 +164,8 @@ for T in Times:
     temps = []
     minutes = []
     
-    element = 'Fe_ZrO2'
-    D0 = elementdict[element]['D0']*1e8# Diffusion coefficient inital value [cm^2/s]
+    element = 'Zr_UN'
+    D0 = elementdict[element]['D0']*1e8# Diffusion coefficient inital value [um^2/s]
     Ea = elementdict[element]['Ea']# Activation energy for diffusion in kJ/mole or eV depending on choise of k
     rho = elementdict[element]['rho']# density of target [g/cm^3]
     m_a = elementdict[element]['Ma']# molar mass of target in [g/mole]
@@ -194,17 +193,15 @@ for T in Times:
 
     # # Initialize initial condition
     start = find_start(root)
-    print(start)
     if start == None:
         start = 0
     
-    data = np.loadtxt(root,skiprows=start,usecols=1,unpack=True,encoding='cp437')#Initialize data from SRIM
-    binwidth,y_hist = histog(data, studyL)#Create histogram from data
-    y = y_hist*fluence/(at_in_mol*n_atoms*1e-6) #Convert data from histograms to atomic fraction
-    # Atoms/cm^2 DIVIDED BY atoms/cm^3 * thickness (USE THICKNESS OF BIN)
+    height = np.loadtxt(root,usecols=1,unpack=True,encoding='cp437') #load height of bins
+    height = height*fluence #convert into atoms/cm^3
+    conc = height/(height + n_atoms) #Calculate concentration from number density of SRIM
 
     # Apply initial condition 
-    C[0, :] = y
+    C[0, :] = conc
     C = np.hstack((C, np.zeros((Nt,(L-studyL)*Nx)))) #Add zeros to desired length, SRIM length is only 1 micron usually
     
     
