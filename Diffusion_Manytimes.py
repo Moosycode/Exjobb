@@ -123,10 +123,10 @@ def hist_integral(n, width):
 
 
 #GENERAL DATA, INPUT URSELF
-root = '/Users/niwi9751/Dropbox/Nils_files/Srim_Results/Zr300keV_in_UN_range.txt'
+root = '/Users/niwi9751/Dropbox/Nils_files/Srim_Results/Xe300keV_in_ZrO2_Range.txt' 
 furnace_root = '/Users/niwi9751/Dropbox/Nils_files/furnanceDataTest.txt'
-#potku_path = '/Users/niwi9751/potku/requests/20240304-KrXe-In-ZrO2.potku'
-Times_in = [2]#Times in hours
+potku_path = '/Users/niwi9751/potku/requests/20240304-KrXe-In-ZrO2.potku'
+Times_in = [12,16,20]#Times in hours
 Integrate = False
 
 time, cool_curve = np.loadtxt(furnace_root,usecols=(0,1),unpack=True, dtype= 'U25') #Fix data format
@@ -142,10 +142,13 @@ MaxT_Times = []
 
 #Dictionary with needed values of each element
 elementdict = {
-    'Fe_ZrO2':{'D0':2.26e-6,'Ea':2.3, 'rho':5.68, 'Ma': 123.218, 'N_at':3}, #Data from Springer
-    'Zr_UN':{'D0':2.26e-6,'Ea':2.3, 'rho':14.05, 'Ma': 252.036, 'N_at':2}, 
-    'Kr_ZrO2':{'D0':8.11e-7,'Ea':3.04, 'rho':5.68, 'Ma': 123.218, 'N_at':3},
-    'B_Si':{'D0':0.76*1e8,'Ea':3.46, 'rho':2.33, 'Ma': 28.09, 'N_at':1}
+    'Fe_ZrO2':{'D0':2.26e-6,'Ea':2.3, 'rho':5.68, 'Ma': 123.218}, #Data from Springer
+    'Kr_ZrO2':{'D0':8.11e-7,'Ea':3.04, 'rho':5.68, 'Ma': 123.218},
+    'Xe_ZrO2':{'D0':1.83e-6,'Ea':3.26, 'rho':5.68, 'Ma': 123.218} ,
+    'Zr_UN':{'D0':2.26e-6,'Ea':2.3, 'rho':14.05, 'Ma': 252.036}, #Not found yet
+    'Ba_UN':{'D0':2.26e-6,'Ea':2.3, 'rho':14.05, 'Ma': 252.036},#Not found yet
+    'Kr_UN':{'D0':2e-4,'Ea':4.66, 'rho':14.05, 'Ma': 252.036},
+    'Xe_UN':{'D0':2e-4,'Ea':4.71, 'rho':14.05, 'Ma': 252.036}
 }
 
 for T in Times:
@@ -160,16 +163,15 @@ for T in Times:
     Temp_fin = 1473.15 #Target emperature [K] 
     Temp = 300#Initial temperature [K]
     Na = 6.022e23 # avogadros number [atoms/mole]
-    fluence = 1e16# Input fluence of implantation [atoms/cm^2]
+    fluence = 1e17# Input fluence of implantation [atoms/cm^2]
     temps = []
     minutes = []
     
-    element = 'Zr_UN'
-    D0 = elementdict[element]['D0']*1e8# Diffusion coefficient inital value [um^2/s]
-    Ea = elementdict[element]['Ea']# Activation energy for diffusion in kJ/mole or eV depending on choise of k
+    element = 'Fe_ZrO2'
+    D0 = elementdict[element]['D0']*1e8 # Diffusion coefficient inital value [um^2/s]
+    Ea = elementdict[element]['Ea']# Activation energy for diffusion [eV] 
     rho = elementdict[element]['rho']# density of target [g/cm^3]
-    m_a = elementdict[element]['Ma']# molar mass of target in [g/mole]
-    at_in_mol = elementdict[element]['N_at']# Number of atoms in each molecule 
+    m_a = elementdict[element]['Ma']# atomic mass of target in [g/mole]
     
     n_atoms = rho*Na/m_a #atomic density of target [atoms/cm^3]
     heat = True
@@ -294,11 +296,11 @@ for C_ in Concentrations:
     i = i + 1
 
 #Measured plot
-# potku_data = Initialize_Profile(potku_path)
-# x_pot = potku_data['Samples']['Fe-Imp']['Fe']['x']
-# x_pot = [at_in_mol*1e18*x/(n_atoms) for x in x_pot] #Convert to micrometer
-# c_pot = potku_data['Samples']['Fe-Imp']['Fe']['C']
-# plt.plot(x_pot,c_pot, label = 'Measured distribution')
+#potku_data = Initialize_Profile(potku_path)
+#x_pot = potku_data['Samples']['Fe-Imp']['Fe']['x']
+#x_pot = [at_in_mol*1e18*x/(n_atoms) for x in x_pot] #Convert to micrometer
+#c_pot = potku_data['Samples']['Fe-Imp']['Fe']['C']
+#plt.plot(x_pot,c_pot, label = 'Measured distribution')
 plt.title('Diffusion of Concentration')
 plt.xlabel('Position [micrometer]')
 plt.ylabel('Concentration [at. fraction]')

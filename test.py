@@ -20,7 +20,7 @@ def excel_time_to_hours(excel_time):
     return hours*60 + minutes + seconds/60
     
 # Read the CSV file
-filename = '/Users/Nils/Dropbox/Nils_files/SRIM_Results/test4.txt'  # Replace 'your_file.csv' with the path to your file
+filename = '/Users/Niwi9751/Dropbox/Nils_files/SRIM_Results/test4.txt'  # Replace 'your_file.csv' with the path to your file
 with open(filename, 'r') as file:
      lines = file.readlines()
 
@@ -38,7 +38,7 @@ Times_in = [2,10]#Times in hours
 Times = [T*3600 for T in Times_in]#Convert to seconds
 Concentrations = []#Result list
 #root = '/Users/niwi9751/Srim_Results/Fe_inZrO2_300keV.txt'
-root = '/Users/Nils/Dropbox/Nils_Files/Srim_Results/B300keV_in_Si.txt'
+root = '/Users/Niwi9751/Dropbox/Nils_Files/Srim_Results/B300keV_in_Si.txt'
 furnace_root = '/Users/niwi9751/furnanceData.txt'
 #potku_path = '/Users/niwi9751/potku/requests/20240304-KrXe-In-ZrO2.potku'
 elementdict = {
@@ -130,7 +130,7 @@ plt.ylabel('Concentration [at. fraction]')
 plt.grid(True)
 plt.legend()
 # Read the CSV file
-filenames = ['/Users/Nils/Dropbox/Nils_Files/SRIM_Results/test.txt','/Users/Nils/Dropbox/Nils_Files/SRIM_Results/test2.txt','/Users/Nils/Dropbox/Nils_Files/SRIM_Results/test3.txt']  # Replace 'your_file.csv' with the path to your file
+filenames = ['/Users/Niwi9751/Dropbox/Nils_Files/SRIM_Results/test.txt','/Users/Niwi9751/Dropbox/Nils_Files/SRIM_Results/test2.txt','/Users/Niwi9751/Dropbox/Nils_Files/SRIM_Results/test3.txt']  # Replace 'your_file.csv' with the path to your file
 i = 0
 times = [0,2,10]
 for filename in filenames:
