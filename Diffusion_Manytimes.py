@@ -123,7 +123,7 @@ def hist_integral(n, width):
 
 
 #GENERAL DATA, INPUT URSELF
-root = '/Users/niwi9751/Dropbox/Nils_files/Srim_Results/Xe300keV_in_ZrO2_Range.txt' 
+root = '/Users/niwi9751/Dropbox/Nils_files/Srim_Results/Zr300keV_in_UN_Range.txt' 
 furnace_root = '/Users/niwi9751/Dropbox/Nils_files/furnanceDataTest.txt'
 potku_path = '/Users/niwi9751/potku/requests/20240304-KrXe-In-ZrO2.potku'
 Times_in = [12,16,20]#Times in hours
@@ -163,11 +163,11 @@ for T in Times:
     Temp_fin = 1473.15 #Target emperature [K] 
     Temp = 300#Initial temperature [K]
     Na = 6.022e23 # avogadros number [atoms/mole]
-    fluence = 1e17# Input fluence of implantation [atoms/cm^2]
+    fluence = 1e16# Input fluence of implantation [atoms/cm^2]
     temps = []
     minutes = []
     
-    element = 'Fe_ZrO2'
+    element = 'Zr_UN'
     D0 = elementdict[element]['D0']*1e8 # Diffusion coefficient inital value [um^2/s]
     Ea = elementdict[element]['Ea']# Activation energy for diffusion [eV] 
     rho = elementdict[element]['rho']# density of target [g/cm^3]
