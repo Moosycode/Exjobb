@@ -68,7 +68,7 @@ def find_start(filename):
     try:
         with open(filename, 'r', encoding='cp437') as file:
             for i, line in enumerate(file, 1):
-                if '-------  ----------- ----------- -----------' in line:
+                if '-----------  ----------  ------------' in line:
                     # Check if the line contains a hyphen
                     return i  # Return the index (line number) if found
     except Exception as e:
@@ -93,10 +93,6 @@ def excel_time_to_hours(excel_time):
     seconds = int(time_delta.total_seconds() % 60)
     return hours*60 + minutes + seconds/60
 
-# Gaussian
-def gaussian(x,amp,mu,sigma):
-    return amp*np.exp(-(x-mu)**2/(2*sigma**2))
-
 def histog(data, length):
     L = length*10000 #Make sure unit is correct
     n, bins = np.histogram(data, bins = 100,range=(0,L))
@@ -104,28 +100,14 @@ def histog(data, length):
     y = n/sum(n) #Normalize
     return width,y
 
-# Fit data to gaussian, NOT USED IN THIS VERSION
-def fit_gauss(data, plot = False):
-    n, bins, patches = plt.hist(data, bins = 60)
-    x = np.linspace(min(data), max(data),60)
-    x = x*0.0001 #rescale to micrometer
-    y = n/0.11 #sketchy normalization, not correct...
-    popt, pcov = curve_fit(gaussian,x,y)
-    if plot:
-        plt.figure('Initial data and gaussian fit')
-        plt.plot(x,gaussian(x,*popt))
-        plt.plot(x,y)
-        plt.show()
-    return popt
-
 def hist_integral(n, width):
     return sum(n*width)#Definition of integrals :))
 
 
 #GENERAL DATA, INPUT URSELF
-root = '/Users/niwi9751/Dropbox/Nils_files/Srim_Results/Zr300keV_in_UN_Range.txt' 
+root = '/Users/niwi9751/Dropbox/Nils_files/Srim_Results/Zr330keV_in_UN_Range.txt' 
 furnace_root = '/Users/niwi9751/Dropbox/Nils_files/furnanceDataTest.txt'
-potku_path = '/Users/niwi9751/potku/requests/20240304-KrXe-In-ZrO2.potku'
+#potku_path = '/Users/niwi9751/potku/requests/20240304-KrXe-In-ZrO2.potku'
 Times_in = [12,16,20]#Times in hours
 Integrate = False
 
@@ -163,7 +145,7 @@ for T in Times:
     Temp_fin = 1473.15 #Target emperature [K] 
     Temp = 300#Initial temperature [K]
     Na = 6.022e23 # avogadros number [atoms/mole]
-    fluence = 1e16# Input fluence of implantation [atoms/cm^2]
+    fluence = 3.73e16# Input fluence of implantation [atoms/cm^2]
     temps = []
     minutes = []
     
