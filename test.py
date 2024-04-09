@@ -20,7 +20,7 @@ def excel_time_to_hours(excel_time):
     return hours*60 + minutes + seconds/60
     
 # Read the CSV file
-filename = '/Users/Niwi9751/Dropbox/Nils_files/SRIM_Results/test4.txt'  # Replace 'your_file.csv' with the path to your file
+filename = '/Users/Nils/Dropbox/Nils_files/SRIM_Results/test4.txt'  # Replace 'your_file.csv' with the path to your file
 with open(filename, 'r') as file:
      lines = file.readlines()
 
@@ -38,14 +38,14 @@ Times_in = [2,10]#Times in hours
 Times = [T*3600 for T in Times_in]#Convert to seconds
 Concentrations = []#Result list
 #root = '/Users/niwi9751/Srim_Results/Fe_inZrO2_300keV.txt'
-root = '/Users/Niwi9751/Dropbox/Nils_Files/Srim_Results/B300keV_in_Si.txt'
+root = '/Users/Nils/Dropbox/Nils_Files/Srim_Results/B300keV_in_Si.txt'
 furnace_root = '/Users/niwi9751/furnanceData.txt'
 #potku_path = '/Users/niwi9751/potku/requests/20240304-KrXe-In-ZrO2.potku'
 elementdict = {
     'Fe_ZrO2':{'D0':1.13e-7*1e8,'Ea':2.7, 'rho':5.68, 'Ma': 123.218, 'N_at':3},
     'Zr_UN':{'D0':2.69e-4,'Ea':0.521, 'rho':13.9, 'Ma': 518.078, 'N_at':2},
     'Kr_ZrO2':{'D0':8.11e-7,'Ea':3.04, 'rho':5.68, 'Ma': 123.218, 'N_at':3},
-    'B_Si':{'D0':0.35*1e8,'Ea':3.5, 'rho':2.33, 'Ma': 28.09, 'N_at':1}
+    'B_Si':{'D0':0.22*1e8,'Ea':3.46, 'rho':2.33, 'Ma': 28.09, 'N_at':1}
 }
 
 for T in Times:
@@ -130,7 +130,7 @@ plt.ylabel('Concentration [at. fraction]')
 plt.grid(True)
 plt.legend()
 # Read the CSV file
-filenames = ['/Users/Niwi9751/Dropbox/Nils_Files/SRIM_Results/test.txt','/Users/Niwi9751/Dropbox/Nils_Files/SRIM_Results/test2.txt','/Users/Niwi9751/Dropbox/Nils_Files/SRIM_Results/test3.txt']  # Replace 'your_file.csv' with the path to your file
+filenames = ['/Users/Nils/Dropbox/Nils_Files/SRIM_Results/test.txt','/Users/Nils/Dropbox/Nils_Files/SRIM_Results/test2.txt','/Users/Nils/Dropbox/Nils_Files/SRIM_Results/test3.txt']  # Replace 'your_file.csv' with the path to your file
 i = 0
 times = [0,2,10]
 for filename in filenames:
