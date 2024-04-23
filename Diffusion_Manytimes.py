@@ -104,13 +104,33 @@ def hist_integral(n, width):
     return sum(n*width)#Definition of integrals :))
 
 
-#GENERAL DATA, INPUT URSELF
-root = '/Users/niwi9751/Dropbox/Nils_files/Srim_Results/Zr330keV_in_UN_Range.txt' 
-furnace_root = '/Users/niwi9751/Dropbox/Nils_files/furnanceDataTest.txt'
-#potku_path = '/Users/niwi9751/potku/requests/20240304-KrXe-In-ZrO2.potku'
-Times_in = [12,16,20]#Times in hours
-Integrate = False
+#Constants----------------------------
+k = 8.6e-5 # boltzmann constant [ev/K]
+Na = 6.022e23 # avogadros number [atoms/mole]
+#-------------------------------------
 
+#GENERAL FILEPATHS-----------------------------------------------------------------
+root = '/Users/niwi9751/Dropbox/Nils_files/Srim_Results/Kr300keV_in_ZrO2_range.txt' 
+# root = '/Users/niwi9751/Dropbox/Nils_files/Srim_Results/Zr300keV_in_UN_Range.txt'
+furnace_root = '/Users/niwi9751/Dropbox/Nils_files/furnanceDataTest.txt'
+potku_path = '/Users/niwi9751/potku/requests/20240304-KrXe-In-ZrO2.potku'
+#---------------------------------------------------------------------------------
+
+#Global Parameters-----------------------------------------------------------------------
+Times_in = [5,25,50,100]#Times in hours
+L = 3# Studied region [micrometer]
+studyL = 1 #Region of intrest, where SRIM starts/ends [micrometer] (HAS TO BE SAME LENGTH AS IN SRIM SIM)
+Temp_fin = 1473.15 #Target emperature [K] 
+fluence = 1e17# Input fluence of implantation [atoms/cm^2]
+Integrate = True
+Concentrations = []#Result list
+MaxT_Times = []#Honestly do not remember
+Mins = []#All minutes globally
+Temperatures = []#All temperatures globally
+#---------------------------------------------------------------------------------
+
+
+#Stupid stuff since i am not that good at coding-------------------------------------
 time, cool_curve = np.loadtxt(furnace_root,usecols=(0,1),unpack=True, dtype= 'U25') #Fix data format
 time = [t.replace(',','.') for t in time]
 cool_curve = [c.replace(',','.') for c in cool_curve]
@@ -119,45 +139,39 @@ time = [excel_time_to_hours(t) for t in time]
 time = [int(t - time[0]) for t in time]
 cool_curve = np.array(cool_curve, dtype=float)
 Times = [T*3600 for T in Times_in]#Convert to seconds
-Concentrations = []#Result list
-MaxT_Times = []
+#---------------------------------------------------------------------------------
 
 #Dictionary with needed values of each element
 elementdict = {
-    'Fe_ZrO2':{'D0':2.26e-6,'Ea':2.3, 'rho':5.68, 'Ma': 123.218}, #Data from Springer
-    'Kr_ZrO2':{'D0':8.11e-7,'Ea':3.04, 'rho':5.68, 'Ma': 123.218},
-    'Xe_ZrO2':{'D0':1.83e-6,'Ea':3.26, 'rho':5.68, 'Ma': 123.218} ,
-    'Zr_UN':{'D0':2.26e-6,'Ea':2.3, 'rho':14.05, 'Ma': 252.036}, #Not found yet
-    'Ba_UN':{'D0':2.26e-6,'Ea':2.3, 'rho':14.05, 'Ma': 252.036},#Not found yet
+    'Fe_ZrO2':{'D0':2.26e-6,'Ea':2.3, 'rho':6.025, 'Ma': 123.218}, #Data from Springer
+    'Kr_ZrO2':{'D0':8.11e-7,'Ea':2.53, 'rho':6.025, 'Ma': 123.218},
+    'Xe_ZrO2':{'D0':1.83e-6,'Ea':2.91, 'rho':6.025, 'Ma': 123.218},
+    'Zr_UN':{'D0':6.9e-7,'Ea':2.7, 'rho':14.05, 'Ma': 252.036}, 
     'Kr_UN':{'D0':2e-4,'Ea':4.66, 'rho':14.05, 'Ma': 252.036},
     'Xe_UN':{'D0':2e-4,'Ea':4.71, 'rho':14.05, 'Ma': 252.036}
 }
 
 for T in Times:
-    # Parameters
-    L = 3# Studied region [micrometer]
-    studyL = 1 #Region of intrest, where SRIM starts/ends [micrometer] (HAS TO BE SAME LENGTH AS IN SRIM SIM)
+    # Parameters------------------------------------------------------
+    element = 'Kr_ZrO2'
+    Temp = 1473.15#Initial temperature [K]
+    #-----------------------------------------------------------------
+    
+    #Constants--------------------------------------------------------
     Nx = 100  # Number of spatial points per micrometer
-    Nt = 100 # Number of time steps, can be anything really, code finds this for you, START LOW
+    Nt = int(T/60) # Number of time steps, can be anything really, code finds this for you but do not start lower than this.
     dx = L / (L*Nx - 1) # Spatial step size
     dt = T / Nt # Time step size
-    k = 8.6e-5 # boltzmann constant [ev/K]
-    Temp_fin = 1473.15 #Target emperature [K] 
-    Temp = 300#Initial temperature [K]
-    Na = 6.022e23 # avogadros number [atoms/mole]
-    fluence = 3.73e16# Input fluence of implantation [atoms/cm^2]
-    temps = []
-    minutes = []
-    
-    element = 'Zr_UN'
+    temps = [] #Result list for temperatures each minute
+    minutes = []#Result list for minutes passed
     D0 = elementdict[element]['D0']*1e8 # Diffusion coefficient inital value [um^2/s]
     Ea = elementdict[element]['Ea']# Activation energy for diffusion [eV] 
     rho = elementdict[element]['rho']# density of target [g/cm^3]
     m_a = elementdict[element]['Ma']# atomic mass of target in [g/mole]
-    
     n_atoms = rho*Na/m_a #atomic density of target [atoms/cm^3]
-    heat = True
+    heat = False
     cool = False
+    #-----------------------------------------------------------------
     
     #Check stability
     stability_cond = D(D0,Ea, Temp_fin)*dt/(dx**2)
@@ -175,23 +189,26 @@ for T in Times:
     # Initialize solution matrix
     C = np.zeros((Nt, Nx))
 
-    # # Initialize initial condition
+    # Initialize initial condition
     start = find_start(root)
     if start == None:
         start = 0
     
-    height = np.loadtxt(root,usecols=1,unpack=True,encoding='cp437') #load height of bins
+    # Read data from SRIM
+    depth,height = np.loadtxt(root,usecols=(0,1),unpack=True,encoding='cp437') #load height and width of bins
     height = height*fluence #convert into atoms/cm^3
+    binwidth = depth[1]-depth[0] #define binwidth
     conc = height/(height + n_atoms) #Calculate concentration from number density of SRIM
-
+    
     # Apply initial condition 
     C[0, :] = conc
     C = np.hstack((C, np.zeros((Nt,(L-studyL)*Nx)))) #Add zeros to desired length, SRIM length is only 1 micron usually
     
     
     cool_time = (Temp_fin-1273.15)/10 + time[-1] #Cooling time in minutes
-    Current_min = 0
-    Fin_min = 0
+    print(f'Cooling time will be {cool_time/60} hours!!')
+    Current_min = 0 #Some awesome parameters
+    Fin_min = 0 #same as above
     # Time-stepping loop
     for n in range(0, Nt - 1):
         # Update interior points using forward difference in time and central difference in space
@@ -199,32 +216,25 @@ for T in Times:
         min = int(second/60)
         hour = min/60
         time_left = T/60-min
-        if heat:
-            if min != Current_min:  # Check if minute has changed
-                minutes.append(min)
-                temps.append(Temp)
-                #print("A minute has passed at", second, "seconds.")
-                Current_min = min  # Update current minute
+        temps.append(Temp)
+        minutes.append(min)
+        if min != Current_min:  # Check if minute has changed
+            Current_min = min  # Update current minute
+            if heat:
                 if Temp <= 1273:
                     Temp = Temp + 10
-                    check = D(D0, Ea, Temp)*dt / dx**2
                     #print('Temp increasing! ')
                     #print(Temp)
                 elif Temp < Temp_fin and Temp > 1273:
                     Temp = Temp + 5
                     Fin_min = Current_min
-                    check = D(D0, Ea, Temp)*dt / dx**2
                     #print('Temp increasing! ')
                     #print(Temp)
                 else:
                     heat = False     
-        if (time_left - cool_time == 0):
-            cool =  True
-        if cool:
-            if min != Current_min:  # Check if minute has changed
-                minutes.append(min) 
-                temps.append(Temp)
-                Current_min = min  # Update current minute
+            if (time_left - cool_time == 0):
+                cool =  False
+            if cool:
                 if Temp > 1273:
                     Temp = Temp - 10 #Linear decrease from Final temp to 1000 deg C
                 else:
@@ -238,16 +248,19 @@ for T in Times:
         Diff = D(D0, Ea, Temp) #calculate diffusion coefficient
         for i in range(1, L*Nx - 1): #Update interior points
             C[n+1, i] = C[n, i] + Diff * dt / dx**2 * (C[n, i+1] - 2*C[n, i] + C[n, i-1])
-            # Apply Neumann boundary condition to boundaries
-            C[n+1, 0] = C[n+1, 1]
-            C[n+1, -1] = C[n+1,-2]
+        
+        # Apply Neumann boundary condition to boundaries
+        C[n+1, 0] = C[n+1, 1]
+        C[n+1, -1] = C[n+1,-2]
 
     #Tell time to reach maxtemp
     MaxT_time = min - Fin_min- cool_time
     print(f'Time to reach max temp: {Fin_min} minutes')
     print(f'Time at maxtemp: {MaxT_time} minutes')
+    print(f'Diffusion coefficient at maxtemp: {D(D0,Ea,Temp_fin)*1e-8}')
     Concentrations.append(C[-1,:])
     MaxT_Times.append(int(MaxT_time/60))
+    
     if Integrate:
     #Integrate over intresting areas in steps of 1 micrometer
         I_interval = []
@@ -268,30 +281,35 @@ for T in Times:
         print(f'Ratio between total integrals: ')
         print(ratio)
         print()
+    Mins.append(minutes)
+    Temperatures.append(temps)
 
 # Plot the results
 plt.figure(figsize=(8, 6))
 plt.plot(x,C[0,:], label = 'Initial distribution')
 i = 0
 for C_ in Concentrations:        
-    plt.plot(x,C_, label = f'Distribution after {Times_in[i]} hours. Time at maxtemp = {MaxT_Times[i]} hours')
+    plt.plot(x,C_, label = f'Distribution after {Times_in[i]} hours. ')
     i = i + 1
 
 #Measured plot
-#potku_data = Initialize_Profile(potku_path)
-#x_pot = potku_data['Samples']['Fe-Imp']['Fe']['x']
-#x_pot = [at_in_mol*1e18*x/(n_atoms) for x in x_pot] #Convert to micrometer
-#c_pot = potku_data['Samples']['Fe-Imp']['Fe']['C']
-#plt.plot(x_pot,c_pot, label = 'Measured distribution')
-plt.title('Diffusion of Concentration')
+potku_data = Initialize_Profile(potku_path)
+x_pot = potku_data['Samples']['Kr-Imp']['Kr']['x']
+x_pot = [3*1e18*x/(n_atoms) for x in x_pot] #Convert to micrometer
+c_pot = potku_data['Samples']['Kr-Imp']['Kr']['C']
+plt.plot(x_pot,c_pot, label = 'ToF-ERDA Measurement')
+plt.title(f'Diffusion of Concentration ')
 plt.xlabel('Position [micrometer]')
 plt.ylabel('Concentration [at. fraction]')
 plt.grid(True)
 plt.legend()
 
 plt.figure()
-plt.title('Temperature change over time')
-plt.xlabel('Minutes')
-plt.ylabel('Temperature [K]')
-plt.plot(minutes,temps)
+for i in range(len(Temperatures)):
+    plt.title('Temperature change over time')
+    plt.xlabel('Minutes')
+    plt.ylabel('Temperature [K]')
+    plt.plot(Mins[i],Temperatures[i], label = f'Time: {Times_in[i]} h')
+plt.legend()
+plt.grid(True)
 plt.show()
