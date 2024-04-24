@@ -118,7 +118,7 @@ potku_path = '/Users/niwi9751/potku/requests/20240410-Zr-in-UN.potku'
 #---------------------------------------------------------------------------------
 
 #Global Parameters-----------------------------------------------------------------------
-Times_in = [5]#Times in hours
+Times_in = [1]#Times in hours
 L = 3# Studied region [micrometer]
 studyL = 1 #Region of intrest, where SRIM starts/ends [micrometer] (HAS TO BE SAME LENGTH AS IN SRIM SIM)
 Temp_fin = 1473.15 #Target emperature [K] 
@@ -292,7 +292,8 @@ x_pot = [3*1e18*x/(n_atoms) for x in x_pot] #Convert to micrometer
 c_pot = potku_data['Samples']['UN-AimedLow']['Zr']['C']
 pot_width = (x_pot[1]-x_pot[0])*1e-4 #Convert to cm
 pot_Integral = hist_integral(c_pot,pot_width)
-print(f'Fluence put in acc. to measurement: {pot_Integral*n_atoms} at/cm^2')
+print(f'Fluence put in acc. to SRIM:{I_inital*n_atoms} at/cm^2')
+print(f'Fluence put in acc. to measurement: {pot_Integral*n_atoms*0.95} at/cm^2')
 plt.plot(x_pot,c_pot, label = 'ToF-ERDA Measurement')
 plt.title(f'Diffusion of Concentration ')
 plt.xlabel('Position [micrometer]')
