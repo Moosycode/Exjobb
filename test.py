@@ -1,20 +1,16 @@
-import pandas as pd
+import numpy as np
 
-filepath = '/Users/niwi9751/Desktop/Data Zr In UN/'
+# Path to the file
+file_path = '/Users/Nils/Testing.txt'
 
-# Load the data into a DataFrame, assuming space-separated columns without headers
-data = pd.read_csv(file_path, delim_whitespace=True, header=None)
+# Use np.genfromtxt to read the headers separately
+headers = np.genfromtxt(file_path, max_rows=1, dtype=str, skip_header=2)
 
-# Select columns of interest based on the user's description
-# Column 3: Depth (nm), Column 4: Concentration (atomic fraction)
-data_depth_concentration = data[[2, 3]]
-data_depth_concentration.columns = ['Depth (nm)', 'Concentration (atomic fraction)']
+# Now use np.loadtxt to read the data, skipping the first four lines including the header line
+data = np.loadtxt(file_path, skiprows=3)
 
-# Update the atomic density for UN (uranium nitride)
-atomic_density_UN = 3.36e22  # atoms/cm³
+# Creating a dictionary to map headers to data columns
+structured_data_np = {header: data[:, i] for i, header in enumerate(headers)}
 
-# Recalculate the total implanted dose (ions/cm²) using the atomic density for UN
-total_implanted_dose_UN = (data_depth_concentration['Concentration (atomic fraction)'][:-1] * atomic_density_UN * 
-                           data_depth_concentration['Delta Depth (cm)'][1:]).sum()
-
-total_implanted_dose_UN
+# You can print structured_data_np to see the output:
+print(structured_data_np['Zr'])
