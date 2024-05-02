@@ -17,13 +17,34 @@ def find_start(filename):
         print("An error occurred while reading the file:", e)
         return 0
     
-root = '/Users/niwi9751/CONTES/Output_Data/I127_44MeV_pos7_Zr_imp_UN_AIMED_LOW_profiles.txt'
+# Step 1: Read the file and identify headers and data
+file_path = '/Users/Nils/Testing.txt'
+
+# Initialize a dictionary to hold the structured data
+structured_data = {}
+
+# Read the file and process it
+with open(file_path, 'r') as file:
+    lines = file.readlines()
     
-data = np.loadtxt(root,skiprows=4, unpack=True,encoding='cp437')
-depth = data[0]
-elements = ['U', 'Zr', 'O', 'N']
-for i in range(len(data)-1):
-    if i != 0:
-        plt.step(depth,data[i],label = elements[i-1])
-plt.legend()
-plt.show()
+    # The 4th line contains the headers, which are 1-indexed in a normal description, 0-indexed in Python
+    headers = lines[2].split()
+    print(headers)
+    
+    # Initialize the dictionary with headers as keys and empty lists as values
+    for header in headers:
+        structured_data[header] = []
+    
+    # Iterate over the remaining lines to populate the dictionary
+    for line in lines[3:]:
+        if line.strip():  # This checks if the line is not just whitespace
+            values = line.split()
+            for header, value in zip(headers, values):
+                structured_data[header].append(float(value))  # Convert string to float and append to the correct list
+
+# The structured_data dictionary now contains the data categorized under each header.
+# For this code to run here, you'd need to uncomment the next line:
+print(structured_data['Fe'])
+
+# Let's comment out the print for now as per instruction to optimize the code further if necessary.
+# print(structured_data)
