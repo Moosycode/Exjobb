@@ -17,15 +17,13 @@ def find_start(filename):
         print("An error occurred while reading the file:", e)
         return 0
     
-root = '/Users/niwi9751/CONTES/Output_Data/I127_44MeV_pos7_Zr_imp_UN_AIMED_HIGH_profiles.txt'
+root = '/Users/niwi9751/CONTES/Output_Data/I127_44MeV_pos7_Zr_imp_UN_AIMED_LOW_profiles.txt'
     
-data = np.loadtxt(root,skiprows=3, unpack=True,encoding='cp437')
+data = np.loadtxt(root,skiprows=4, unpack=True,encoding='cp437')
 depth = data[0]
-print(data)
-
-# elements = ['U', 'Al', 'O', 'N',]
-# for i in range(len(data)-1):
-#     if i != 0:
-#         plt.step(depth,data[i],label = elements[i-1])
-# plt.legend()
-# plt.show()
+elements = ['U', 'Zr', 'O', 'N']
+for i in range(len(data)-1):
+    if i != 0:
+        plt.step(depth,data[i],label = elements[i-1])
+plt.legend()
+plt.show()
