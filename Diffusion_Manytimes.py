@@ -111,8 +111,8 @@ Na = 6.022e23 # avogadros number [atoms/mole]
 #-------------------------------------
 
 #GENERAL FILEPATHS-----------------------------------------------------------------
-# root = '/Users/niwi9751/Dropbox/Nils_files/Srim_Results/Xe300keV_in_ZrO2_range.txt' 
-root = '/Users/niwi9751/Dropbox/Nils_files/Srim_Results/Zr330keV_in_UN_Range.txt'
+root = '/Users/niwi9751/Dropbox/Nils_files/Srim_Results/Xe300keV_in_ZrO2_range.txt' 
+# root = '/Users/niwi9751/Dropbox/Nils_files/Srim_Results/Zr330keV_in_UN_Range.txt'
 furnace_root = '/Users/niwi9751/Dropbox/Nils_files/furnanceDataTest.txt'
 potku_path = '/Users/niwi9751/potku/requests/20240410-Zr-in-UN.potku'
 # potku_path = '/Users/niwi9751/potku/requests/20240304-KrXe-In-ZrO2.potku'
@@ -120,11 +120,11 @@ potku_path = '/Users/niwi9751/potku/requests/20240410-Zr-in-UN.potku'
 #---------------------------------------------------------------------------------
 
 #Global Parameters-----------------------------------------------------------------------
-Times_in = [1]#Times in hours
+Times_in = [9]#Times in hours
 L = 3# Studied region [micrometer]
 studyL = 1 #Region of intrest, where SRIM starts/ends [micrometer] (HAS TO BE SAME LENGTH AS IN SRIM SIM)
 Temp_fin = 1473.15 #Target emperature [K] 
-fluence = 3.73e16# Input fluence of implantation [atoms/cm^2]
+fluence = 1e17# Input fluence of implantation [atoms/cm^2]
 Integrate = True
 Concentrations = []#Result list
 MaxT_Times = []#Honestly do not remember
@@ -156,7 +156,7 @@ elementdict = {
 
 for T in Times:
     # Parameters------------------------------------------------------
-    element = 'Zr_UN'
+    element = 'Xe_ZrO2'
     Temp = 1473.15#Initial temperature [K]
     #-----------------------------------------------------------------
     
