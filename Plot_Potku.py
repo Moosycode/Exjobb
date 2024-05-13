@@ -1,4 +1,3 @@
-# Importing necessary library
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -6,11 +5,6 @@ from scipy.optimize import curve_fit
 import json
 import os
 import re
-
-
-# Function to clean headers by removing parentheses and contents within
-def clean_header(header):
-    return re.sub(r"\(.*?\)", "", header).strip()
 
 def Initialize_Profile(folder_path):
     if '.potku' in folder_path:                     #Check if potku is in the path name
@@ -73,56 +67,43 @@ def rebin(data,x_res):
     data = [(data[1::2][i] + data[::2][i])/2 for i in range(len(data[1::2]))]
     x_res = x_res[1::2]
     return data, x_res
-    
-    
-# Load the data
-file_path = '/Users/niwi9751/CONTES/Output_Data/I127_44MeV_pos7_Zr_imp_UN_AIMED_LOW_profiles.txt'
-potku_path = '/Users/niwi9751/potku/requests/20240410-Zr-in-UN.potku'
-data = pd.read_csv(file_path, delimiter='\t', skiprows=3, header=None)
 
-# Extract headers and data
-headers = data.iloc[0].values
-values = data.iloc[1:]
+def plot_profiles(data):
+    i = 0
+    Na = 6.022e23
+    # rho = 6.025
+    # Ma = 123.218
+    rho = 14.05
+    Ma = 252.036
+    n_atoms = rho*Na/Ma
+    for sample in data['Samples']:
+        plt.figure(i)
+        plt.title(sample)
+        for depth in data['Samples'][sample]:
+            x = data['Samples'][sample][depth]['x']
+            x = [2*1e21*x/(n_atoms) for x in x]
+            C = data['Samples'][sample][depth]['C']
+            C,x = rebin(C,x)
+            C,x = rebin(C,x)
+            plt.ylim([0.0, 1])
+            plt.xlim([-15,400])
+            plt.step(x,C, label = depth, color = color_dict[depth])
+            plt.xlabel('depth [nanometer]')
+            plt.ylabel('atomic fraction')
+            plt.grid(linestyle='--')
+            plt.legend(loc = 'upper right')
+        i = i+1
 
-# Create the dictionary with cleaned headers as keys and convert each column's values to appropriate numeric types
-data_dict = {}
-for index, header in enumerate(headers):
-    clean_header_name = clean_header(header)
-    headers[index] = clean_header_name
-    # Attempt to convert column to float, if fails keep as string (this should not happen if all are numbers)
-    try:
-        data_dict[clean_header_name] = values[index].astype(float).tolist()
-    except ValueError:
-        data_dict[clean_header_name] = values[index].tolist()
+# color_dict = {'Zr':'r','O':'b', 'Fe':'gray', 'Xe': 'c', 'Kr':'g', 'Hf': 'y', 'Al':'m', 'C':'k'}
+color_dict = {'U':'r','N':'g', 'O': 'b','Zr':'gray', 'Xe': 'c', 'Kr':'g', 'Hf': 'y', 'Al':'m', 'C':'k'}
 
-data_dict.popitem()
-headers = np.delete(headers, len(headers)-1)
-headers = np.delete(headers, 0)
-x_cont = data_dict['x']
-c_cont = data_dict['Zr']
+# potku_path = '/Users/niwi9751/potku/requests/20240410-Zr-in-UN.potku'
+potku_path = '/Users/niwi9751/potku/requests/20240506-UNUO2Samples.potku'
+# potku_path = '/Users/niwi9751/potku/requests/20240304-KrXe-In-ZrO2.potku'
 
-potku_data = Initialize_Profile(potku_path)
-x_pot = potku_data['Samples']['UN-AimedLow']['Zr']['x']
-c_pot = potku_data['Samples']['UN-AimedLow']['Zr']['C']
 
-plt.step(x_pot,c_pot,label = 'Potku')
-plt.step(x_cont,c_cont,label = 'Contes')
-plt.legend()
-plt.xlabel('Depth [10^15 at/cm^2]')
-plt.ylabel('Concentration [%]')
-plt.grid()
 
-plt.show()
-plt.figure() #Plot all contes profiles
-for header in headers:
-    C, x = data_dict[header], data_dict['x']
-    C, x = rebin(C,x)
-    plt.step(x,C,label = header)
-    plt.xlim([0,   2500])
-    plt.ylim([0.0, 1.2])
-    plt.yscale('log')
-    plt.xlabel('depth [10$^{15}$ atoms/cm$^2$]')
-    plt.ylabel('atomic fraction')
-    plt.grid(linestyle='--')
-plt.legend()    
+data = Initialize_Profile(potku_path)
+
+plot_profiles(data)
 plt.show()

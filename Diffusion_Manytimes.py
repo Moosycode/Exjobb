@@ -18,6 +18,11 @@ def  read_columns(root):
                 columns[i].append(float(column_data.strip()))
     return columns
 
+def rebin(data,x_res):
+    data = [(data[1::2][i] + data[::2][i])/2 for i in range(len(data[1::2]))]
+    x_res = x_res[1::2]
+    return data, x_res
+
 #Finding profiles
 def Initialize_Profile(folder_path):
     if '.potku' in folder_path:                     #Check if potku is in the path name
@@ -111,20 +116,19 @@ Na = 6.022e23 # avogadros number [atoms/mole]
 #-------------------------------------
 
 #GENERAL FILEPATHS-----------------------------------------------------------------
-root = '/Users/niwi9751/Dropbox/Nils_files/Srim_Results/Xe300keV_in_ZrO2_range.txt' 
+root = '/Users/niwi9751/Dropbox/Nils_files/Srim_Results/Zr330keV_in_UN_range.txt' 
 # root = '/Users/niwi9751/Dropbox/Nils_files/Srim_Results/Zr330keV_in_UN_Range.txt'
 furnace_root = '/Users/niwi9751/Dropbox/Nils_files/furnanceDataTest.txt'
 potku_path = '/Users/niwi9751/potku/requests/20240410-Zr-in-UN.potku'
 # potku_path = '/Users/niwi9751/potku/requests/20240304-KrXe-In-ZrO2.potku'
-
 #---------------------------------------------------------------------------------
 
 #Global Parameters-----------------------------------------------------------------------
-Times_in = [9]#Times in hours
+Times_in = [1]#Times in hours
 L = 3# Studied region [micrometer]
 studyL = 1 #Region of intrest, where SRIM starts/ends [micrometer] (HAS TO BE SAME LENGTH AS IN SRIM SIM)
 Temp_fin = 1473.15 #Target emperature [K] 
-fluence = 1e17# Input fluence of implantation [atoms/cm^2]
+fluence = 3.73e16# Input fluence of implantation [atoms/cm^2]
 Integrate = True
 Concentrations = []#Result list
 MaxT_Times = []#Honestly do not remember
@@ -156,7 +160,7 @@ elementdict = {
 
 for T in Times:
     # Parameters------------------------------------------------------
-    element = 'Xe_ZrO2'
+    element = 'Zr_UN'
     Temp = 1473.15#Initial temperature [K]
     #-----------------------------------------------------------------
     
@@ -281,24 +285,26 @@ for T in Times:
 
 # Plot the results
 plt.figure(figsize=(8, 6))
-plt.plot(x,C[0,:], label = 'Initial distribution')
+plt.plot(x,C[0,:], label = 'SRIM simulation')
 i = 0
-for C_ in Concentrations:        
-    plt.plot(x,C_, label = f'Distribution after {Times_in[i]} hours. ')
-    i = i + 1
+# for C_ in Concentrations:        
+#     plt.plot(x,C_, label = f'Distribution after {Times_in[i]} hours. ')
+#     i = i + 1
 
 #Measured plot
 potku_data = Initialize_Profile(potku_path)
 x_pot = potku_data['Samples']['UN-AimedLow']['Zr']['x']
 c_pot = potku_data['Samples']['UN-AimedLow']['Zr']['C']
-x_pot = [2*1e18*x/(n_atoms) for x in x_pot] #Convert to micrometer
+x_pot = [3*1e18*x/(n_atoms) for x in x_pot] #Convert to micrometer
+c_pot,x_pot = rebin(c_pot,x_pot)
+c_pot,x_pot = rebin(c_pot,x_pot)
 pot_width = (x_pot[1]-x_pot[0])*1e-4 #Convert to cm
 pot_Integral = hist_integral(c_pot,pot_width)
-print(f'Fluence put in acc. to SRIM:{I_inital*n_atoms*0.95} at/cm^2')
+print(f'Fluence put in acc. to SRIM:{fluence*0.95} at/cm^2')
 print(f'Fluence put in acc. to measurement: {pot_Integral*n_atoms} at/cm^2')
 print(f'Ratio: {pot_Integral/(I_inital*0.95)}')
 plt.plot(x_pot,c_pot, label = 'ToF-ERDA Measurement')
-plt.title(f'Diffusion of Concentration ')
+plt.title(f'Comparison between SRIM and ToF-ERDA Measurement ')
 plt.xlabel('Position [micrometer]')
 plt.ylabel('Concentration [at. fraction]')
 plt.grid(True)

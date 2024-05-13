@@ -1,16 +1,9 @@
-# Importing necessary library
-import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
 import json
 import os
 import re
-
-
-# Function to clean headers by removing parentheses and contents within
-def clean_header(header):
-    return re.sub(r"\(.*?\)", "", header).strip()
 
 def Initialize_Profile(folder_path):
     if '.potku' in folder_path:                     #Check if potku is in the path name
@@ -57,6 +50,10 @@ def Initialize_Profile(folder_path):
                     dict['Samples'][currentsample][depthprofile] = {'x': columns[0], 'C': columns[3],'NoNormC': columns[4],'N': columns[6]}
     return dict
 
+def hist_integral(n, width):
+    n = [item*width for item in n]
+    return sum(n)#Definition of integrals :))
+
 def  read_columns(root):
     columns =  []
     with open(root,'r') as depthprofiles:
@@ -69,60 +66,31 @@ def  read_columns(root):
                 columns[i].append(float(column_data.strip()))
     return columns
 
-def rebin(data,x_res):
-    data = [(data[1::2][i] + data[::2][i])/2 for i in range(len(data[1::2]))]
-    x_res = x_res[1::2]
-    return data, x_res
-    
-    
-# Load the data
-file_path = '/Users/niwi9751/CONTES/Output_Data/I127_44MeV_pos7_Zr_imp_UN_AIMED_LOW_profiles.txt'
-potku_path = '/Users/niwi9751/potku/requests/20240410-Zr-in-UN.potku'
-data = pd.read_csv(file_path, delimiter='\t', skiprows=3, header=None)
+#Parameters 
+potku_path = '/Users/niwi9751/potku/requests/20240410-Zr-in-UN.potku' #Folder path to potku file (ends with .potku)
+x_start = 0 #Start value of integral (in 10^15 at/cm^2)
+x_end = 1000 # stop value of integral (in 10^15 at/cm^2)
 
-# Extract headers and data
-headers = data.iloc[0].values
-values = data.iloc[1:]
+#-------------------Example usage-------------------------
+data = Initialize_Profile(potku_path)
 
-# Create the dictionary with cleaned headers as keys and convert each column's values to appropriate numeric types
-data_dict = {}
-for index, header in enumerate(headers):
-    clean_header_name = clean_header(header)
-    headers[index] = clean_header_name
-    # Attempt to convert column to float, if fails keep as string (this should not happen if all are numbers)
-    try:
-        data_dict[clean_header_name] = values[index].astype(float).tolist()
-    except ValueError:
-        data_dict[clean_header_name] = values[index].tolist()
+x = data['Samples']['UN-AimedLow']['U']['x']
+C = data['Samples']['UN-AimedLow']['U']['C']
+binwidth = x[1]-x[0]
 
-data_dict.popitem()
-headers = np.delete(headers, len(headers)-1)
-headers = np.delete(headers, 0)
-x_cont = data_dict['x']
-c_cont = data_dict['Zr']
-
-potku_data = Initialize_Profile(potku_path)
-x_pot = potku_data['Samples']['UN-AimedLow']['Zr']['x']
-c_pot = potku_data['Samples']['UN-AimedLow']['Zr']['C']
-
-plt.step(x_pot,c_pot,label = 'Potku')
-plt.step(x_cont,c_cont,label = 'Contes')
-plt.legend()
-plt.xlabel('Depth [10^15 at/cm^2]')
-plt.ylabel('Concentration [%]')
-plt.grid()
-
+plt.step(x,C)
+plt.xlabel('depth [10$^{15}$ atoms/cm$^2$]')
+plt.ylabel('atomic fraction')
+plt.grid(linestyle='--')
 plt.show()
-plt.figure() #Plot all contes profiles
-for header in headers:
-    C, x = data_dict[header], data_dict['x']
-    C, x = rebin(C,x)
-    plt.step(x,C,label = header)
-    plt.xlim([0,   2500])
-    plt.ylim([0.0, 1.2])
-    plt.yscale('log')
-    plt.xlabel('depth [10$^{15}$ atoms/cm$^2$]')
-    plt.ylabel('atomic fraction')
-    plt.grid(linestyle='--')
-plt.legend()    
-plt.show()
+
+diffarray1 = [abs(x - x_start) for x in x]
+diffarray1 = np.array(diffarray1)
+diffarray2 = [abs(x - x_end) for x in x]
+diffarray2 = np.array(diffarray2)
+start_index = diffarray1.argmin()
+stop_index = diffarray2.argmin()
+
+integral = hist_integral(C[start_index:stop_index],binwidth)
+
+print(f'Integral between {x[start_index]} and {x[stop_index]} is: {integral}')
