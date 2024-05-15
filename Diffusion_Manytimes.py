@@ -119,7 +119,8 @@ Na = 6.022e23 # avogadros number [atoms/mole]
 root = '/Users/niwi9751/Dropbox/Nils_files/Srim_Results/Zr330keV_in_UN_range.txt' 
 # root = '/Users/niwi9751/Dropbox/Nils_files/Srim_Results/Zr330keV_in_UN_Range.txt'
 furnace_root = '/Users/niwi9751/Dropbox/Nils_files/furnanceDataTest.txt'
-potku_path = '/Users/niwi9751/potku/requests/20240410-Zr-in-UN.potku'
+# potku_path = '/Users/niwi9751/potku/requests/20240410-Zr-in-UN.potku'
+potku_path = '/Users/niwi9751/potku/requests/20240506-UNUO2Samples.potku'
 # potku_path = '/Users/niwi9751/potku/requests/20240304-KrXe-In-ZrO2.potku'
 #---------------------------------------------------------------------------------
 
@@ -128,7 +129,7 @@ Times_in = [1]#Times in hours
 L = 3# Studied region [micrometer]
 studyL = 1 #Region of intrest, where SRIM starts/ends [micrometer] (HAS TO BE SAME LENGTH AS IN SRIM SIM)
 Temp_fin = 1473.15 #Target emperature [K] 
-fluence = 3.73e16# Input fluence of implantation [atoms/cm^2]
+fluence = 9.7e15# Input fluence of implantation [atoms/cm^2]
 Integrate = True
 Concentrations = []#Result list
 MaxT_Times = []#Honestly do not remember
@@ -160,7 +161,7 @@ elementdict = {
 
 for T in Times:
     # Parameters------------------------------------------------------
-    element = 'Zr_UN'
+    element = 'Kr_UN'
     Temp = 1473.15#Initial temperature [K]
     #-----------------------------------------------------------------
     
@@ -293,16 +294,17 @@ i = 0
 
 #Measured plot
 potku_data = Initialize_Profile(potku_path)
-x_pot = potku_data['Samples']['UN-AimedLow']['Zr']['x']
-c_pot = potku_data['Samples']['UN-AimedLow']['Zr']['C']
+x_pot = potku_data['Samples']['UN-1-MIT']['Zr']['x']
+c_pot = potku_data['Samples']['UN-1-MIT']['Zr']['C']
 x_pot = [3*1e18*x/(n_atoms) for x in x_pot] #Convert to micrometer
+c_pot,x_pot = rebin(c_pot,x_pot)
 c_pot,x_pot = rebin(c_pot,x_pot)
 c_pot,x_pot = rebin(c_pot,x_pot)
 pot_width = (x_pot[1]-x_pot[0])*1e-4 #Convert to cm
 pot_Integral = hist_integral(c_pot,pot_width)
 print(f'Fluence put in acc. to SRIM:{fluence*0.95} at/cm^2')
 print(f'Fluence put in acc. to measurement: {pot_Integral*n_atoms} at/cm^2')
-print(f'Ratio: {pot_Integral/(I_inital*0.95)}')
+print(f'Ratio: {pot_Integral*n_atoms/(fluence*0.95)}')
 plt.plot(x_pot,c_pot, label = 'ToF-ERDA Measurement')
 plt.title(f'Comparison between SRIM and ToF-ERDA Measurement ')
 plt.xlabel('Position [micrometer]')
