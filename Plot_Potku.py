@@ -6,10 +6,10 @@ import json
 import os
 import re
 Na = 6.022e23
-# rho = 6.025
-# Ma = 123.218
-rho = 14.05
-Ma = 252.036
+rho = 6.025
+Ma = 123.218
+# rho = 14.05
+# Ma = 252.036
 n_atoms = rho*Na/Ma
 
 def Initialize_Profile(folder_path):
@@ -98,65 +98,63 @@ def plot_profiles(data):
             plt.legend(loc = 'upper right')
         i = i+1
 
-# color_dict = {'Zr':'r','O':'b', 'Fe':'gray', 'Xe': 'c', 'Kr':'g', 'Hf': 'y', 'Al':'m', 'C':'k'}
-color_dict = {'U':'r','N':'deepskyblue', 'O': 'b','Zr':'gray', 'Xe': 'c', 'Kr':'g', 'Hf': 'y', 'Al':'m', 'C':'k'}
+color_dict = {'Zr':'r','O':'b', 'Fe':'gray', 'Xe': 'c', 'Kr':'g', 'Hf': 'y', 'Al':'m', 'C':'k'}
+# color_dict = {'U':'r','N':'deepskyblue', 'O': 'b','Zr':'gray', 'Xe': 'c', 'Kr':'g', 'Hf': 'y', 'Al':'m', 'C':'k'}
 
 # potku_path = '/Users/niwi9751/potku/requests/20240410-Zr-in-UN.potku'
-potku_path = '/Users/niwi9751/potku/requests/20240506-UNUO2Samples.potku'
+# potku_path = '/Users/niwi9751/potku/requests/20240506-UNUO2Samples.potku'
 # potku_path = '/Users/niwi9751/potku/requests/20240304-KrXe-In-ZrO2.potku'
+potku_path = '/Users/niwi9751/potku/requests/20230205_KrXe_in_ZrO2.potku'
 
 
 
 data = Initialize_Profile(potku_path)
 
-samples = ['UN-AimedLow','UN-AimedHigh','UN-1-MIT','UN-02','UN-2-MIT','UN-05']
-elements = ['Zr','Kr']
-element = elements[0]
+# samples = ['UN-AimedLow','UN-AimedHigh','UN-1-MIT','UN-02','UN-2-MIT','UN-05']
+samples = ['ZrO2','Xe-imp','Kr-imp']
+elements = ['Zr','Kr','Xe']
+element = elements[1]
 imp = samples[2]
-ref = samples[3]
+ref = samples[0]
 x = data['Samples'][imp][element]['x']
-x = [2*1e21*x/(n_atoms) for x in x]
+x = [3*1e21*x/(n_atoms) for x in x]
 C1 = data['Samples'][imp][element]['C']
 C1,x = rebin(C1,x)
 C1,x = rebin(C1,x)
-C2 = data['Samples'][imp]['U']['C']
+C2 = data['Samples'][imp]['Zr']['C']
 C2,x2 =rebin(C2,x)
 C2,x2 =rebin(C2,x)
-C3 = data['Samples'][ref]['U']['C']
+C3 = data['Samples'][ref]['Zr']['C']
 C3,x3 = rebin(C3,x)
 C3,x3 = rebin(C3,x)
-C4 = data['Samples'][ref]['N']['C']
+C4 = data['Samples'][ref]['O']['C']
 C4,x4 =rebin(C4,x)
 C4,x4 =rebin(C4,x)
-C5 = data['Samples'][imp]['N']['C']
+C5 = data['Samples'][imp]['O']['C']
 C5,x4 =rebin(C5,x)
 C5,x4 =rebin(C5,x)
-C6 = data['Samples'][ref][element]['C']
-C6,x4 =rebin(C6,x)
-C6,x4 =rebin(C6,x)
+# C6 = data['Samples'][ref][element]['C']
+# C6,x4 =rebin(C6,x)
+# C6,x4 =rebin(C6,x)
 
 plt.plot(x,C1,label = f'{element}-Imp')
-plt.plot(x,C6, label = f'{element}-Ref')
-plt.plot(x,C2, label = 'U-Imp')
-plt.plot(x,C3, label = 'U-Ref')
-plt.plot(x,C4, label = 'N-Imp')
-plt.plot(x,C5, label = 'N-Ref')
+# plt.plot(x,C6, label = f'{element}-Ref')
+plt.plot(x,C2, label = 'Zr-Imp')
+plt.plot(x,C4, label = 'O-Imp')
+plt.plot(x,C3, label = 'Zr-Ref')
+plt.plot(x,C5, label = 'O-Ref')
 plt.yscale('log')
 plt.ylim(0.001,1)
-plt.xlim(0,400)
+plt.xlim(0,160)
 plt.xlabel('depth [nanometer]')
 plt.ylabel('atomic %')
 plt.grid(linestyle='--')
 plt.legend(loc = 'lower right')
+plt.title('U and N concentration in implanted vs non implanted matrix')
+plt.title('Zr and O concentration in implanted vs non implanted matrix')
 
-Cdiff1 = [c1 - c2 for c1,c2 in zip(C3,C2)]
-Cdiff2 = [c1 - c2 for c1,c2 in zip(C5,C4)]
-Cdiff3 = [c1 - c2 for c1,c2 in zip(C1,C6)]
-Cdiff = [c1+c2 for c1,c2 in zip(Cdiff1,Cdiff2)]
+
 plt.figure()
-# plt.plot(x,Cdiff1)
 
-plt.plot(x,Cdiff3)
-plt.plot(x,Cdiff1)
 # plot_profiles(data)
 plt.show()

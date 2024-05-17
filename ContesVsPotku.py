@@ -98,24 +98,25 @@ for index, header in enumerate(headers):
 data_dict.popitem()
 headers = np.delete(headers, len(headers)-1)
 headers = np.delete(headers, 0)
-x_cont = data_dict['x']
-c_cont = data_dict['Zr']
+# x_cont = data_dict['x']
+# c_cont = data_dict['Zr']
 
-potku_data = Initialize_Profile(potku_path)
-x_pot = potku_data['Samples']['UN-AimedLow']['Zr']['x']
-c_pot = potku_data['Samples']['UN-AimedLow']['Zr']['C']
+# potku_data = Initialize_Profile(potku_path)
+# x_pot = potku_data['Samples']['UN-AimedLow']['Zr']['x']
+# c_pot = potku_data['Samples']['UN-AimedLow']['Zr']['C']
 
-plt.step(x_pot,c_pot,label = 'Potku')
-plt.step(x_cont,c_cont,label = 'Contes')
-plt.legend()
-plt.xlabel('Depth [10^15 at/cm^2]')
-plt.ylabel('Concentration [%]')
-plt.grid()
+# plt.step(x_pot,c_pot,label = 'Potku')
+# plt.step(x_cont,c_cont,label = 'Contes')
+# plt.legend()
+# plt.xlabel('Depth [10^15 at/cm^2]')
+# plt.ylabel('Concentration [%]')
+# plt.grid()
 
 plt.show()
 plt.figure() #Plot all contes profiles
 for header in headers:
     C, x = data_dict[header], data_dict['x']
+    C, x = rebin(C,x)
     C, x = rebin(C,x)
     plt.step(x,C,label = header)
     plt.xlim([0,   2500])

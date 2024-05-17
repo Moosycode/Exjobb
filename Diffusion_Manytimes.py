@@ -116,7 +116,7 @@ Na = 6.022e23 # avogadros number [atoms/mole]
 #-------------------------------------
 
 #GENERAL FILEPATHS-----------------------------------------------------------------
-root = '/Users/niwi9751/Dropbox/Nils_files/Srim_Results/Zr330keV_in_UN_range.txt' 
+root = '/Users/niwi9751/Dropbox/Nils_files/Srim_Results/Kr300keV_in_UN_range.txt' 
 # root = '/Users/niwi9751/Dropbox/Nils_files/Srim_Results/Zr330keV_in_UN_Range.txt'
 furnace_root = '/Users/niwi9751/Dropbox/Nils_files/furnanceDataTest.txt'
 # potku_path = '/Users/niwi9751/potku/requests/20240410-Zr-in-UN.potku'
@@ -129,7 +129,7 @@ Times_in = [1]#Times in hours
 L = 3# Studied region [micrometer]
 studyL = 1 #Region of intrest, where SRIM starts/ends [micrometer] (HAS TO BE SAME LENGTH AS IN SRIM SIM)
 Temp_fin = 1473.15 #Target emperature [K] 
-fluence = 9.7e15# Input fluence of implantation [atoms/cm^2]
+fluence = 1e17# Input fluence of implantation [atoms/cm^2]
 Integrate = True
 Concentrations = []#Result list
 MaxT_Times = []#Honestly do not remember
@@ -156,12 +156,13 @@ elementdict = {
     'Xe_ZrO2':{'D0':1.83e-6,'Ea':2.91, 'rho':6.025, 'Ma': 123.218},
     'Zr_UN':{'D0':6.9e-7,'Ea':2.7, 'rho':14.05, 'Ma': 252.036}, 
     'Kr_UN':{'D0':2e-4,'Ea':4.66, 'rho':14.05, 'Ma': 252.036},
-    'Xe_UN':{'D0':2e-4,'Ea':4.71, 'rho':14.05, 'Ma': 252.036}
+    'Xe_UN':{'D0':2e-4,'Ea':4.71, 'rho':14.05, 'Ma': 252.036},
+    'Zr_UO2':{'D0':2e-4,'Ea':4.71, 'rho':10.6, 'Ma': 270.02},
 }
 
 for T in Times:
     # Parameters------------------------------------------------------
-    element = 'Kr_UN'
+    element = 'Zr_UN'
     Temp = 1473.15#Initial temperature [K]
     #-----------------------------------------------------------------
     
@@ -294,15 +295,18 @@ i = 0
 
 #Measured plot
 potku_data = Initialize_Profile(potku_path)
-x_pot = potku_data['Samples']['UN-1-MIT']['Zr']['x']
-c_pot = potku_data['Samples']['UN-1-MIT']['Zr']['C']
-x_pot = [3*1e18*x/(n_atoms) for x in x_pot] #Convert to micrometer
+x_pot = potku_data['Samples']['UN-05']['Kr']['x']
+c_pot = potku_data['Samples']['UN-05']['Kr']['C']
+c_pot2 = potku_data['Samples']['UN-05']['Ru']['C']
+c_pot = [c1 - c2 for c1,c2 in zip(c_pot,c_pot2)]
+c_pot = [0 if c < 0 else c for c in c_pot]
+x_pot = [2*1e18*x/(n_atoms) for x in x_pot] #Convert to micrometer
 c_pot,x_pot = rebin(c_pot,x_pot)
 c_pot,x_pot = rebin(c_pot,x_pot)
 c_pot,x_pot = rebin(c_pot,x_pot)
 pot_width = (x_pot[1]-x_pot[0])*1e-4 #Convert to cm
 pot_Integral = hist_integral(c_pot,pot_width)
-print(f'Fluence put in acc. to SRIM:{fluence*0.95} at/cm^2')
+print(f'Fluence put in acc. to SRIM:{fluence*0.95} at/cm^2') #0.965 for Zr in UN
 print(f'Fluence put in acc. to measurement: {pot_Integral*n_atoms} at/cm^2')
 print(f'Ratio: {pot_Integral*n_atoms/(fluence*0.95)}')
 plt.plot(x_pot,c_pot, label = 'ToF-ERDA Measurement')
