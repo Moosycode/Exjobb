@@ -104,57 +104,56 @@ color_dict = {'Zr':'r','O':'b', 'Fe':'gray', 'Xe': 'c', 'Kr':'g', 'Hf': 'y', 'Al
 # potku_path = '/Users/niwi9751/potku/requests/20240410-Zr-in-UN.potku'
 # potku_path = '/Users/niwi9751/potku/requests/20240506-UNUO2Samples.potku'
 # potku_path = '/Users/niwi9751/potku/requests/20240304-KrXe-In-ZrO2.potku'
-potku_path = '/Users/niwi9751/potku/requests/20230205_KrXe_in_ZrO2.potku'
-
+# potku_path = '/Users/niwi9751/potku/requests/20230205_KrXe_in_ZrO2.potku'
+potku_path = '/Users/niwi9751/potku/requests/20240521-PostAnnealZrO2.potku'
 
 
 data = Initialize_Profile(potku_path)
 
 # samples = ['UN-AimedLow','UN-AimedHigh','UN-1-MIT','UN-02','UN-2-MIT','UN-05']
-samples = ['ZrO2','Xe-imp','Kr-imp']
-elements = ['Zr','Kr','Xe']
-element = elements[1]
-imp = samples[2]
-ref = samples[0]
-x = data['Samples'][imp][element]['x']
-x = [3*1e21*x/(n_atoms) for x in x]
-C1 = data['Samples'][imp][element]['C']
-C1,x = rebin(C1,x)
-C1,x = rebin(C1,x)
-C2 = data['Samples'][imp]['Zr']['C']
-C2,x2 =rebin(C2,x)
-C2,x2 =rebin(C2,x)
-C3 = data['Samples'][ref]['Zr']['C']
-C3,x3 = rebin(C3,x)
-C3,x3 = rebin(C3,x)
-C4 = data['Samples'][ref]['O']['C']
-C4,x4 =rebin(C4,x)
-C4,x4 =rebin(C4,x)
-C5 = data['Samples'][imp]['O']['C']
-C5,x4 =rebin(C5,x)
-C5,x4 =rebin(C5,x)
+# samples = ['ZrO2','Xe-imp','Kr-imp']
+# elements = ['Zr','Kr','Xe']
+# element = elements[1]
+# imp = samples[2]
+# ref = samples[0]
+# x = data['Samples'][imp][element]['x']
+# x = [3*1e21*x/(n_atoms) for x in x]
+# C1 = data['Samples'][imp][element]['C']
+# C1,x = rebin(C1,x)
+# C1,x = rebin(C1,x)
+# C2 = data['Samples'][imp]['Zr']['C']
+# C2,x2 =rebin(C2,x)
+# C2,x2 =rebin(C2,x)
+# C3 = data['Samples'][ref]['Zr']['C']
+# C3,x3 = rebin(C3,x)
+# C3,x3 = rebin(C3,x)
+# C4 = data['Samples'][ref]['O']['C']
+# C4,x4 =rebin(C4,x)
+# C4,x4 =rebin(C4,x)
+# C5 = data['Samples'][imp]['O']['C']
+# C5,x4 =rebin(C5,x)
+# C5,x4 =rebin(C5,x)
 # C6 = data['Samples'][ref][element]['C']
 # C6,x4 =rebin(C6,x)
 # C6,x4 =rebin(C6,x)
 
-plt.plot(x,C1,label = f'{element}-Imp')
-# plt.plot(x,C6, label = f'{element}-Ref')
-plt.plot(x,C2, label = 'Zr-Imp')
-plt.plot(x,C4, label = 'O-Imp')
-plt.plot(x,C3, label = 'Zr-Ref')
-plt.plot(x,C5, label = 'O-Ref')
-plt.yscale('log')
-plt.ylim(0.001,1)
-plt.xlim(0,160)
-plt.xlabel('depth [nanometer]')
-plt.ylabel('atomic %')
-plt.grid(linestyle='--')
-plt.legend(loc = 'lower right')
-plt.title('U and N concentration in implanted vs non implanted matrix')
-plt.title('Zr and O concentration in implanted vs non implanted matrix')
+# plt.plot(x,C1,label = f'{element}-Imp')
+# # plt.plot(x,C6, label = f'{element}-Ref')
+# plt.plot(x,C2, label = 'Zr-Imp')
+# plt.plot(x,C4, label = 'O-Imp')
+# plt.plot(x,C3, label = 'Zr-Ref')
+# plt.plot(x,C5, label = 'O-Ref')
+# plt.yscale('log')
+# plt.ylim(0.001,1)
+# plt.xlim(0,160)
+# plt.xlabel('depth [nanometer]')
+# plt.ylabel('atomic %')
+# plt.grid(linestyle='--')
+# plt.legend(loc = 'lower right')
+# plt.title('U and N concentration in implanted vs non implanted matrix')
+# plt.title('Zr and O concentration in implanted vs non implanted matrix')
 
 
-plt.figure()
 
-# plot_profiles(data)
+plot_profiles(data)
 plt.show()
