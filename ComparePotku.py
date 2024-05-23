@@ -76,6 +76,7 @@ def rebin(data,x_res):
 
 def plot_profiles(data):
     i = 0
+    
     for sample in data['Samples']:
         plt.figure(i)
         plt.title(sample)
@@ -96,68 +97,46 @@ def plot_profiles(data):
             plt.grid(linestyle='--')
             plt.legend(loc = 'upper right')
         i = i+1
-        
-def NormalizeData(data):
-    for sample in data['Samples']:
-        for element in data['Samples'][sample]:
-            pass
 
-color_dict = {'Zr':'r','O':'b', 'Fe':'gray', 'Xe': 'c', 'Kr':'g', 'Hf': 'y', 'Al':'m', 'C':'k', 'Cr': 'silver'}
-# color_dict = {'U':'r','N':'deepskyblue', 'O': 'b','Zr':'gray', 'Xe': 'c', 'Kr':'g', 'Hf': 'y', 'Al':'m', 'C':'k'}
+
+Na = 6.022e23
+rho = 6.025
+Ma = 123.218
+# rho = 14.05
+# Ma = 252.036
+n_atoms = rho*Na/Ma
 
 # potku_path = '/Users/niwi9751/potku/requests/20240410-Zr-in-UN.potku'
-potku_path = '/Users/niwi9751/potku/requests/20240506-UNUO2Samples.potku'
-# potku_path = '/Users/niwi9751/potku/requests/20240304-KrXe-In-ZrO2.potku'
+# potku_path = '/Users/niwi9751/potku/requests/20240506-UNUO2Samples.potku'
+potku_path1 = '/Users/niwi9751/potku/requests/20240304-KrXe-In-ZrO2.potku'
 # potku_path = '/Users/niwi9751/potku/requests/20230205_KrXe_in_ZrO2.potku'
-# potku_path = '/Users/niwi9751/potku/requests/20240521-PostAnnealZrO2.potku'
-# potku_path = '/Users/niwi9751/potku/requests/20240319-Fe-In-ZrO2.potku'
+potku_path2 = '/Users/niwi9751/potku/requests/20240521-PostAnnealZrO2.potku'
+# potku_path2 = '/Users/niwi9751/potku/requests/20240319-Fe-In-ZrO2.potku'
 
-data = Initialize_Profile(potku_path)
-
-samples = ['UN-AimedLow','UN-AimedHigh','UN-1-MIT','UN-02','UN-2-MIT','UN-05']
-# samples = ['ZrO2','Xe-imp','Kr-imp']
-elements = ['Zr','Kr','Xe']
+data = Initialize_Profile(potku_path1)
+data2 = Initialize_Profile(potku_path2)
+elements = ['Xe', 'Kr', 'Fe']
 element = elements[0]
-imp = samples[2]
-ref = samples[3]
-x = data['Samples'][imp][element]['x']
-x = [3*1e21*x/(n_atoms) for x in x]
-C1 = data['Samples'][imp][element]['C']
-C1,x = rebin(C1,x)
-C1,x = rebin(C1,x)
-C2 = data['Samples'][imp]['Zr']['C']
-C2,x2 =rebin(C2,x)
-C2,x2 =rebin(C2,x)
-C3 = data['Samples'][ref]['Zr']['C']
-C3,x3 = rebin(C3,x)
-C3,x3 = rebin(C3,x)
-C4 = data['Samples'][ref]['O']['C']
-C4,x4 =rebin(C4,x)
-C4,x4 =rebin(C4,x)
-C5 = data['Samples'][imp]['O']['C']
-C5,x4 =rebin(C5,x)
-C5,x4 =rebin(C5,x)
-C6 = data['Samples'][ref][element]['C']
-C6,x4 =rebin(C6,x)
-C6,x4 =rebin(C6,x)
 
-plt.plot(x,C1,label = f'{element}-Imp')
-# plt.plot(x,C6, label = f'{element}-Ref')
-plt.plot(x,C2, label = 'Zr-Imp')
-plt.plot(x,C4, label = 'O-Imp')
-plt.plot(x,C3, label = 'Zr-Ref')
-plt.plot(x,C5, label = 'O-Ref')
-plt.yscale('log')
-plt.ylim(0.001,1)
-plt.xlim(0,160)
+x1 = data['Samples'][f'XeKr-Imp'][f'{element}']['x']
+x1 = [3*1e21*x/(n_atoms) for x in x1]
+c1 = data['Samples'][f'XeKr-Imp'][f'{element}']['C']
+c1,x1 = rebin(c1,x1)
+c1,x1 = rebin(c1,x1)
+c1 = [c*100 for c in c1]
+
+x2 = data2['Samples'][f'XeKr-Imp'][f'{element}']['x']
+x2 = [3*1e21*x/(n_atoms) for x in x2]
+c2 = data2['Samples'][f'XeKr-Imp'][f'{element}']['C']
+c2,x2 = rebin(c2,x2)
+c2,x2 = rebin(c2,x2)
+c2 = [c*100 for c in c2]
+
 plt.xlabel('depth [nanometer]')
 plt.ylabel('atomic %')
 plt.grid(linestyle='--')
-plt.legend(loc = 'lower right')
-plt.title('U and N concentration in implanted vs non implanted matrix')
-plt.title('Zr and O concentration in implanted vs non implanted matrix')
-
-
-
-# plot_profiles(data)
-# plt.show()
+plt.plot(x1,c1, label = f'Implanted {element}, pre annealing')
+plt.plot(x2,c2, label = f'Implanted {element}, post annealing')
+plt.title('Implanted Xenon, before and after annealing')
+plt.legend()
+plt.show()
