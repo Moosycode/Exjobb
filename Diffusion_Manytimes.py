@@ -126,7 +126,7 @@ potku_path = '/Users/niwi9751/potku/requests/20240521-PostAnnealZrO2.potku'
 #---------------------------------------------------------------------------------
 
 #Global Parameters-----------------------------------------------------------------------
-Times_in = [5,10,25,50]#Times in hours
+Times_in = [5,10,25,50,100,200]#Times in hours
 L = 3# Studied region [micrometer]
 studyL = 1 #Region of intrest, where SRIM starts/ends [micrometer] (HAS TO BE SAME LENGTH AS IN SRIM SIM)
 Temp_fin = 1673.15 #Target emperature [K] 
@@ -164,7 +164,7 @@ elementdict = {
 for T in Times:
     # Parameters------------------------------------------------------
     element = 'Zr_UN'
-    Temp = 1473.15#Initial temperature [K]
+    Temp = 1673.15#Initial temperature [K]
     #-----------------------------------------------------------------
     
     #Constants--------------------------------------------------------
@@ -195,6 +195,7 @@ for T in Times:
 
     # Create spatial grid
     x = np.linspace(0, L, L*Nx)
+    print(x)
 
     # Initialize solution matrix
     C = np.zeros((Nt, Nx))
@@ -295,26 +296,26 @@ for C_ in Concentrations:
     plt.plot(x,C_, label = f'Distribution after {Times_in[i]} hours. ')
     i = i + 1
 
-#Measured plot
-potku_data = Initialize_Profile(potku_path)
-x_pot = potku_data['Samples']['Xe-Imp']['Xe']['x']
-c_pot = potku_data['Samples']['Xe-Imp']['Xe']['C']
+# #Measured plot
+# potku_data = Initialize_Profile(potku_path)
+# x_pot = potku_data['Samples']['Xe-Imp']['Xe']['x']
+# c_pot = potku_data['Samples']['Xe-Imp']['Xe']['C']
     
-# c_pot2 = potku_data['Samples']['UN-05']['Ru']['C']
-# c_pot = [c1 - c2 for c1,c2 in zip(c_pot,c_pot2)]
-# c_pot = [0 if c < 0 else c for c in c_pot]
-x_pot = [3*1e18*x/(n_atoms) for x in x_pot] #Convert to micrometer
-c_pot,x_pot = rebin(c_pot,x_pot)
-c_pot,x_pot = rebin(c_pot,x_pot)
-c_pot,x_pot = rebin(c_pot,x_pot)
-pot_width = (x_pot[1]-x_pot[0])*1e-4 #Convert to cm
-pot_Integral = hist_integral(c_pot,pot_width)
-print(f'Fluence put in acc. to SRIM:{fluence*0.95} at/cm^2') #0.965 for Zr in UN
-print(f'Fluence put in acc. to measurement: {pot_Integral*n_atoms} at/cm^2')
+# # c_pot2 = potku_data['Samples']['UN-05']['Ru']['C']
+# # c_pot = [c1 - c2 for c1,c2 in zip(c_pot,c_pot2)]
+# # c_pot = [0 if c < 0 else c for c in c_pot]
+# x_pot = [3*1e18*x/(n_atoms) for x in x_pot] #Convert to micrometer
+# c_pot,x_pot = rebin(c_pot,x_pot)
+# c_pot,x_pot = rebin(c_pot,x_pot)
+# c_pot,x_pot = rebin(c_pot,x_pot)
+# pot_width = (x_pot[1]-x_pot[0])*1e-4 #Convert to cm
+# pot_Integral = hist_integral(c_pot,pot_width)
+# print(f'Fluence put in acc. to SRIM:{fluence*0.95} at/cm^2') #0.965 for Zr in UN
+# print(f'Fluence put in acc. to measurement: {pot_Integral*n_atoms} at/cm^2')
 
-print(f'Ratio: {pot_Integral*n_atoms/(fluence*0.95)}')
-plt.plot(x_pot,c_pot, label = 'ToF-ERDA Measurement')
-plt.title(f'Comparison between SRIM and ToF-ERDA Measurement ')
+# print(f'Ratio: {pot_Integral*n_atoms/(fluence*0.95)}')
+# plt.plot(x_pot,c_pot, label = 'ToF-ERDA Measurement')
+plt.title(f'Distribution of concentration T = {Temp-273.15}C')
 plt.xlabel('Position [micrometer]')
 plt.ylabel('Concentration [at. fraction]')
 plt.grid(True)

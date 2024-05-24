@@ -6,10 +6,10 @@ import json
 import os
 import re
 Na = 6.022e23
-rho = 6.025
-Ma = 123.218
-# rho = 14.05
-# Ma = 252.036
+# rho = 6.025
+# Ma = 123.218
+rho = 14.05
+Ma = 252.036
 n_atoms = rho*Na/Ma
 
 def Initialize_Profile(folder_path):
@@ -97,6 +97,30 @@ def plot_profiles(data):
             plt.legend(loc = 'upper right')
         i = i+1
 
+def plot_profiles_noNorm(data):
+    i = 0
+    for sample in data['Samples']:
+        plt.figure(i)
+        plt.title(sample)
+        for depth in data['Samples'][sample]:
+            x = data['Samples'][sample][depth]['x']
+            x = [3*1e21*x/(n_atoms) for x in x]
+            C = data['Samples'][sample][depth]['NoNormC']
+            C,x = rebin(C,x)
+            # C,x = rebin(C,x)
+            C,x = rebin(C,x)
+            C = [c*100 for c in C]
+            # plt.yscale('log')
+            # plt.ylim(0,1)
+            plt.xlim([0,400])
+            plt.plot(x,C, label = depth, color = color_dict[depth])
+            plt.xlabel('depth [nanometer]')
+            plt.ylabel('atomic %')
+            plt.grid(linestyle='--')
+            plt.legend(loc = 'upper right')
+        i = i+1
+
+
 def normalize_potku(data):
     for sample in data['Samples']:
         summ = [0 for i in range(data['Settings']['Num_step']+10)]
@@ -121,9 +145,8 @@ def normalize_potku_2(data):
             data['Samples'][sample][element]['NoNormC'] = C
     return data
 
-
 # color_dict = {'Zr':'r','O':'b', 'Fe':'gray', 'Xe': 'c', 'Kr':'g', 'Hf': 'y', 'Al':'m', 'C':'k', 'Cr': 'silver'}
-color_dict = {'U':'r','N':'deepskyblue', 'O': 'b','Zr':'gray', 'Xe': 'c', 'Kr':'g', 'Hf': 'y', 'Al':'m', 'C':'k', 'Ru': 'y'}
+color_dict = {'U':'r','N':'deepskyblue', 'O': 'b','Zr':'gray', 'Xe': 'c', 'Kr':'g', 'Hf': 'y', 'Al':'m', 'C':'k', 'Br': 'y','Ru':'y'}
 
 # potku_path = '/Users/niwi9751/potku/requests/20240410-Zr-in-UN.potku'
 potku_path = '/Users/niwi9751/potku/requests/20240506-UNUO2Samples.potku'
@@ -132,31 +155,38 @@ potku_path = '/Users/niwi9751/potku/requests/20240506-UNUO2Samples.potku'
 # potku_path = '/Users/niwi9751/potku/requests/20240521-PostAnnealZrO2.potku'
 # potku_path = '/Users/niwi9751/potku/requests/20240319-Fe-In-ZrO2.potku'
 
+
+root = '/Users/niwi9751/Dropbox/Nils_files/Srim_Results/Zr330keV_in_UN_Range.txt'
+fluence = 9.7e15
+x_srim = np.linspace(0,1,100)
+# Read data from SRIM
+depth,height = np.loadtxt(root,usecols=(0,1),unpack=True,encoding='cp437') #load height and width of bins
+height = height*fluence #convert into atoms/cm^3
+binwidth = (depth[1]-depth[0])*1e-8 #define binwidth (in cm)
+conc = height/(height + n_atoms) #Calculate concentration from number density of SRIM
+plt.plot(x_srim,conc)
+    
+
 data = Initialize_Profile(potku_path)
-data = normalize_potku(data)
-# plot_profiles(data)
-# plt.show()
-samples = ['UN-AimedLow','UN-AimedHigh','UN-1-MIT','UN-02','UN-2-MIT','UN-05']
+samples = ['UN-05', 'UN-1-MIT']
+elements = ['Kr', 'Zr']
+sample = samples[1]
+element = elements[1]
+x = data['Samples'][f'{sample}'][f'{element}']['x']
+x = [3*1e18*x/(n_atoms) for x in x] #Convert to micrometer
+C1 = data['Samples'][f'{sample}'][f'{element}']['NoNormC']
+C2 = data['Samples'][f'{sample}']['Kr']['NoNormC']
+C = [c1 - c2 for c1,c2 in zip(C1,C2)]
+data['Samples'][f'{sample}'][f'{element}']['NoNormC'] = C
+data = normalize_potku_2(data)
+C = data['Samples'][f'{sample}'][f'{element}']['NoNormC']
+C, x = rebin(C,x)
+C, x = rebin(C,x)
+C, x = rebin(C,x)
 
-x = data['Samples']['UN-1-MIT']['U']['x']
-C1 = data['Samples']['UN-1-MIT']['U']['C']
-C1,x = rebin(C1,x)
-C1,x = rebin(C1,x)
-C2 = data['Samples']['UN-1-MIT']['N']['C']
-C2,x2 = rebin(C2,x)
-C2,x2 = rebin(C2,x)
-C_rat1 = [c1/c2 if c2 != 0 else 0 for c1,c2 in zip(C1,C2)]
-C3 = data['Samples']['UN-02']['U']['C']
-C3,x3 = rebin(C3,x)
-C3,x3 = rebin(C3,x)
-C4 = data['Samples']['UN-02']['N']['C']
-C4,x4 = rebin(C4,x)
-C4,x4 = rebin(C4,x)
-C_rat2 = [c1/c2 if c2 != 0 else 0 for c1,c2 in zip(C3,C4)]
-
-plt.plot(x,C1,label ='Implanted')
-plt.plot(x,C2,label ='Implanted')
-plt.plot(x,C3,label ='UnImplanted')
-plt.plot(x,C4,label ='UNImplanted')
+plt.plot(x,C, label = 'asfasdf')
+plt.xlabel('Position [micrometer]')
+plt.ylabel('Concentration [at. fraction]')
+plt.grid(True)
 plt.legend()
 plt.show()
