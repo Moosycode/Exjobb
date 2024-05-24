@@ -300,10 +300,6 @@ for C_ in Concentrations:
 # potku_data = Initialize_Profile(potku_path)
 # x_pot = potku_data['Samples']['Xe-Imp']['Xe']['x']
 # c_pot = potku_data['Samples']['Xe-Imp']['Xe']['C']
-    
-# # c_pot2 = potku_data['Samples']['UN-05']['Ru']['C']
-# # c_pot = [c1 - c2 for c1,c2 in zip(c_pot,c_pot2)]
-# # c_pot = [0 if c < 0 else c for c in c_pot]
 # x_pot = [3*1e18*x/(n_atoms) for x in x_pot] #Convert to micrometer
 # c_pot,x_pot = rebin(c_pot,x_pot)
 # c_pot,x_pot = rebin(c_pot,x_pot)

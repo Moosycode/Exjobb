@@ -120,6 +120,9 @@ def plot_profiles_noNorm(data):
             plt.legend(loc = 'upper right')
         i = i+1
 
+def hist_integral(n, width):
+    n = [item*width for item in n]
+    return sum(n)#Definition of integrals :))
 
 def normalize_potku(data):
     for sample in data['Samples']:
@@ -183,6 +186,11 @@ C = data['Samples'][f'{sample}'][f'{element}']['NoNormC']
 C, x = rebin(C,x)
 C, x = rebin(C,x)
 C, x = rebin(C,x)
+
+pot_width = (x[1]-x[0])*1e-4 #Convert to cm
+pot_Integral = hist_integral(C,pot_width)
+print(f'Fluence put in acc. to SRIM:{fluence*0.965} at/cm^2') #0.965 for Zr in UN
+print(f'Fluence put in acc. to measurement: {pot_Integral*n_atoms} at/cm^2')
 
 plt.plot(x,C, label = 'asfasdf')
 plt.xlabel('Position [micrometer]')
