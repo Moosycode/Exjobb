@@ -6,10 +6,10 @@ import json
 import os
 import re
 Na = 6.022e23
-rho = 6.025
-Ma = 123.218
-# rho = 14.05
-# Ma = 252.036
+# rho = 6.025
+# Ma = 123.218
+rho = 14.0
+Ma = 252.036
 n_atoms = rho*Na/Ma
 
 def Initialize_Profile(folder_path):
@@ -74,6 +74,10 @@ def rebin(data,x_res):
     x_res = x_res[1::2]
     return data, x_res
 
+def rebinn(N):
+    N = [(N[1::2][i] + N[::2][i]) for i in range(len(N[1::2]))]
+    return N
+
 def plot_profiles(data):
     i = 0
     for sample in data['Samples']:
@@ -81,14 +85,14 @@ def plot_profiles(data):
         plt.title(sample)
         for depth in data['Samples'][sample]:
             x = data['Samples'][sample][depth]['x']
-            x = [3*1e21*x/(n_atoms) for x in x]
+            x = [2*1e21*x/(n_atoms) for x in x]
             C = data['Samples'][sample][depth]['C']
             C,x = rebin(C,x)
             # C,x = rebin(C,x)
             C,x = rebin(C,x)
             C = [c*100 for c in C]
             # plt.yscale('log')
-            plt.ylim(0,1)
+            plt.ylim(0,100)
             plt.xlim([0,400])
             plt.plot(x,C, label = depth, color = color_dict[depth])
             plt.xlabel('depth [nanometer]')
@@ -123,7 +127,7 @@ def normalize_potku_2(data):
 
 
 # color_dict = {'Zr':'r','O':'b', 'Fe':'gray', 'Xe': 'c', 'Kr':'g', 'Hf': 'y', 'Al':'m', 'C':'k', 'Cr': 'silver'}
-color_dict = {'U':'r','N':'deepskyblue', 'O': 'b','Zr':'gray', 'Xe': 'c', 'Kr':'g', 'Hf': 'y', 'Al':'m', 'C':'k', 'Ru': 'y'}
+color_dict = {'U':'r','N':'deepskyblue', 'O': 'b','Zr':'gray', 'Xe': 'c', 'Kr':'g', 'Hf': 'y', 'Al':'m', 'C':'k', 'Ru':'r', 'Br': 'r'}
 
 # potku_path = '/Users/niwi9751/potku/requests/20240410-Zr-in-UN.potku'
 potku_path = '/Users/niwi9751/potku/requests/20240506-UNUO2Samples.potku'
@@ -134,29 +138,83 @@ potku_path = '/Users/niwi9751/potku/requests/20240506-UNUO2Samples.potku'
 
 data = Initialize_Profile(potku_path)
 data = normalize_potku(data)
-# plot_profiles(data)
 # plt.show()
 samples = ['UN-AimedLow','UN-AimedHigh','UN-1-MIT','UN-02','UN-2-MIT','UN-05']
+imps = ['Zr','Kr']
 
-x = data['Samples']['UN-1-MIT']['U']['x']
-C1 = data['Samples']['UN-1-MIT']['U']['C']
+imp = imps[1]
+sample = samples[5]
+ref = samples[3]
+
+x = data['Samples'][f'{sample}']['U']['x']
+x = [2*1e21*x/(n_atoms) for x in x] #Convert to nanometer
+C1 = data['Samples'][f'{sample}']['U']['C']
+N1 = data['Samples'][f'{sample}']['U']['N']
+N1 = rebinn(rebinn(rebinn(N1)))
 C1,x = rebin(C1,x)
 C1,x = rebin(C1,x)
-C2 = data['Samples']['UN-1-MIT']['N']['C']
+C1,x = rebin(C1,x)
+
+C2 = data['Samples'][f'{sample}']['N']['C']
+N2 = data['Samples'][f'{sample}']['N']['N']
+N2 = rebinn(rebinn(rebinn(N2)))
+C2,x2 = rebin(C2,x)
 C2,x2 = rebin(C2,x)
 C2,x2 = rebin(C2,x)
 C_rat1 = [c1/c2 if c2 != 0 else 0 for c1,c2 in zip(C1,C2)]
-C3 = data['Samples']['UN-02']['U']['C']
+Err_1 = [R*(1/n1 + 1/n2)**(1/2) for R,n1,n2 in zip(C_rat1,N1,N2)]
+
+
+C3 = data['Samples'][f'{ref}']['U']['C']
+N3 = data['Samples'][f'{ref}']['U']['N']
+N3 = rebinn(rebinn(rebinn(N3)))
 C3,x3 = rebin(C3,x)
 C3,x3 = rebin(C3,x)
-C4 = data['Samples']['UN-02']['N']['C']
+C3,x3 = rebin(C3,x)
+
+C4 = data['Samples'][f'{ref}']['N']['C']
+N4 = data['Samples'][f'{sample}']['N']['N']
+N4 = rebinn(rebinn(rebinn(N4)))
+C4,x4 = rebin(C4,x)
 C4,x4 = rebin(C4,x)
 C4,x4 = rebin(C4,x)
 C_rat2 = [c1/c2 if c2 != 0 else 0 for c1,c2 in zip(C3,C4)]
+Err_2 = [R*(1/n1 + 1/n2)**(1/2) for R,n1,n2 in zip(C_rat2,N3,N4)]
 
-plt.plot(x,C1,label ='Implanted')
-plt.plot(x,C2,label ='Implanted')
-plt.plot(x,C3,label ='UnImplanted')
-plt.plot(x,C4,label ='UNImplanted')
+impd = data['Samples'][f'{sample}'][f'{imp}']['C']
+COx = data['Samples'][f'{sample}']['O']['C']
+COx, x1 = rebin(COx,x)
+COx, x1 = rebin(COx,x)
+COx, x1 = rebin(COx,x)
+impd,x1 = rebin(impd,x)
+impd,x1 = rebin(impd,x)
+impd,x1 = rebin(impd,x)
+
+fig, ax1 = plt.subplots()
+color = 'tab:red'
+ax1.plot(x,impd, label = f'Implanted {imp}', color = color)
+ax1.plot(x,COx,label= 'Oxygen', color = color, linestyle = 'dashed')
+ax1.tick_params(axis = 'y', labelcolor = color)
 plt.legend()
+plt.ylim(0,1)
+plt.xlim([0,400])
+plt.xlabel('depth [nanometer]')
+plt.ylabel('Atomic fraction')
+plt.legend(loc = 'upper left')
+
+ax2 = ax1.twinx()
+color = 'tab:blue'
+ax2.plot(x,C_rat1, '-.',label ='Implanted sample', color = color)
+ax2.errorbar(x,C_rat1,Err_1,fmt='.k', capsize= 2,capthick=1)
+ax2.plot(x,C_rat2,':',label ='Unimplanted sample', color = color)
+ax2.errorbar(x,C_rat2,Err_2,fmt='.k', capsize= 2,capthick=1)
+ax2.tick_params(axis = 'y', labelcolor = color)
+plt.legend()
+plt.ylim(0,1)
+plt.xlim([0,400])
+plt.xlabel('depth [nanometer]')
+plt.ylabel('Ratio (U/N)')
+plt.grid(linestyle='--')
+plt.legend(loc = 'upper right')
+plt.title(f'{sample} vs {ref}')
 plt.show()

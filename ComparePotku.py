@@ -98,6 +98,9 @@ def plot_profiles(data):
             plt.legend(loc = 'upper right')
         i = i+1
 
+def hist_integral(n, width):
+    n = [item*width for item in n]
+    return sum(n)#Definition of integrals :))
 
 
 Na = 6.022e23
@@ -124,20 +127,29 @@ x1 = [3*1e21*x/(n_atoms) for x in x1]
 c1 = data['Samples'][f'Kr-Imp'][f'{element}']['C']
 c1,x1 = rebin(c1,x1)
 c1,x1 = rebin(c1,x1)
-c1 = [c*100/sum(c1) for c in c1]
+c1 = [c for c in c1]
 
 x2 = data2['Samples'][f'Kr-Imp'][f'{element}']['x']
 x2 = [3*1e21*x/(n_atoms) for x in x2]
 c2 = data2['Samples'][f'Kr-Imp'][f'{element}']['C']
 c2,x2 = rebin(c2,x2)
 c2,x2 = rebin(c2,x2)
-c2 = [c*100/sum(c2) for c in c2]
+c2 = [c for c in c2]
+
+binwidth = (x1[1]-x1[0])*1e-7
+
+preInt = hist_integral(c1,binwidth)
+postInt = hist_integral(c2,binwidth)
+
+print(preInt*n_atoms)
+print(postInt*n_atoms)
+
 
 plt.xlabel('depth [nanometer]')
 plt.ylabel('atomic %')
 plt.grid(linestyle='--')
 plt.plot(x1,c1, label = f'Implanted {element}, pre annealing')
 plt.plot(x2,c2, label = f'Implanted {element}, post annealing')
-plt.title('Implanted Krypton, before and after annealing, normalised')
+plt.title('Implanted Xenon, before and after annealing, normalised')
 plt.legend()
 plt.show()

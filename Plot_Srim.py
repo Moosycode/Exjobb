@@ -102,14 +102,14 @@ plt.figure()
 i = 0
 for root in roots2:
     depth, ionvac, recoilvac = np.loadtxt(root,usecols=(0,1,2),unpack=True,encoding='cp437')
-    totvac = [sum(x) for x in zip(ionvac,recoilvac)]
-    totvac = [x*100000000 for x in totvac]
+    totvac = [c1 + c2 for c1,c2 in zip(ionvac,recoilvac)]
+    totvac = [x*1e8 for x in totvac]
     rho = 14.05
     M_a = 252
     N_a = 6.022e23
     fluence = fluences[i]
     N = N_a*rho/M_a
-    dpa = [x*fluence/(100*N) for x in totvac]
+    dpa = [x*fluence/(N) for x in totvac]
     plt.plot(depth/10000,dpa,'-.',label=Names[i])
     i = i+1
 
