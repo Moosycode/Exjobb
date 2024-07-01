@@ -57,7 +57,7 @@ def Initialize_Profile(folder_path):
                     dict['Samples'][currentsample][depthprofile] = {'x': columns[0], 'C': columns[3],'NoNormC': columns[4],'N': columns[6]}
     return dict
 
-def  read_columns(root):
+def read_columns(root):
     columns =  []
     with open(root,'r') as depthprofiles:
         lines = depthprofiles.readlines()
@@ -74,6 +74,10 @@ def rebin(data,x_res):
     x_res = x_res[1::2]
     return data, x_res
 
+def rebinn(N):
+    N = [(N[1::2][i] + N[::2][i]) for i in range(len(N[1::2]))]
+    return N
+
 def plot_profiles(data):
     i = 0
     for sample in data['Samples']:
@@ -88,7 +92,7 @@ def plot_profiles(data):
             C,x = rebin(C,x)
             C = [c*100 for c in C]
             # plt.yscale('log')
-            plt.ylim(0,1)
+            plt.ylim(0,100)
             plt.xlim([0,400])
             plt.plot(x,C, label = depth, color = color_dict[depth])
             plt.xlabel('depth [nanometer]')
@@ -141,18 +145,19 @@ def normalize_potku_2(data):
         summ = [0 for i in range(data['Settings']['Num_step']+10)]
         for element in data['Samples'][sample]:
             C = data['Samples'][sample][element]['NoNormC']
+            data['Samples'][sample][element]['NoNormC'] = C
             summ = [c1 + c2 for c1,c2 in zip(C,summ)]
         for element in data['Samples'][sample]:
             C = data['Samples'][sample][element]['NoNormC']
             C = [c1/c2 if c2 != 0 else 0 for c1,c2 in zip(C,summ) ]
-            data['Samples'][sample][element]['NoNormC'] = C
+            data['Samples'][sample][element]['C'] = C
     return data
 
-# color_dict = {'Zr':'r','O':'b', 'Fe':'gray', 'Xe': 'c', 'Kr':'g', 'Hf': 'y', 'Al':'m', 'C':'k', 'Cr': 'silver'}
-color_dict = {'U':'r','N':'deepskyblue', 'O': 'b','Zr':'gray', 'Xe': 'c', 'Kr':'g', 'Hf': 'y', 'Al':'m', 'C':'k', 'Br': 'y','Ru':'y'}
+color_dict = {'Zr':'r','O':'b', 'Fe':'gray', 'Xe': 'c', 'Kr':'g', 'Hf': 'y', 'Al':'m', 'C':'k', 'Cr': 'silver', 'I': 'y', 'Br': 'y'}
+# color_dict = {'U':'r','N':'deepskyblue', 'O': 'b','Zr':'gray', 'Xe': 'c', 'Kr':'g', 'Hf': 'y', 'Al':'m', 'C':'k', 'Br': 'y','Ru':'y', 'Cr':'y'}
 
-# potku_path = '/Users/niwi9751/potku/requests/20240410-Zr-in-UN.potku'
-potku_path = '/Users/niwi9751/potku/requests/20240506-UNUO2Samples.potku'
+potku_path = '/Users/niwi9751/potku/requests/20240410-Zr-in-UN.potku'
+# potku_path = '/Users/niwi9751/potku/requests/20240506-UNUO2Samples.potku'
 # potku_path = '/Users/niwi9751/potku/requests/20240304-KrXe-In-ZrO2.potku'
 # potku_path = '/Users/niwi9751/potku/requests/20230205_KrXe_in_ZrO2.potku'
 # potku_path = '/Users/niwi9751/potku/requests/20240521-PostAnnealZrO2.potku'
@@ -160,39 +165,51 @@ potku_path = '/Users/niwi9751/potku/requests/20240506-UNUO2Samples.potku'
 
 
 root = '/Users/niwi9751/Dropbox/Nils_files/Srim_Results/Zr330keV_in_UN_Range.txt'
-fluence = 9.7e15
+fluence = 3.73e16
 x_srim = np.linspace(0,1,100)
 # Read data from SRIM
 depth,height = np.loadtxt(root,usecols=(0,1),unpack=True,encoding='cp437') #load height and width of bins
 height = height*fluence #convert into atoms/cm^3
 binwidth = (depth[1]-depth[0])*1e-8 #define binwidth (in cm)
 conc = height/(height + n_atoms) #Calculate concentration from number density of SRIM
-plt.plot(x_srim,conc)
-    
+plt.plot(x_srim,conc, label = 'SRIM Simulation')
+
 
 data = Initialize_Profile(potku_path)
-samples = ['UN-05', 'UN-1-MIT']
-elements = ['Kr', 'Zr']
-sample = samples[1]
+samples = ['UN-05', 'UN-1-MIT','UN-2-MIT', 'UN-AimedLow'] 
+samples2 = ['Kr-Imp','Xe-Imp','Fe-Imp']
+elements = ['Kr', 'Zr', 'Xe', 'Fe']
+sample = samples[3]
 element = elements[1]
 x = data['Samples'][f'{sample}'][f'{element}']['x']
-x = [3*1e18*x/(n_atoms) for x in x] #Convert to micrometer
+x = [2*1e18*x/(n_atoms) for x in x] #Convert to micrometer
 C1 = data['Samples'][f'{sample}'][f'{element}']['NoNormC']
-C2 = data['Samples'][f'{sample}']['Kr']['NoNormC']
+C2 = data['Samples'][f'{sample}']['Ru']['NoNormC']
+N1 = data['Samples'][f'{sample}'][f'{element}']['N']
+N2 = data['Samples'][f'{sample}']['Ru']['N'] 
 C = [c1 - c2 for c1,c2 in zip(C1,C2)]
+N = [n1 - n2 for n1,n2 in zip(N1,N2)]
+N = rebinn(rebinn(rebinn(N)))
+print(N)
+
 data['Samples'][f'{sample}'][f'{element}']['NoNormC'] = C
 data = normalize_potku_2(data)
-C = data['Samples'][f'{sample}'][f'{element}']['NoNormC']
-C, x = rebin(C,x)
-C, x = rebin(C,x)
-C, x = rebin(C,x)
-
+C = data['Samples'][f'{sample}'][f'{element}']['C']
+# C = [c if c < 0.1 else 0 for c in C]
 pot_width = (x[1]-x[0])*1e-4 #Convert to cm
 pot_Integral = hist_integral(C,pot_width)
+C, x = rebin(C,x)
+C, x = rebin(C,x)
+C, x = rebin(C,x)
+N = [abs(c/n**(1/2)) if n != 0 else 0 for c,n in zip(C,N)]
+print(N)
+print('-------------------')
+print(C)
 print(f'Fluence put in acc. to SRIM:{fluence*0.965} at/cm^2') #0.965 for Zr in UN
 print(f'Fluence put in acc. to measurement: {pot_Integral*n_atoms} at/cm^2')
 
-plt.plot(x,C, label = 'asfasdf')
+plt.plot(x,C, label = 'Measurment, noise corrected')
+plt.errorbar(x,C, yerr = N, fmt='.k', capsize= 2,capthick=1)
 plt.xlabel('Position [micrometer]')
 plt.ylabel('Concentration [at. fraction]')
 plt.grid(True)

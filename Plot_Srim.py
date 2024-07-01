@@ -104,25 +104,16 @@ roots2 = ['/Users/nilsw/Dropbox/Nils_files/Srim_Results/Xe300keV_in_ZrO2_Vacanci
 plt.figure()
 i = 0
 for root in roots2:
-    depth, ionvac, recoilvac = np.loadtxt(root,usecols=(0,1,2),unpack=True,encoding='cp437', dtype=str)
-    depth = [x.replace(',','.') for x in depth]
-    depth = [float(x)/10000 for x in depth]
-    ionvac = [x.replace(',','.') for x in ionvac]
-    ionvac = [float(x) for x in ionvac]
-    recoilvac = [x.replace(',','.') for x in recoilvac]
-    recoilvac = [float(x) for x in recoilvac]
-    totvac = [x1 + x2 for x1,x2 in zip(ionvac,recoilvac)]
-    totvac = [x*1e8 for x in totvac]
-    # rho = 14.05
-    # M_a = 252
-    rho = 6.025
-    M_a = 123.218
+    depth, ionvac, recoilvac = np.loadtxt(root,usecols=(0,1,2),unpack=True,encoding='cp437')
+    totvac = [sum(x) for x in zip(ionvac,recoilvac)]
+    totvac = [x*100000000 for x in totvac]
+    rho = 14.05
+    M_a = 252
     N_a = 6.022e23
     fluence = fluences[i]
     N = N_a*rho/M_a
-    print(N)
-    dpa = [x*fluence/(N) for x in totvac]
-    plt.plot(depth,dpa,'-.',label=Names[i])
+    dpa = [x*fluence/(100*N) for x in totvac]
+    plt.plot(depth/10000,dpa,'-.',label=Names[i])
     i = i+1
 
 plt.grid()
