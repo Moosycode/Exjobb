@@ -1,4 +1,3 @@
-import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
@@ -65,22 +64,25 @@ def  read_columns(root):
     return columns
 
 
-potku_path = '/Users/niwi9751/potku/requests/20240410-Zr-in-UN.potku'
-data = Initialize_Profile(potku_path)
+# potku_path = '/Users/niwi9751/potku/requests/20240410-Zr-in-UN.potku'
+# data = Initialize_Profile(potku_path)
 
-roots = ['/Users/niwi9751/Dropbox/Nils_files/Srim_Results/Zr330keV_in_UN_range.txt', 
-         '/Users/niwi9751/Dropbox/Nils_files/Srim_Results/Kr300keV_in_UN_range.txt']
-Names = ['Zirconium','Krypton']
+roots = ['/Users/nilsw/Dropbox/Nils_files/Srim_Results/Xe300keV_in_ZrO2_range.txt',
+         '/Users/nilsw/Dropbox/Nils_files/Srim_Results/Kr300keV_in_ZrO2_range.txt',
+         '/Users/nilsw/Dropbox/Nils_files/Srim_Results/Fe300keV_in_ZrO2_range.txt']
+Names = ['Xe', 'Kr', 'Fe']
 
 
 
 
-fluences = [9.6e15, 1e17]
+fluences = [1e17,1e17,1e17]
 i = 0
 for root in roots:
     depth, height = np.loadtxt(root,usecols=(0,1),unpack=True,encoding='cp437')
-    rho = 14.05
-    M_a = 252
+    # rho = 14.05
+    # M_a = 252
+    rho = 6.025
+    M_a = 123.218
     N_a = 6.022e23
     fluence = fluences[i]
     height = height*fluence
@@ -95,22 +97,32 @@ plt.xlabel('Depth [micrometer]')
 plt.ylabel('Concentration [at. fraction]')
 
 
-roots2 = ['/Users/niwi9751/Dropbox/Nils_files/Srim_Results/Zr330keV_in_UN_Vacancies.txt',
-          '/Users/niwi9751/Dropbox/Nils_files/Srim_Results/Kr300keV_in_UN_Vacancies.txt']
+roots2 = ['/Users/nilsw/Dropbox/Nils_files/Srim_Results/Xe300keV_in_ZrO2_Vacancies.txt',
+          '/Users/nilsw/Dropbox/Nils_files/Srim_Results/Kr300keV_in_ZrO2_Vacancies.txt',
+          '/Users/nilsw/Dropbox/Nils_files/Srim_Results/Fe300keV_in_ZrO2_Vacancies.txt']
 
 plt.figure()
 i = 0
 for root in roots2:
-    depth, ionvac, recoilvac = np.loadtxt(root,usecols=(0,1,2),unpack=True,encoding='cp437')
-    totvac = [sum(x) for x in zip(ionvac,recoilvac)]
-    totvac = [x*100000000 for x in totvac]
-    rho = 14.05
-    M_a = 252
+    depth, ionvac, recoilvac = np.loadtxt(root,usecols=(0,1,2),unpack=True,encoding='cp437', dtype=str)
+    depth = [x.replace(',','.') for x in depth]
+    depth = [float(x)/10000 for x in depth]
+    ionvac = [x.replace(',','.') for x in ionvac]
+    ionvac = [float(x) for x in ionvac]
+    recoilvac = [x.replace(',','.') for x in recoilvac]
+    recoilvac = [float(x) for x in recoilvac]
+    totvac = [x1 + x2 for x1,x2 in zip(ionvac,recoilvac)]
+    totvac = [x*1e8 for x in totvac]
+    # rho = 14.05
+    # M_a = 252
+    rho = 6.025
+    M_a = 123.218
     N_a = 6.022e23
     fluence = fluences[i]
     N = N_a*rho/M_a
-    dpa = [x*fluence/(100*N) for x in totvac]
-    plt.plot(depth/10000,dpa,'-.',label=Names[i])
+    print(N)
+    dpa = [x*fluence/(N) for x in totvac]
+    plt.plot(depth,dpa,'-.',label=Names[i])
     i = i+1
 
 plt.grid()

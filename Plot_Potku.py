@@ -1,4 +1,4 @@
-import pandas as pd
+# import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
@@ -84,15 +84,15 @@ def plot_profiles(data):
             x = [3*1e21*x/(n_atoms) for x in x]
             C = data['Samples'][sample][depth]['C']
             C,x = rebin(C,x)
-            # C,x = rebin(C,x)
+            C,x = rebin(C,x)
             C,x = rebin(C,x)
             C = [c*100 for c in C]
-            # plt.yscale('log')
-            plt.ylim(0,1)
+            plt.yscale('log')
+            plt.ylim(0.1,100)
             plt.xlim([0,400])
             plt.plot(x,C, label = depth, color = color_dict[depth])
             plt.xlabel('depth [nanometer]')
-            plt.ylabel('atomic %')
+            plt.ylabel('concentration [at. %]')
             plt.grid(linestyle='--')
             plt.legend(loc = 'upper right')
         i = i+1
@@ -123,7 +123,7 @@ def normalize_potku_2(data):
 
 
 # color_dict = {'Zr':'r','O':'b', 'Fe':'gray', 'Xe': 'c', 'Kr':'g', 'Hf': 'y', 'Al':'m', 'C':'k', 'Cr': 'silver'}
-color_dict = {'U':'r','N':'deepskyblue', 'O': 'b','Zr':'gray', 'Xe': 'c', 'Kr':'g', 'Hf': 'y', 'Al':'m', 'C':'k', 'Ru': 'y'}
+color_dict = {'U':'r','N':'deepskyblue', 'O': 'b','Zr':'gray', 'Xe': 'c', 'Kr':'g', 'Hf': 'y', 'Al':'m', 'C':'k', 'Ba': 'y','H':'k'}
 
 # potku_path = '/Users/niwi9751/potku/requests/20240410-Zr-in-UN.potku'
 potku_path = '/Users/niwi9751/potku/requests/20240506-UNUO2Samples.potku'
@@ -131,32 +131,34 @@ potku_path = '/Users/niwi9751/potku/requests/20240506-UNUO2Samples.potku'
 # potku_path = '/Users/niwi9751/potku/requests/20230205_KrXe_in_ZrO2.potku'
 # potku_path = '/Users/niwi9751/potku/requests/20240521-PostAnnealZrO2.potku'
 # potku_path = '/Users/niwi9751/potku/requests/20240319-Fe-In-ZrO2.potku'
+potku_path = '/Users/nilsw/potku/requests/20240611UN.potku'
+# potku_path = '/Users/nilsw/potku/requests/20240611UNAuBeam.potku'
 
 data = Initialize_Profile(potku_path)
 data = normalize_potku(data)
-# plot_profiles(data)
-# plt.show()
-samples = ['UN-AimedLow','UN-AimedHigh','UN-1-MIT','UN-02','UN-2-MIT','UN-05']
-
-x = data['Samples']['UN-1-MIT']['U']['x']
-C1 = data['Samples']['UN-1-MIT']['U']['C']
-C1,x = rebin(C1,x)
-C1,x = rebin(C1,x)
-C2 = data['Samples']['UN-1-MIT']['N']['C']
-C2,x2 = rebin(C2,x)
-C2,x2 = rebin(C2,x)
-C_rat1 = [c1/c2 if c2 != 0 else 0 for c1,c2 in zip(C1,C2)]
-C3 = data['Samples']['UN-02']['U']['C']
-C3,x3 = rebin(C3,x)
-C3,x3 = rebin(C3,x)
-C4 = data['Samples']['UN-02']['N']['C']
-C4,x4 = rebin(C4,x)
-C4,x4 = rebin(C4,x)
-C_rat2 = [c1/c2 if c2 != 0 else 0 for c1,c2 in zip(C3,C4)]
-
-plt.plot(x,C1,label ='Implanted')
-plt.plot(x,C2,label ='Implanted')
-plt.plot(x,C3,label ='UnImplanted')
-plt.plot(x,C4,label ='UNImplanted')
-plt.legend()
+plot_profiles(data)
 plt.show()
+# samples = ['UN-AimedLow','UN-AimedHigh','UN-1-MIT','UN-02','UN-2-MIT','UN-05']
+
+# x = data['Samples']['UN-1-MIT']['U']['x']
+# C1 = data['Samples']['UN-1-MIT']['U']['C']
+# C1,x = rebin(C1,x)
+# C1,x = rebin(C1,x)
+# C2 = data['Samples']['UN-1-MIT']['N']['C']
+# C2,x2 = rebin(C2,x)
+# C2,x2 = rebin(C2,x)
+# C_rat1 = [c1/c2 if c2 != 0 else 0 for c1,c2 in zip(C1,C2)]
+# C3 = data['Samples']['UN-02']['U']['C']
+# C3,x3 = rebin(C3,x)
+# C3,x3 = rebin(C3,x)
+# C4 = data['Samples']['UN-02']['N']['C']
+# C4,x4 = rebin(C4,x)
+# C4,x4 = rebin(C4,x)
+# C_rat2 = [c1/c2 if c2 != 0 else 0 for c1,c2 in zip(C3,C4)]
+
+# plt.plot(x,C1,label ='Implanted')
+# plt.plot(x,C2,label ='Implanted')
+# plt.plot(x,C3,label ='UnImplanted')
+# plt.plot(x,C4,label ='UNImplanted')
+# plt.legend()
+# plt.show()

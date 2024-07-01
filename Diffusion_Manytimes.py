@@ -117,7 +117,7 @@ Na = 6.022e23 # avogadros number [atoms/mole]
 
 #GENERAL FILEPATHS-----------------------------------------------------------------
 # root = '/Users/niwi9751/Dropbox/Nils_files/Srim_Results/Kr300keV_in_ZrO2_range.txt' 
-root = '/Users/niwi9751/Dropbox/Nils_files/Srim_Results/Zr330keV_in_UN_Range.txt'
+root = '/Users/nilsw/Desktop/Dropbox/Nils_files/Srim_Results/Zr330keV_in_UN_Range.txt'
 furnace_root = '/Users/niwi9751/Dropbox/Nils_files/furnanceDataTest.txt'
 # # potku_path = '/Users/niwi9751/potku/requests/20240410-Zr-in-UN.potku'
 # potku_path = '/Users/niwi9751/potku/requests/20240506-UNUO2Samples.potku'
