@@ -127,12 +127,10 @@ potku_path = '/Users/nilsw/Potku/requests/20240611UNAuBeam.potku'
 #---------------------------------------------------------------------------------
 
 #Global Parameters-----------------------------------------------------------------------
-Times_in = [5,25,50,100]#Times in hours
-L = 3# Studied region [micrometer]
-studyL = 1 #Region of intrest, where SRIM starts/ends [micrometer] (HAS TO BE SAME LENGTH AS IN SRIM SIM)
-Temp_fin = 1373.15 #Target emperature [K] 
+Times_in = [5,25,50]#Times in hours
+Temp = 1373.15 #Target emperature [K] 
 fluence = 1e17# Input fluence of implantation [atoms/cm^2]
-Integrate = True
+Integrate = False
 Concentrations = []#Result list
 MaxT_Times = []#Honestly do not remember
 Mins = []#All minutes globally
@@ -167,39 +165,47 @@ elementdict = {
 for T in Times:
     # Parameters------------------------------------------------------
     element = 'Xe_UN'
-    Temp = 1373.15#Initial temperature [K]
     #-----------------------------------------------------------------
-    
+    potku_data = Initialize_Profile(potku_path)
+    x_pot = potku_data['Samples']['UN2Xe']['Xe']['x']
+    c_pot = potku_data['Samples']['UN2Xe']['Xe']['C']
+    c_pot,x_pot = rebin(c_pot,x_pot)
+    c_pot,x_pot = rebin(c_pot,x_pot)
+
     #Constants--------------------------------------------------------
-    Nx = 100  # Number of spatial points per micrometer
-    Nt = int(T/60) # Number of time steps, can be anything really, code finds this for you but do not start lower than this.
-    dx = L / (L*Nx - 1) # Spatial step size
-    dt = T / Nt # Time step size
-    temps = [] #Result list for temperatures each minute
-    minutes = []#Result list for minutes passed
     D0 = elementdict[element]['D0']*1e8 # Diffusion coefficient inital value [um^2/s]
     Ea = elementdict[element]['Ea']# Activation energy for diffusion [eV] 
     rho = elementdict[element]['rho']# density of target [g/cm^3]
     m_a = elementdict[element]['Ma']# atomic mass of target in [g/mole]
     n_atoms = rho*Na/m_a #atomic density of target [atoms/cm^3]
-    heat = False
-    cool = False
+    Nx = len(x_pot)  # Number of spatial points per micrometer
+    Nt = int(T/60) # Number of time steps, can be anything really, code finds this for you but do not start lower than this.
+    x_pot = [3*1e21*x/(n_atoms) for x in x_pot] #Convert to micrometer
+    L = x_pot[-1]
+    dx = L / (L*Nx - 1) # Spatial step size
+    dt = T / Nt # Time step size
+    temps = [] #Result list for temperatures each minute
+    minutes = []#Result list for minutes passed
     #-----------------------------------------------------------------
     
     #Check stability
-    stability_cond = D(D0,Ea, Temp_fin)*dt/(dx**2)
+    stability_cond = D(D0,Ea, Temp)*dt/(dx**2)
     if stability_cond > 0.5:
         print('Not stable, increasing number of timesteps')
         while stability_cond > 0.4:
             Nt = Nt+1
             dt = T/Nt
-            stability_cond = D(D0,Ea, Temp_fin)*dt/(dx**2)
+            stability_cond = D(D0,Ea, Temp)*dt/(dx**2)
         print(f'Continuing with new number of timesteps: {Nt}')
 
+
+    
+
     # Create spatial grid
-    x = np.linspace(0, L, L*Nx)
+    x = np.linspace(0, L, Nx)
 
     # Initialize solution matrix
+
     C = np.zeros((Nt, Nx))
 
     # Initialize initial condition
@@ -215,52 +221,13 @@ for T in Times:
     
     
     # Apply initial condition 
-    C[0, :] = conc
-    C = np.hstack((C, np.zeros((Nt,(L-studyL)*Nx)))) #Add zeros to desired length, SRIM length is only 1 micron usually
+    C[0, :] = c_pot
     
-    
-    cool_time = (Temp_fin-1273.15)/10 + time[-1] #Cooling time in minutes
-    print(f'Cooling time will be {cool_time/60} hours!!')
-    Current_min = 0 #Some awesome parameters
-    Fin_min = 0 #same as above
     # Time-stepping loop
     for n in range(0, Nt - 1):
         # Update interior points using forward difference in time and central difference in space
-        second = T/Nt*n
-        min = int(second/60)
-        hour = min/60
-        time_left = T/60-min
-        temps.append(Temp)
-        minutes.append(min)
-        if min != Current_min:  # Check if minute has changed
-            Current_min = min  # Update current minute
-            if heat:
-                if Temp <= 1273:
-                    Temp = Temp + 10
-                    #print('Temp increasing! ')
-                    #print(Temp)
-                elif Temp < Temp_fin and Temp > 1273:
-                    Temp = Temp + 5
-                    Fin_min = Current_min
-                    #print('Temp increasing! ')
-                    #print(Temp)
-                else:
-                    heat = False     
-            if (time_left - cool_time == 0):
-                cool =  False
-            if cool:
-                if Temp > 1273:
-                    Temp = Temp - 10 #Linear decrease from Final temp to 1000 deg C
-                else:
-                    time_temp = int(cool_time - time_left) #Find
-                    try:
-                        index = time.index(time_temp) #Find index of time
-                    except:
-                        Temp = Temp #Temp is low enough here so fixing this is not worth it to fix this bug
-                    Temp = int(cool_curve[index]+273) #Update temperature according to data
-                
         Diff = D(D0, Ea, Temp) #calculate diffusion coefficient
-        for i in range(1, L*Nx - 1): #Update interior points
+        for i in range(1, Nx - 1): #Update interior points
             C[n+1, i] = C[n, i] + Diff * dt / dx**2 * (C[n, i+1] - 2*C[n, i] + C[n, i-1])
         
         # Apply Neumann boundary condition to boundaries
@@ -268,12 +235,8 @@ for T in Times:
         C[n+1, -1] = C[n+1,-2]
 
     #Tell time to reach maxtemp
-    MaxT_time = min - Fin_min- cool_time
-    print(f'Time to reach max temp: {Fin_min} minutes')
-    print(f'Time at maxtemp: {MaxT_time} minutes')
-    print(f'Diffusion coefficient at maxtemp: {D(D0,Ea,Temp_fin)*1e-8}')
+    print(f'Diffusion coefficient at maxtemp: {D(D0,Ea,Temp)*1e-8}')
     Concentrations.append(C[-1,:])
-    MaxT_Times.append(int(MaxT_time/60))
     
     if Integrate:
         #Integrate over total length
@@ -287,52 +250,36 @@ for T in Times:
         print(f'Ratio between total integrals: ')
         print(ratio)
         print()
-    Mins.append(minutes)
-    Temperatures.append(temps)
 
 # Plot the results
 plt.figure(figsize=(8, 6))
 
-x = [x*1e3 for x in x] #Convert to nm
+# x = [x*1e3 for x in x] #Convert to nm
 C[0,:] = [c*100 for c in C[0,:]]
-plt.plot(x,C[0,:], label = 'SRIM simulation')
+plt.plot(x,C[0,:], label = 'Measured concentration')
 i = 0
 for C_ in Concentrations:      
     C_ = [c*100 for c in C_]  
     plt.plot(x,C_, label = f'Distribution after {Times_in[i]} hours. ')
     i = i + 1
 
-# #Measured plot
-potku_data = Initialize_Profile(potku_path)
-x_pot = potku_data['Samples']['UN2Xe']['Xe']['x']
-c_pot = potku_data['Samples']['UN2Xe']['Xe']['C']
-x_pot = [3*1e21*x/(n_atoms) for x in x_pot] #Convert to micrometer
-c_pot,x_pot = rebin(c_pot,x_pot)
-c_pot,x_pot = rebin(c_pot,x_pot)
-c_pot,x_pot = rebin(c_pot,x_pot)
-pot_width = (x_pot[1]-x_pot[0])*1e-4 #Convert to cm
-pot_Integral = hist_integral(c_pot,pot_width)
-c_pot = [c*100 for c in c_pot]
-print(f'Fluence put in acc. to SRIM:{fluence*0.95} at/cm^2') #0.965 for Zr in UN
-print(f'Fluence put in acc. to measurement: {pot_Integral*n_atoms} at/cm^2')
-
-print(f'Ratio: {pot_Integral*n_atoms/(fluence*0.95)}')
-plt.plot(x_pot,c_pot, label = 'ToF-ERDA Measurement')
 plt.xlabel('Position [nanometer]')
 plt.ylabel('Concentration [at. %]')
 plt.grid(True)
-plt.xlim([0,500])
-plt.ylim([0,35])
+# plt.xlim([0,500])
 plt.legend()
 plt.show()
 
+#Measured plot
+# pot_width = (x_pot[1]-x_pot[0])*1e-4 #Convert to cm
+# pot_Integral = hist_integral(c_pot,pot_width)
+# c_pot = [c*100 for c in c_pot]
+# print(f'Fluence put in acc. to SRIM:{fluence*0.95} at/cm^2') #0.965 for Zr in UN
+# print(f'Fluence put in acc. to measurement: {pot_Integral*n_atoms} at/cm^2')
 
-# plt.figure()
-# for i in range(len(Temperatures)):
-#     plt.title('Temperature change over time')
-#     plt.xlabel('Minutes')
-#     plt.ylabel('Temperature [K]')
-#     plt.plot(Mins[i],Temperatures[i], label = f'Time: {Times_in[i]} h')
-# plt.legend()
-# plt.grid(True)
+# print(f'Ratio: {pot_Integral*n_atoms/(fluence*0.95)}')
+# plt.plot(x_pot,c_pot, label = 'ToF-ERDA Measurement')
+# plt.ylim([0,35])
 # plt.show()
+
+

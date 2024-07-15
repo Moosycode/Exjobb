@@ -1,4 +1,3 @@
-import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
@@ -162,10 +161,11 @@ potku_path = '/Users/niwi9751/potku/requests/20240410-Zr-in-UN.potku'
 # potku_path = '/Users/niwi9751/potku/requests/20230205_KrXe_in_ZrO2.potku'
 # potku_path = '/Users/niwi9751/potku/requests/20240521-PostAnnealZrO2.potku'
 # potku_path = '/Users/niwi9751/potku/requests/20240319-Fe-In-ZrO2.potku'
+potku_path = '/Users/nilsw/Potku/requests/20240611UNAuBeam.potku'
 
 
-root = '/Users/niwi9751/Dropbox/Nils_files/Srim_Results/Zr330keV_in_UN_Range.txt'
-fluence = 3.73e16
+root = '/Users/nilsw/Dropbox/Nils_files/Srim_Results/Zr330keV_in_UN_Range.txt'
+fluence = 1e17
 x_srim = np.linspace(0,1,100)
 # Read data from SRIM
 depth,height = np.loadtxt(root,usecols=(0,1),unpack=True,encoding='cp437') #load height and width of bins
@@ -181,6 +181,10 @@ samples2 = ['Kr-Imp','Xe-Imp','Fe-Imp']
 elements = ['Kr', 'Zr', 'Xe', 'Fe']
 sample = samples[3]
 element = elements[1]
+
+sample = 'UN2Xe'
+element = 'Xe'
+
 x = data['Samples'][f'{sample}'][f'{element}']['x']
 x = [2*1e18*x/(n_atoms) for x in x] #Convert to micrometer
 C1 = data['Samples'][f'{sample}'][f'{element}']['NoNormC']
@@ -190,7 +194,6 @@ N2 = data['Samples'][f'{sample}']['Ru']['N']
 C = [c1 - c2 for c1,c2 in zip(C1,C2)]
 N = [n1 - n2 for n1,n2 in zip(N1,N2)]
 N = rebinn(rebinn(rebinn(N)))
-print(N)
 
 data['Samples'][f'{sample}'][f'{element}']['NoNormC'] = C
 data = normalize_potku_2(data)
