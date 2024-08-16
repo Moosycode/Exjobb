@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import fmin
+from scipy.optimize import minimize
 import datetime
 import json
 import os
@@ -180,7 +181,7 @@ dx = L / (L*Nx - 1) # Spatial step size
 dt = T / Nt # Time step size
 x2 = [3*1e21*x/(n_atoms) for x in x2]
 
-def optifunc(vars):
+def optifunc(vars,plot = False):
     D0, Ea, q = vars
     # Create spatial grid
     x = np.linspace(0, L, Nx*Extendby)
@@ -194,7 +195,7 @@ def optifunc(vars):
     for n in range(0, Nt - 1):
         # Update interior points using forward difference in time and central difference in space
         Diff = D(D0, Ea, Temp) #calculate diffusion coefficient
-        C[n+1, 0] = q*C[n, 0] + Diff * dt / dx**2 * (C[n, 1] - 2*C[n, 0])
+        C[n+1, 0] = C[n, 0] + Diff * dt / dx**2 * (C[n, 1] - 2*C[n, 0])
         for i in range(1, Extendby*Nx - 1): #Update interior points
             C[n+1, i] = C[n, i] + Diff * dt / dx**2 * (C[n, i+1] - 2*C[n, i] + C[n, i-1])
         # Apply Neumann boundary condition to boundaries
@@ -204,11 +205,31 @@ def optifunc(vars):
     # score = sum([c-c_ for c,c_ in zip(C[-1,:],c2)])**2
     score = sum([(c-c_)**2 for c,c_ in zip(C[-1,:],c2)])
     
-
+    
+    if plot:
+        c_pot2 = [c*100 for c in c_pot]
+        Cres = [c*100 for c in C[-1,:]]
+        Cmeas = [c*100 for c in c2]
+        plt.step(x_pot,c_pot2)
+        plt.step(x,Cres)
+        plt.step(x,Cmeas)
+        plt.xlabel('Depth [nm]', fontsize = 18)
+        plt.ylabel('Concentration [at. %]', fontsize = 18)
+        plt.grid(True)
+        plt.rcParams.update({'font.size':18})
+        plt.tight_layout()
+        plt.show()
     return score
 
 initial_guess = [elementdict[element]['D0']*1e8, elementdict[element]['Ea'], 0.5]
+# bounders = [(None,None),(None,None),(0,None)]
 
-result = fmin(optifunc, initial_guess, )
+result = minimize(optifunc, initial_guess)
 
 print(result)
+optivals = []
+for val in result['x']:
+    print(val)
+    optivals.append(val)
+print(optivals)
+optifunc(result['x'],True)

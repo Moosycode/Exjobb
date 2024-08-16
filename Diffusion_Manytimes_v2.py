@@ -156,6 +156,7 @@ for T in Times:
     # Parameters------------------------------------------------------
     element = 'Xe_ZrO2'
     sample = 'Xe'
+    optivals = [183.0004694875679, 2.231761415631045, 0.5]
     #-----------------------------------------------------------------
     potku_data = Initialize_Profile(potku_path)
     x_pot = potku_data['Samples'][f'{sample}-Imp'][sample]['x']
@@ -167,12 +168,18 @@ for T in Times:
 
     #Constants--------------------------------------------------------
     D0 = elementdict[element]['D0']*1e8# Diffusion coefficient inital value [um^2/s]
-    # D0 = 89.95021308 #D0 for Xe opt
-    D0 = 86.48485855
-    D0 = 1.28159243e+03
     Ea = elementdict[element]['Ea']*1# Activation energy for diffusion [eV] 
+    D0 = optivals[0]
+    Ea = optivals[1]
+    q = optivals[2]
+    # D0 = 89.95021308 #D0 for Xe opt
+    # D0 = 86.48485855 #Kr opt
     # Ea = 2.221570131 #Ea for Xe opt
-    Ea = 2.55231264
+    # Ea = 2.55231264# Kr opt
+    # q = 1.17438022 #Q for Xe opt
+    # q = 0.50797624
+    # q = -5.64015441e-01
+
     rho = elementdict[element]['rho']# density of target [g/cm^3]
     m_a = elementdict[element]['Ma']# atomic mass of target in [g/mole]
     n_atoms = rho*Na/m_a #atomic density of target [atoms/cm^3]
@@ -184,12 +191,7 @@ for T in Times:
     studyL = int(x_pot[-1])
     dx = L / (L*Nx - 1) # Spatial step size
     dt = T / Nt # Time step size
-    temps = [] #Result list for temperatures each minute
-    minutes = []#Result list for minutes passed
     #-----------------------------------------------------------------
-    # q = 1.17438022 #Q for Xe opt
-    # q = 0.50797624
-    q = -5.64015441e-01
     #Check stability
     stability_cond = D(D0,Ea, Temp)*dt/(dx**2)
     if stability_cond > 0.5:
@@ -212,8 +214,8 @@ for T in Times:
     for n in range(0, Nt - 1):
         Diff = D(D0, Ea, Temp) #calculate diffusion coefficient
         # Update interior points using forward difference in time and central difference in space
-        C[n+1, 0] = q*C[n, 0] + Diff * dt / dx**2 * (C[n, 1] - 2*C[n, 0])
-        for i in range(1, Extendby*Nx - 1): #Update interior points {    }
+        C[n+1, 0] = C[n, 0] + Diff * dt / dx**2 * (C[n, 1] - 2*C[n, 0])
+        for i in range(1, Extendby*Nx - 1): #Update interior points 
             C[n+1, i] = C[n, i] + Diff * dt / dx**2 * (C[n, i+1] - 2*C[n, i] + C[n, i-1])
         # Apply Neumann boundary condition to boundaries
         # if C[n, 0]*(1- q*dx) > 0:
@@ -249,7 +251,8 @@ c2,x2 = rebin(c2,x2)
 c2,x2 = rebin(c2,x2)
 # c2,x2 = rebin(c2,x2)
 c2 = [c*100 for c in c2]
-plt.step(x2,c2,label = 'Post annealing (measured)')
+c2 = np.hstack((c2, np.zeros(((Extendby-1)*Nx))))
+plt.step(x,c2,label = 'Post annealing (measured)')
 
 plt.xlabel('Depth [nm]', fontsize = 18)
 plt.ylabel('Concentration [at. %]', fontsize = 18)
@@ -260,17 +263,4 @@ plt.xlim([0,600])
 plt.ylim([0,5])
 plt.legend()
 plt.show()
-
-#Measured plot
-# pot_width = (x_pot[1]-x_pot[0])*1e-4 #Convert to cm
-# pot_Integral = hist_integral(c_pot,pot_width)
-# c_pot = [c*100 for c in c_pot]
-# print(f'Fluence put in acc. to SRIM:{fluence*0.95} at/cm^2') #0.965 for Zr in UN
-# print(f'Fluence put in acc. to measurement: {pot_Integral*n_atoms} at/cm^2')
-
-# print(f'Ratio: {pot_Integral*n_atoms/(fluence*0.95)}')
-# plt.plot(x_pot,c_pot, label = 'ToF-ERDA Measurement')
-# plt.ylim([0,35])
-# plt.show()
-
 
