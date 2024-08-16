@@ -6,10 +6,10 @@ import json
 import os
 import re
 Na = 6.022e23
-# rho = 6.025
-# Ma = 123.218
-rho = 14.0
-Ma = 252.036
+rho = 6.025
+Ma = 123.218
+# rho = 14.0
+# Ma = 252.036
 n_atoms = rho*Na/Ma
 
 def Initialize_Profile(folder_path):
@@ -85,7 +85,7 @@ def plot_profiles(data):
         # plt.title(sample)
         for depth in data['Samples'][sample]:
             x = data['Samples'][sample][depth]['x']
-            x = [2*1e21*x/(n_atoms) for x in x]
+            x = [3*1e21*x/(n_atoms) for x in x]
             C = data['Samples'][sample][depth]['C']
             C,x = rebin(C,x)
             C,x = rebin(C,x)
@@ -94,12 +94,13 @@ def plot_profiles(data):
             plt.yscale('log')
             plt.ylim(0.1,100)
             plt.xlim([-50,400])
-            plt.rcParams.update({'font.size':12})
+            plt.rcParams.update({'font.size':18})
             plt.plot(x,C, label = depth, color = color_dict[depth])
-            plt.xlabel('Depth [nm]',fontsize = 12)
-            plt.ylabel('Concentration [at. %]',fontsize = 12)
+            plt.xlabel('Depth [nm]',fontsize = 18)
+            plt.ylabel('Concentration [at. %]',fontsize = 18)
             plt.grid(linestyle='--')
             plt.legend(loc = 'upper right')
+            plt.tight_layout()
         i = i+1
 
 def normalize_potku(data):
@@ -127,8 +128,8 @@ def normalize_potku_2(data):
     return data
 
 
-# color_dict = {'Zr':'r','O':'b', 'Fe':'gray', 'Xe': 'c', 'Kr':'g', 'Hf': 'y', 'Al':'m', 'C':'k', 'Cr': 'silver'}
-color_dict = {'U':'r','N':'deepskyblue', 'O': 'b','Zr':'gray', 'Xe': 'orange', 'Kr':'g', 'Hf': 'y', 'Al':'m', 'C':'k', 'Ru': 'y', 'Ba':'g', 'H':'y'}
+color_dict = {'Zr':'r','O':'b', 'Fe':'gray', 'Xe': 'c', 'Kr':'g', 'Hf': 'y', 'Al':'m', 'C':'k', 'Cr': 'silver'}
+# color_dict = {'U':'r','N':'deepskyblue', 'O': 'b','Zr':'gray', 'Xe': 'orange', 'Kr':'g', 'Hf': 'y', 'Al':'m', 'C':'k', 'Ru': 'y', 'Ba':'g', 'H':'y'}
 
 # potku_path = '/Users/niwi9751/potku/requests/20240410-Zr-in-UN.potku'
 # potku_path = '/Users/niwi9751/potku/requests/20240506-UNUO2Samples.potku'
@@ -137,8 +138,8 @@ color_dict = {'U':'r','N':'deepskyblue', 'O': 'b','Zr':'gray', 'Xe': 'orange', '
 # potku_path = '/Users/niwi9751/potku/requests/20240521-PostAnnealZrO2.potku'
 # potku_path = '/Users/niwi9751/potku/requests/20240319-Fe-In-ZrO2.potku'
 # potku_path = '/Users/nilsw/potku/requests/20240611UN.potku'
-potku_path = '/Users/nilsw/potku/requests/20240611UNAuBeam.potku'
-# potku_path = '/Users/nilsw/Dropbox/Nils_Files/Tof_ERDA_Files/20240304-KrXe-In-ZrO2.potku'
+# potku_path = '/Users/nilsw/potku/requests/20240611UNAuBeam.potku'
+potku_path = '/Users/nilsw/Dropbox/Nils_Files/Tof_ERDA_Files/requests/20240304-KrXe-In-ZrO2.potku'
 
 data = Initialize_Profile(potku_path)
 # data = normalize_potku(data)

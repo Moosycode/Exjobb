@@ -110,6 +110,7 @@ def hist_integral(n, width):
     return sum(n)#Definition of integrals :))
 
 
+
 #Constants----------------------------
 k = 8.6e-5 # boltzmann constant [ev/K]
 Na = 6.022e23 # avogadros number [atoms/mole]
@@ -127,17 +128,12 @@ potku_path = '/Users/nilsw/Dropbox/Nils_Files/Tof_ERDA_Files/requests/20240304-K
 #---------------------------------------------------------------------------------
 
 #Global Parameters-----------------------------------------------------------------------
-# Times_in = [5,25,50,100]#Times in hours
-Times_in = [9]
+Times_in = 9 #simtime in hrs
 Temp = 1473.15 #Target emperature [K] 
 fluence = 1e17# Input fluence of implantation [atoms/cm^2]
-Integrate = False
 Concentrations = []#Result list
-MaxT_Times = []#Honestly do not remember
-Mins = []#All minutes globally
-Temperatures = []#All temperatures globally
 #---------------------------------------------------------------------------------
-Times = [T*3600 for T in Times_in]#Convert to seconds
+T = Times_in*3600 #Convert to seconds
 #---------------------------------------------------------------------------------
 
 #Dictionary with needed values of each element
@@ -151,126 +147,68 @@ elementdict = {
     'Zr_UO2':{'D0':6.9e-7,'Ea':2.7, 'rho':10.6, 'Ma': 270.02},
     'Kr_UO2':{'D0':8.11e-7,'Ea':2.53, 'rho':10.6, 'Ma': 270.02}
 }
+# Parameters------------------------------------------------------
+element = 'Xe_ZrO2'
+sample = 'Xe'
+#-----------------------------------------------------------------
+potku_data = Initialize_Profile(potku_path)
+x_pot = potku_data['Samples'][f'{sample}-Imp'][sample]['x']
+c_pot = potku_data['Samples'][f'{sample}-Imp'][sample]['C']
+c_pot,x_pot = rebin(c_pot,x_pot)
+c_pot,x_pot = rebin(c_pot,x_pot)
+c_pot,x_pot = rebin(c_pot,x_pot)
 
-for T in Times:
-    # Parameters------------------------------------------------------
-    element = 'Xe_ZrO2'
-    sample = 'Xe'
-    #-----------------------------------------------------------------
-    potku_data = Initialize_Profile(potku_path)
-    x_pot = potku_data['Samples'][f'{sample}-Imp'][sample]['x']
-    c_pot = potku_data['Samples'][f'{sample}-Imp'][sample]['C']
-    c_pot,x_pot = rebin(c_pot,x_pot)
-    c_pot,x_pot = rebin(c_pot,x_pot)
-    c_pot,x_pot = rebin(c_pot,x_pot)
-    # c_pot,x_pot = rebin(c_pot,x_pot)
-
-    #Constants--------------------------------------------------------
-    D0 = elementdict[element]['D0']*1e8# Diffusion coefficient inital value [um^2/s]
-    # D0 = 89.95021308 #D0 for Xe opt
-    D0 = 86.48485855
-    D0 = 1.28159243e+03
-    Ea = elementdict[element]['Ea']*1# Activation energy for diffusion [eV] 
-    # Ea = 2.221570131 #Ea for Xe opt
-    Ea = 2.55231264
-    rho = elementdict[element]['rho']# density of target [g/cm^3]
-    m_a = elementdict[element]['Ma']# atomic mass of target in [g/mole]
-    n_atoms = rho*Na/m_a #atomic density of target [atoms/cm^3]
-    Nx = len(x_pot)  # Number of spatial points per micrometer
-    Nt = int(T/60) # Number of time steps, can be anything really, code finds this for you but do not start lower than this.
-    x_pot = [3*1e21*x/(n_atoms) for x in x_pot] #Convert to micrometer
-    Extendby = 20
-    L = int(x_pot[-1])*Extendby
-    studyL = int(x_pot[-1])
-    dx = L / (L*Nx - 1) # Spatial step size
-    dt = T / Nt # Time step size
-    temps = [] #Result list for temperatures each minute
-    minutes = []#Result list for minutes passed
-    #-----------------------------------------------------------------
-    # q = 1.17438022 #Q for Xe opt
-    # q = 0.50797624
-    q = -5.64015441e-01
-    #Check stability
-    stability_cond = D(D0,Ea, Temp)*dt/(dx**2)
-    if stability_cond > 0.5:
-        print('Not stable, increasing number of timesteps')
-        while stability_cond > 0.4:
-            Nt = Nt+1
-            dt = T/Nt
-            stability_cond = D(D0,Ea, Temp)*dt/(dx**2)
-        print(f'Continuing with new number of timesteps: {Nt}')
-
-    # Create spatial grid
-    x = np.linspace(0, L, Nx*Extendby)
-    # Initialize solution matrix
-    C = np.zeros((Nt, Nx))
-    
-    # Apply initial condition 
-    C[0, :] = c_pot
-    C = np.hstack((C, np.zeros((Nt,(Extendby-1)*Nx)))) #Add zeros to desired length, SRIM length is only 1 micron usually
-    # Time-stepping loop
-    for n in range(0, Nt - 1):
-        Diff = D(D0, Ea, Temp) #calculate diffusion coefficient
-        # Update interior points using forward difference in time and central difference in space
-        C[n+1, 0] = q*C[n, 0] + Diff * dt / dx**2 * (C[n, 1] - 2*C[n, 0])
-        for i in range(1, Extendby*Nx - 1): #Update interior points {    }
-            C[n+1, i] = C[n, i] + Diff * dt / dx**2 * (C[n, i+1] - 2*C[n, i] + C[n, i-1])
-        # Apply Neumann boundary condition to boundaries
-        # if C[n, 0]*(1- q*dx) > 0:
-            
-        # else:
-            # C[n+1, 0] = 0
-        C[n+1, -1] = C[n+1,-2] 
-    print(f'Diffusion coeff at maxtemp: {Diff*1e-8}')
-    Concentrations.append(C[-1,:])
-
-# Plot the results
-plt.figure(figsize=(8, 6))
-
-# x = [x*1e3 for x in x] #Convert to nm
-plt.rcParams.update({'font.size':18})
-C[0,:] = [c*100 for c in C[0,:]]
-plt.step(x,C[0,:], label = 'Initial distribution')
-i = 0
-x = [x for x in x]
-for C_ in Concentrations:      
-    C_ = [c*100 for c in C_]  
-    plt.step(x,C_, label = f'Distribution after {Times_in[i]} h')
-    i = i + 1
-
-# potku_path2 = '/Users/nilsw/Dropbox/Nils_Files/Tof_ERDA_Files/requests/20240319-Fe-In-ZrO2.potku'
 potku_path2 = '/Users/nilsw/Dropbox/Nils_Files/Tof_ERDA_Files/requests/20240521-PostAnnealZrO2.potku'
 data2 = Initialize_Profile(potku_path2)
 x2 = data2['Samples'][f'{sample}-Imp'][sample]['x']
-x2 = [3*1e21*x/(n_atoms) for x in x2]
 c2 = data2['Samples'][f'{sample}-Imp'][sample]['C']
 c2,x2 = rebin(c2,x2)
 c2,x2 = rebin(c2,x2)
 c2,x2 = rebin(c2,x2)
-# c2,x2 = rebin(c2,x2)
-c2 = [c*100 for c in c2]
-plt.step(x2,c2,label = 'Post annealing (measured)')
 
-plt.xlabel('Depth [nm]', fontsize = 18)
-plt.ylabel('Concentration [at. %]', fontsize = 18)
-plt.grid(True)
-plt.rcParams.update({'font.size':18})
-plt.tight_layout()
-plt.xlim([0,600])
-plt.ylim([0,5])
-plt.legend()
-plt.show()
+#Constants--------------------------------------------------------
+rho = elementdict[element]['rho']# density of target [g/cm^3]
+m_a = elementdict[element]['Ma']# atomic mass of target in [g/mole]
+n_atoms = rho*Na/m_a #atomic density of target [atoms/cm^3]
+Nx = len(x_pot)  # Number of spatial points per micrometer
+Nt = int(T/60) # Number of time steps, can be anything really, code finds this for you but do not start lower than this.
+x_pot = [3*1e21*x/(n_atoms) for x in x_pot] #Convert to micrometer
+Extendby = 1
+L = int(x_pot[-1])*Extendby
+studyL = int(x_pot[-1])
+dx = L / (L*Nx - 1) # Spatial step size
+dt = T / Nt # Time step size
+x2 = [3*1e21*x/(n_atoms) for x in x2]
 
-#Measured plot
-# pot_width = (x_pot[1]-x_pot[0])*1e-4 #Convert to cm
-# pot_Integral = hist_integral(c_pot,pot_width)
-# c_pot = [c*100 for c in c_pot]
-# print(f'Fluence put in acc. to SRIM:{fluence*0.95} at/cm^2') #0.965 for Zr in UN
-# print(f'Fluence put in acc. to measurement: {pot_Integral*n_atoms} at/cm^2')
+def optifunc(vars):
+    D0, Ea, q = vars
+    # Create spatial grid
+    x = np.linspace(0, L, Nx*Extendby)
+    # Initialize solution matrix
+    C = np.zeros((Nt, Nx))
+    # Apply initial condition 
+    C[0, :] = c_pot
+    C = np.hstack((C, np.zeros((Nt,(Extendby-1)*Nx)))) #Add zeros to desired length
 
-# print(f'Ratio: {pot_Integral*n_atoms/(fluence*0.95)}')
-# plt.plot(x_pot,c_pot, label = 'ToF-ERDA Measurement')
-# plt.ylim([0,35])
-# plt.show()
+    # Time-stepping loop
+    for n in range(0, Nt - 1):
+        # Update interior points using forward difference in time and central difference in space
+        Diff = D(D0, Ea, Temp) #calculate diffusion coefficient
+        C[n+1, 0] = q*C[n, 0] + Diff * dt / dx**2 * (C[n, 1] - 2*C[n, 0])
+        for i in range(1, Extendby*Nx - 1): #Update interior points
+            C[n+1, i] = C[n, i] + Diff * dt / dx**2 * (C[n, i+1] - 2*C[n, i] + C[n, i-1])
+        # Apply Neumann boundary condition to boundaries
 
+        C[n+1, -1] = C[n+1,-2] 
+    
+    # score = sum([c-c_ for c,c_ in zip(C[-1,:],c2)])**2
+    score = sum([(c-c_)**2 for c,c_ in zip(C[-1,:],c2)])
+    
 
+    return score
+
+initial_guess = [elementdict[element]['D0']*1e8, elementdict[element]['Ea'], 0.5]
+
+result = fmin(optifunc, initial_guess, )
+
+print(result)

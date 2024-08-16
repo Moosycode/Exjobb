@@ -75,8 +75,7 @@ N_a = 6.022e23
 # data = Initialize_Profile(potku_path)
 
 roots = ['/Users/nilsw/Dropbox/Nils_files/Srim_Results/Xe300keV_in_ZrO2_range.txt',
-         '/Users/nilsw/Dropbox/Nils_files/Srim_Results/Kr300keV_in_ZrO2_range.txt',
-         '/Users/nilsw/Dropbox/Nils_files/Srim_Results/Fe300keV_in_ZrO2_range.txt']
+         '/Users/nilsw/Dropbox/Nils_files/Srim_Results/Kr300keV_in_ZrO2_range.txt']
 
 # roots = ['/Users/nilsw/Dropbox/Nils_files/Srim_Results/Xe300keV_in_UN_range.txt',
 #          '/Users/nilsw/Dropbox/Nils_files/Srim_Results/Kr300keV_in_UN_range.txt']
@@ -87,7 +86,7 @@ Names2 = ['Xe-damage', 'Kr-damage','Fe-damage']
 
 fluences = [1e17,1e17,1e17]
 i = 0
-plt.rcParams.update({'font.size':12})
+plt.rcParams.update({'font.size':18})
 fig, ax1 = plt.subplots(figsize=(8,6))
 for root in roots:
     depth, height = np.loadtxt(root,usecols=(0,1),unpack=True,encoding='cp437')
@@ -100,19 +99,18 @@ for root in roots:
     i = i+1
     
 
-ax1.set_ylabel('Concentration [at. %]', fontsize = 12)
-ax1.set_xlabel('Depth [nm]', fontsize = 12)
+ax1.set_ylabel('Concentration [at. %]', fontsize = 18)
+ax1.set_xlabel('Depth [nm]', fontsize = 18)
 ax1.set_xlim([0,600])
 ax1.set_ylim([0,100])
 plt.legend(loc='upper right')
-plt.rcParams.update({'font.size':12})
+plt.rcParams.update({'font.size':18})
 
 
 # roots2 = ['/Users/nilsw/Dropbox/Nils_files/Srim_Results/Xe300keV_in_UN_Vacancies.txt','
 #           '/Users/nilsw/Dropbox/Nils_files/Srim_Results/Kr300keV_in_UN_Vacancies.txt']'
 roots2 = ['/Users/nilsw/Dropbox/Nils_files/Srim_Results/Xe300keV_in_ZrO2_Vacancies.txt',
-          '/Users/nilsw/Dropbox/Nils_files/Srim_Results/Kr300keV_in_ZrO2_Vacancies.txt',
-          '/Users/nilsw/Dropbox/Nils_files/Srim_Results/Fe300keV_in_ZrO2_Vacancies.txt']
+          '/Users/nilsw/Dropbox/Nils_files/Srim_Results/Kr300keV_in_ZrO2_Vacancies.txt']
 
 ax2 = ax1.twinx()
 i = 0
@@ -129,10 +127,11 @@ for root in roots2:
 
 ax2.set_ylabel('Concentration [at. %]')
 ax2.set_xlabel('Damage [dpa]')
-ax2.set_xlim([0,600])
+ax2.set_xlim([0,400])
 ax2.set_ylim([0,1400])
 plt.legend(loc='lower right')
 plt.xlabel('Depth [micrometer]')
 plt.ylabel('dpa')
 plt.grid(linestyle='--')
+plt.tight_layout()
 plt.show()

@@ -127,7 +127,7 @@ potku_path = '/Users/nilsw/Potku/requests/20240611UNAuBeam.potku'
 #---------------------------------------------------------------------------------
 
 #Global Parameters-----------------------------------------------------------------------
-Times_in = [5,25,50,100]#Times in hours
+Times_in = [5]#Times in hours
 L = 3# Studied region [micrometer]
 studyL = 1 #Region of intrest, where SRIM starts/ends [micrometer] (HAS TO BE SAME LENGTH AS IN SRIM SIM)
 Temp_fin = 1373.15 #Target emperature [K] 
@@ -198,7 +198,7 @@ for T in Times:
 
     # Create spatial grid
     x = np.linspace(0, L, L*Nx)
-
+    print(len(x))
     # Initialize solution matrix
     C = np.zeros((Nt, Nx))
 
@@ -217,7 +217,7 @@ for T in Times:
     # Apply initial condition 
     C[0, :] = conc
     C = np.hstack((C, np.zeros((Nt,(L-studyL)*Nx)))) #Add zeros to desired length, SRIM length is only 1 micron usually
-    
+    print(len(C))
     
     cool_time = (Temp_fin-1273.15)/10 + time[-1] #Cooling time in minutes
     print(f'Cooling time will be {cool_time/60} hours!!')
