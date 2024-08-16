@@ -217,11 +217,6 @@ for T in Times:
         C[n+1, 0] = C[n, 0] + Diff * dt / dx**2 * (C[n, 1] - 2*C[n, 0])
         for i in range(1, Extendby*Nx - 1): #Update interior points 
             C[n+1, i] = C[n, i] + Diff * dt / dx**2 * (C[n, i+1] - 2*C[n, i] + C[n, i-1])
-        # Apply Neumann boundary condition to boundaries
-        # if C[n, 0]*(1- q*dx) > 0:
-            
-        # else:
-            # C[n+1, 0] = 0
         C[n+1, -1] = C[n+1,-2] 
     print(f'Diffusion coeff at maxtemp: {Diff*1e-8}')
     Concentrations.append(C[-1,:])

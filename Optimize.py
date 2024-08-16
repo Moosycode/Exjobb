@@ -199,12 +199,9 @@ def optifunc(vars,plot = False):
         for i in range(1, Extendby*Nx - 1): #Update interior points
             C[n+1, i] = C[n, i] + Diff * dt / dx**2 * (C[n, i+1] - 2*C[n, i] + C[n, i-1])
         # Apply Neumann boundary condition to boundaries
-
         C[n+1, -1] = C[n+1,-2] 
-    
-    # score = sum([c-c_ for c,c_ in zip(C[-1,:],c2)])**2
+
     score = sum([(c-c_)**2 for c,c_ in zip(C[-1,:],c2)])
-    
     
     if plot:
         c_pot2 = [c*100 for c in c_pot]
