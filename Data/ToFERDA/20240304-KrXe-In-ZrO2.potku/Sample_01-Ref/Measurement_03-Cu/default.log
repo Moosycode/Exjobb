@@ -1,0 +1,14 @@
+2024-03-05 10:25:08 - INFO - There was no old selection file to add to this request.
+2024-03-05 10:31:52 - INFO - Saving finished in 0.1296525001525879 seconds.
+2024-03-05 10:36:56 - INFO - Selection file C:\Users\niwi9751\potku\requests\20240305-KrXe-In-ZrO2.potku\Sample_01-Ref\Measurement_03-Cu\Data\Cu.selections was read successfully!
+2024-03-05 11:08:44 - INFO - Selection file C:\Users\niwi9751\potku\requests\20240305-KrXe-In-ZrO2.potku\Sample_01-Ref\Measurement_03-Cu\Data\Cu.selections was read successfully!
+2024-03-05 11:09:11 - INFO - Generated tof.in with params> 0
+2024-03-05 11:09:13 - ERROR - Could not create Depth Profile graph: '>' not supported between instances of 'float' and 'NoneType'
+2024-09-06 06:51:26 - INFO - Selection file /mnt/StorageVolume/Dropbox/work-UU/DATA_ANALYSIS/analysis_ToF-ERDA/20240304_ToF-ERDA_Nils/20240304-KrXe-In-ZrO2.potku/Sample_01-Ref/Measurement_03-Cu/Data/Cu.selections was read successfully!
+2024-09-06 06:51:26 - INFO - Backed up old tof.in file to /mnt/StorageVolume/Dropbox/work-UU/DATA_ANALYSIS/analysis_ToF-ERDA/20240304_ToF-ERDA_Nils/20240304-KrXe-In-ZrO2.potku/Sample_01-Ref/Measurement_03-Cu/tof_in/tof.in_2024-09-06_06.51.26.bak
+2024-09-06 06:51:26 - INFO - Generated tof.in with params> 0
+2024-09-06 06:51:26 - ERROR - Could not create Depth Profile graph: [Errno 2] No such file or directory: '/mnt/StorageVolume/Dropbox/work-UU/DATA_ANALYSIS/analysis_ToF-ERDA/20240304_ToF-ERDA_Nils/20240304-KrXe-In-ZrO2.potku/Sample_01-Ref/Measurement_03-Cu/C:/Users/niwi9751/potku/requests/20240305-KrXe-In-ZrO2.potku/Sample_01-Ref/Measurement_03-Cu/Data/Cuts/Cu.Cu.ERD.0.cut'
+2024-09-06 07:04:59 - INFO - Selection file /mnt/StorageVolume/Dropbox/work-UU/DATA_ANALYSIS/analysis_ToF-ERDA/20240304_ToF-ERDA_Nils/20240304-KrXe-In-ZrO2.potku/Sample_01-Ref/Measurement_03-Cu/Data/Cu.selections was read successfully!
+2024-09-06 07:04:59 - ERROR - Could not create Depth Profile graph: [Errno 2] No such file or directory: '/mnt/StorageVolume/Dropbox/work-UU/DATA_ANALYSIS/analysis_ToF-ERDA/20240304_ToF-ERDA_Nils/20240304-KrXe-In-ZrO2.potku/Sample_01-Ref/Measurement_03-Cu/C:/Users/niwi9751/potku/requests/20240305-KrXe-In-ZrO2.potku/Sample_01-Ref/Measurement_03-Cu/Data/Cuts/Cu.Cu.ERD.0.cut'
+2024-09-06 07:05:10 - INFO - Saving finished in 0.012848615646362305 seconds.
+2024-09-06 07:22:14 - INFO - Saving finished in 0.011747360229492188 seconds.

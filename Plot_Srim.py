@@ -74,20 +74,18 @@ N_a = 6.022e23
 # potku_path = '/Users/niwi9751/potku/requests/20240410-Zr-in-UN.potku'
 # data = Initialize_Profile(potku_path)
 
-roots = ['/Users/nilsw/Dropbox/Nils_files/Srim_Results/Xe300keV_in_ZrO2_range.txt',
-         '/Users/nilsw/Dropbox/Nils_files/Srim_Results/Kr300keV_in_ZrO2_range.txt']
+roots = ['Data/SRIM/Xe300keV_in_ZrO2_range.txt', 'Data/SRIM/Kr300keV_in_ZrO2_range.txt']
 
-# roots = ['/Users/nilsw/Dropbox/Nils_files/Srim_Results/Xe300keV_in_UN_range.txt',
-#          '/Users/nilsw/Dropbox/Nils_files/Srim_Results/Kr300keV_in_UN_range.txt']
-
-Names = ['Xe-concentration', 'Kr-concentration','Fe-concentration']
-Names2 = ['Xe-damage', 'Kr-damage','Fe-damage']
+Names = ['Xe-concentration', 'Kr-concentration']
+Names2 = ['Xe-damage', 'Kr-damage']
 
 
-fluences = [1e17,1e17,1e17]
+fluences = [1e17,1e17]
 i = 0
-plt.rcParams.update({'font.size':18})
-fig, ax1 = plt.subplots(figsize=(8,6))
+plts = []
+plt.rc('text', usetex=True)
+plt.rc('font', family='serif',size=20)
+fig, ax1 = plt.subplots(figsize=(7,5))
 for root in roots:
     depth, height = np.loadtxt(root,usecols=(0,1),unpack=True,encoding='cp437')
     fluence = fluences[i]
@@ -95,22 +93,17 @@ for root in roots:
     N = N_a*rho/M_a
     conc = height/(height + N)
     conc = [c*100 for c in conc]
-    ax1.plot(depth/10,conc,label=Names[i])
+    temp = ax1.plot(depth/10,conc,label=Names[i])
+    plts.append(temp)
     i = i+1
     
 
-ax1.set_ylabel('Concentration [at. %]', fontsize = 18)
-ax1.set_xlabel('Depth [nm]', fontsize = 18)
-ax1.set_xlim([0,600])
+ax1.set_ylabel(r'Concentration [at.\%]')
+ax1.set_xlabel('Depth [nm]')
+ax1.set_xlim([0,300])
 ax1.set_ylim([0,100])
-plt.legend(loc='upper right')
-plt.rcParams.update({'font.size':18})
-
-
-# roots2 = ['/Users/nilsw/Dropbox/Nils_files/Srim_Results/Xe300keV_in_UN_Vacancies.txt','
-#           '/Users/nilsw/Dropbox/Nils_files/Srim_Results/Kr300keV_in_UN_Vacancies.txt']'
-roots2 = ['/Users/nilsw/Dropbox/Nils_files/Srim_Results/Xe300keV_in_ZrO2_Vacancies.txt',
-          '/Users/nilsw/Dropbox/Nils_files/Srim_Results/Kr300keV_in_ZrO2_Vacancies.txt']
+plt.grid(True)
+roots2 = ['Data/SRIM/Xe300keV_in_ZrO2_Vacancies.txt', 'Data/SRIM/Kr300keV_in_ZrO2_Vacancies.txt']
 
 ax2 = ax1.twinx()
 i = 0
@@ -122,16 +115,16 @@ for root in roots2:
 
     N = N_a*rho/M_a
     dpa = [x*fluence/(N) for x in totvac]
-    ax2.plot(depth/10,dpa,'-.',label=Names2[i])
+    temp = ax2.plot(depth/10,dpa,'-.',label=Names2[i])
+    plts.append(temp)
     i = i+1
 
 ax2.set_ylabel('Concentration [at. %]')
 ax2.set_xlabel('Damage [dpa]')
-ax2.set_xlim([0,400])
+ax2.set_xlim([0,300])
 ax2.set_ylim([0,1400])
-plt.legend(loc='lower right')
+fig.legend(plts, labels= ['Xe-concentration','Kr-concentration','Xe-damage','Kr-damage'],loc = 'upper center',bbox_to_anchor = (0.6,0.94))
 plt.xlabel('Depth [micrometer]')
-plt.ylabel('dpa')
-plt.grid(linestyle='--')
+plt.ylabel('Damage [dpa]')
 plt.tight_layout()
 plt.show()

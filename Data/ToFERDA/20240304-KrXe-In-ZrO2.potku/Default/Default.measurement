@@ -1,0 +1,26 @@
+{
+    "general": {
+        "name": "Default",
+        "description": "",
+        "modification_time": "Wed Mar  5 14:38:13 2025 +0100 W. Europe Standard Time",
+        "modification_time_unix": 1741181893.126585
+    },
+    "run": {
+        "fluence": 500000000000.0,
+        "current": 1.07,
+        "charge": 0.641,
+        "time": 600.0
+    },
+    "beam": {
+        "ion": "197Au",
+        "energy": 40.0,
+        "charge": 9,
+        "energy_distribution": 0.0,
+        "spot_size": [
+            3.0,
+            5.0
+        ],
+        "divergence": 0.0,
+        "profile": "uniform"
+    }
+}

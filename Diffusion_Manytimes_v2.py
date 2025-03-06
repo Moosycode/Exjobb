@@ -117,7 +117,7 @@ Na = 6.022e23 # avogadros number [atoms/mole]
 
 #GENERAL FILEPATHS-----------------------------------------------------------------
 root = '/Users/nilsw/Dropbox/Nils_files/Srim_Results/Xe300keV_in_ZrO2_range.txt' 
-potku_path = '/Users/nilsw/Dropbox/Nils_Files/Tof_ERDA_Files/requests/20240304-KrXe-In-ZrO2.potku'
+potku_path = 'Data/ToFERDA/20240304-KrXe-In-ZrO2.potku'
 # root = '/Users/nilsw/Dropbox/Nils_files/Srim_Results/Xe300keV_in_UN_Range.txt'
 # # potku_path = '/Users/niwi9751/potku/requests/20240410-Zr-in-UN.potku'
 # potku_path = '/Users/niwi9751/potku/requests/20240506-UNUO2Samples.potku'
@@ -128,7 +128,7 @@ potku_path = '/Users/nilsw/Dropbox/Nils_Files/Tof_ERDA_Files/requests/20240304-K
 
 #Global Parameters-----------------------------------------------------------------------
 # Times_in = [5,25,50,100]#Times in hours
-Times_in = [9]
+Times_in = [9,9]
 Temp = 1473.15 #Target emperature [K] 
 fluence = 1e17# Input fluence of implantation [atoms/cm^2]
 Integrate = False
@@ -136,6 +136,8 @@ Concentrations = []#Result list
 MaxT_Times = []#Honestly do not remember
 Mins = []#All minutes globally
 Temperatures = []#All temperatures globally
+plt.rc('text', usetex=True)
+plt.rc('font', family='serif',size=16)
 #---------------------------------------------------------------------------------
 Times = [T*3600 for T in Times_in]#Convert to seconds
 #---------------------------------------------------------------------------------
@@ -152,34 +154,29 @@ elementdict = {
     'Kr_UO2':{'D0':8.11e-7,'Ea':2.53, 'rho':10.6, 'Ma': 270.02}
 }
 
+opt = True
 for T in Times:
     # Parameters------------------------------------------------------
     element = 'Xe_ZrO2'
     sample = 'Xe'
-    optivals = [183.0004694875679, 2.231761415631045, 0.5]
+    optivals = [90.12682469659086, 2.229793552876081] #Kr
+    optivals = [452.4809528419494, 2.3483484105602397] #Xe
     #-----------------------------------------------------------------
     potku_data = Initialize_Profile(potku_path)
     x_pot = potku_data['Samples'][f'{sample}-Imp'][sample]['x']
     c_pot = potku_data['Samples'][f'{sample}-Imp'][sample]['C']
     c_pot,x_pot = rebin(c_pot,x_pot)
-    c_pot,x_pot = rebin(c_pot,x_pot)
-    c_pot,x_pot = rebin(c_pot,x_pot)
+    # c_pot,x_pot = rebin(c_pot,x_pot)
+    # c_pot,x_pot = rebin(c_pot,x_pot)
     # c_pot,x_pot = rebin(c_pot,x_pot)
 
     #Constants--------------------------------------------------------
     D0 = elementdict[element]['D0']*1e8# Diffusion coefficient inital value [um^2/s]
     Ea = elementdict[element]['Ea']*1# Activation energy for diffusion [eV] 
-    D0 = optivals[0]
-    Ea = optivals[1]
-    q = optivals[2]
-    # D0 = 89.95021308 #D0 for Xe opt
-    # D0 = 86.48485855 #Kr opt
-    # Ea = 2.221570131 #Ea for Xe opt
-    # Ea = 2.55231264# Kr opt
-    # q = 1.17438022 #Q for Xe opt
-    # q = 0.50797624
-    # q = -5.64015441e-01
-
+    if opt:
+        D0 = optivals[0]
+        Ea = optivals[1]
+    opt = False
     rho = elementdict[element]['rho']# density of target [g/cm^3]
     m_a = elementdict[element]['Ma']# atomic mass of target in [g/mole]
     n_atoms = rho*Na/m_a #atomic density of target [atoms/cm^3]
@@ -225,18 +222,22 @@ for T in Times:
 plt.figure(figsize=(8, 6))
 
 # x = [x*1e3 for x in x] #Convert to nm
-plt.rcParams.update({'font.size':18})
 C[0,:] = [c*100 for c in C[0,:]]
-plt.step(x,C[0,:], label = 'Initial distribution')
+plt.plot(x,C[0,:], label = 'Initial measurement')
 i = 0
-x = [x for x in x]
+opt = True
 for C_ in Concentrations:      
-    C_ = [c*100 for c in C_]  
-    plt.step(x,C_, label = f'Distribution after {Times_in[i]} h')
+    C_ = [c*100 for c in C_]
+    if opt:
+        plt.plot(x,C_, label = f'Optimized calculation')
+        opt = False
+    else:
+        plt.plot(x,C_, label = f'First calculation')
     i = i + 1
 
 # potku_path2 = '/Users/nilsw/Dropbox/Nils_Files/Tof_ERDA_Files/requests/20240319-Fe-In-ZrO2.potku'
 potku_path2 = '/Users/nilsw/Dropbox/Nils_Files/Tof_ERDA_Files/requests/20240521-PostAnnealZrO2.potku'
+potku_path = 'Data/ToFERDA/20240521-PostAnnealZrO2.potku'
 data2 = Initialize_Profile(potku_path2)
 x2 = data2['Samples'][f'{sample}-Imp'][sample]['x']
 x2 = [3*1e21*x/(n_atoms) for x in x2]
@@ -244,17 +245,14 @@ c2 = data2['Samples'][f'{sample}-Imp'][sample]['C']
 c2,x2 = rebin(c2,x2)
 c2,x2 = rebin(c2,x2)
 c2,x2 = rebin(c2,x2)
-# c2,x2 = rebin(c2,x2)
 c2 = [c*100 for c in c2]
-c2 = np.hstack((c2, np.zeros(((Extendby-1)*Nx))))
-plt.step(x,c2,label = 'Post annealing (measured)')
+plt.plot(x2,c2,label = 'Post-annealing')
 
-plt.xlabel('Depth [nm]', fontsize = 18)
-plt.ylabel('Concentration [at. %]', fontsize = 18)
+plt.xlabel('Depth [nm]')
+plt.ylabel('Concentration [at. %]')
 plt.grid(True)
-plt.rcParams.update({'font.size':18})
 plt.tight_layout()
-plt.xlim([0,600])
+plt.xlim([0,450])
 plt.ylim([0,5])
 plt.legend()
 plt.show()

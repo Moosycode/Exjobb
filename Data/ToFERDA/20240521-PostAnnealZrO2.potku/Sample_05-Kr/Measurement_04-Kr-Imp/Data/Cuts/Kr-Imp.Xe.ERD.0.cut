@@ -1,0 +1,21 @@
+Count: 11
+Type: ERD
+Weight Factor: 1.0
+Energy: 0
+Detector Angle: 0
+Scatter Element: 
+Element losses: False
+Split count: 1
+
+ToF, Energy, Event number
+1317 452 7741
+1321 458 11726
+1213 819 13332
+1208 799 33138
+1351 395 36491
+1208 784 44841
+1299 523 52165
+1330 439 76775
+1333 428 85013
+1165 1037 86361
+1154 1204 108188

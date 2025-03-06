@@ -1,0 +1,7 @@
+Depth_profiles
+Al	C	Hf	Kr	O	Xe	Zr
+Data/Cuts/XeKr-Imp.Al.ERD.0.cut	Data/Cuts/XeKr-Imp.C.ERD.0.cut	Data/Cuts/XeKr-Imp.Hf.ERD.0.cut	Data/Cuts/XeKr-Imp.Kr.ERD.0.cut	Data/Cuts/XeKr-Imp.O.ERD.0.cut	Data/Cuts/XeKr-Imp.Xe.ERD.0.cut	Data/Cuts/XeKr-Imp.Zr.ERD.0.cut
+1e15 at./cm2
+True
+False
+0.0

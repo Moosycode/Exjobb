@@ -1,0 +1,100 @@
+{
+    "tof_offset": -1.8515380231e-07,
+    "angle_slope": 0.0,
+    "modification_time": "Wed Mar  5 14:38:13 2025 +0100 W. Europe Standard Time",
+    "tof_slope": 2.2517879e-10,
+    "virtual_size": [
+        2.0,
+        5.0
+    ],
+    "detector_theta": 45.0,
+    "angle_offset": 0.0,
+    "energyres": 25.0,
+    "timeres": 300.0,
+    "detector_type": "TOF",
+    "name": "ERDA-T4-chamber2",
+    "description": "Gas detector system",
+    "foils": [
+        {
+            "name": "Foil1",
+            "type": "circular",
+            "distance": 425.0,
+            "layers": [
+                {
+                    "name": "Layer_12C",
+                    "elements": [
+                        "12C 1.0"
+                    ],
+                    "thickness": 0.1,
+                    "density": 2.25,
+                    "start_depth": 0.0
+                }
+            ],
+            "transmission": 1.0,
+            "diameter": 7.0
+        },
+        {
+            "name": "Foil2",
+            "type": "circular",
+            "distance": 825.0,
+            "layers": [
+                {
+                    "name": "Layer_12C",
+                    "elements": [
+                        "12C 1.0"
+                    ],
+                    "thickness": 13.0,
+                    "density": 2.25,
+                    "start_depth": 0.0
+                }
+            ],
+            "transmission": 1.0,
+            "diameter": 10.0
+        },
+        {
+            "name": "Foil3",
+            "type": "circular",
+            "distance": 1195.0,
+            "layers": [
+                {
+                    "name": "Layer_12C",
+                    "elements": [
+                        "12C 1.0"
+                    ],
+                    "thickness": 44.4,
+                    "density": 2.25,
+                    "start_depth": 0.0
+                }
+            ],
+            "transmission": 1.0,
+            "diameter": 18.0
+        },
+        {
+            "name": "Foil4",
+            "type": "rectangular",
+            "distance": 1195.01,
+            "layers": [
+                {
+                    "name": "Layer_28Si",
+                    "elements": [
+                        "14N 0.57",
+                        "28Si 0.43"
+                    ],
+                    "thickness": 100.0,
+                    "density": 3.44,
+                    "start_depth": 0.0
+                }
+            ],
+            "transmission": 1.0,
+            "size": [
+                14.0,
+                14.0
+            ]
+        }
+    ],
+    "tof_foils": [
+        1,
+        2
+    ],
+    "modification_time_unix": 1741181893.127761
+}

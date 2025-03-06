@@ -1,0 +1,21 @@
+{
+    "name": "Default",
+    "description": "These are default simulation parameters.",
+    "modification_time": "Wed Mar  5 14:38:13 2025 +0100 W. Europe Standard Time",
+    "modification_time_unix": 1741181893.1374543,
+    "simulation_type": "ERD",
+    "simulation_mode": "narrow",
+    "number_of_ions": 1000000,
+    "number_of_preions": 100000,
+    "seed_number": 101,
+    "number_of_recoils": 10,
+    "number_of_scaling_ions": 5,
+    "minimum_scattering_angle": 0.05,
+    "minimum_main_scattering_angle": 20.0,
+    "minimum_energy": 1.0,
+    "use_default_settings": "False",
+    "main_recoil": null,
+    "recoils": null,
+    "optimization_recoils": [],
+    "optimized_fluence": null
+}

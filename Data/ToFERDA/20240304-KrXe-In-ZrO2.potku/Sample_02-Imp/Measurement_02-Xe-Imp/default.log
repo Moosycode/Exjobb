@@ -1,0 +1,94 @@
+2024-03-05 10:28:25 - INFO - There was no old selection file to add to this request.
+2024-03-05 10:36:59 - INFO - There was no old selection file to add to this request.
+2024-03-05 10:43:42 - INFO - There was no old selection file to add to this request.
+2024-03-05 11:15:57 - INFO - There was no old selection file to add to this request.
+2024-03-05 11:16:19 - INFO - Chosen selections were read successfully!
+2024-03-05 11:17:21 - INFO - Saving finished in 0.20844268798828125 seconds.
+2024-03-05 11:18:44 - INFO - Saving finished in 0.22439885139465332 seconds.
+2024-03-05 11:18:49 - INFO - Saving single cut finished in 0.018949270248413086 seconds.
+2024-03-05 11:20:35 - ERROR - Could not read selections due to: 'NoneType' object is not iterable.
+2024-03-05 11:20:48 - INFO - Generated tof.in with params> 0
+2024-03-05 11:46:08 - INFO - Chosen selections were read successfully!
+2024-03-05 11:46:14 - INFO - Saving finished in 0.3261268138885498 seconds.
+2024-03-07 14:44:07 - INFO - Selection file C:\Users\niwi9751\potku\requests\20240304-KrXe-In-ZrO2.potku\Sample_02-Imp\Measurement_02-Xe-Imp\Data\Xe-Imp.selections was read successfully!
+2024-03-07 14:44:08 - INFO - Backed up old tof.in file to C:\Users\niwi9751\potku\requests\20240304-KrXe-In-ZrO2.potku\Sample_02-Imp\Measurement_02-Xe-Imp\tof_in\tof.in_2024-03-07_14.44.08.bak
+2024-03-07 14:44:08 - INFO - Generated tof.in with params> 0
+2024-03-07 14:44:10 - ERROR - Could not create Depth Profile graph: [Errno 2] No such file or directory: 'C:\\Users\\niwi9751\\potku\\requests\\20240305-KrXe-In-ZrO2.potku\\Sample_02-Imp\\Measurement_02-Xe-Imp\\Data\\Cuts\\Xe-Imp.Al.ERD.0.cut'
+2024-03-07 15:12:20 - INFO - Selection file C:\Users\niwi9751\potku\requests\20240304-KrXe-In-ZrO2.potku\Sample_02-Imp\Measurement_02-Xe-Imp\Data\Xe-Imp.selections was read successfully!
+2024-03-07 15:14:36 - INFO - Saving finished in 0.30717968940734863 seconds.
+2024-09-06 06:51:46 - INFO - Selection file /mnt/StorageVolume/Dropbox/work-UU/DATA_ANALYSIS/analysis_ToF-ERDA/20240304_ToF-ERDA_Nils/20240304-KrXe-In-ZrO2.potku/Sample_02-Imp/Measurement_02-Xe-Imp/Data/Xe-Imp.selections was read successfully!
+2024-09-06 06:51:46 - INFO - Backed up old tof.in file to /mnt/StorageVolume/Dropbox/work-UU/DATA_ANALYSIS/analysis_ToF-ERDA/20240304_ToF-ERDA_Nils/20240304-KrXe-In-ZrO2.potku/Sample_02-Imp/Measurement_02-Xe-Imp/tof_in/tof.in_2024-09-06_06.51.46.bak
+2024-09-06 06:51:46 - INFO - Generated tof.in with params> 0
+2024-09-06 06:51:46 - ERROR - Could not create Depth Profile graph: [Errno 2] No such file or directory: '/mnt/StorageVolume/Dropbox/work-UU/DATA_ANALYSIS/analysis_ToF-ERDA/20240304_ToF-ERDA_Nils/20240304-KrXe-In-ZrO2.potku/Sample_02-Imp/Measurement_02-Xe-Imp/C:/Users/niwi9751/potku/requests/20240304-KrXe-In-ZrO2.potku/Sample_02-Imp/Measurement_02-Xe-Imp/Data/Cuts/Xe-Imp.Al.ERD.0.cut'
+2024-09-06 06:55:56 - INFO - Selection file /mnt/StorageVolume/Dropbox/work-UU/DATA_ANALYSIS/analysis_ToF-ERDA/20240304_ToF-ERDA_Nils/20240304-KrXe-In-ZrO2.potku/Sample_02-Imp/Measurement_02-Xe-Imp/Data/Xe-Imp.selections was read successfully!
+2024-09-06 07:00:43 - INFO - Saving finished in 0.24318528175354004 seconds.
+2024-09-06 07:05:39 - INFO - Saving single cut finished in 0.013608932495117188 seconds.
+2024-09-06 07:06:24 - INFO - Saving finished in 0.23795294761657715 seconds.
+2024-09-06 07:08:44 - INFO - Saving single cut finished in 0.016550064086914062 seconds.
+2024-09-06 07:09:06 - INFO - Saving finished in 0.23105120658874512 seconds.
+2024-09-06 07:11:11 - INFO - Saving single cut finished in 0.05142092704772949 seconds.
+2024-09-06 07:11:12 - INFO - Saving finished in 0.22805404663085938 seconds.
+2024-09-06 07:16:29 - INFO - Saving finished in 0.2238302230834961 seconds.
+2024-09-06 07:20:32 - INFO - Saving single cut finished in 0.028424739837646484 seconds.
+2024-09-06 07:20:44 - INFO - Saving finished in 0.2362668514251709 seconds.
+2024-09-06 07:22:01 - INFO - Saving finished in 0.22562289237976074 seconds.
+2024-09-06 07:31:13 - INFO - Selection file /mnt/StorageVolume/Dropbox/work-UU/DATA_ANALYSIS/analysis_ToF-ERDA/20240304_ToF-ERDA_Nils/20240304-KrXe-In-ZrO2.potku/Sample_02-Imp/Measurement_02-Xe-Imp/Data/Xe-Imp.selections was read successfully!
+2024-09-06 07:31:14 - INFO - Backed up old tof.in file to /mnt/StorageVolume/Dropbox/work-UU/DATA_ANALYSIS/analysis_ToF-ERDA/20240304_ToF-ERDA_Nils/20240304-KrXe-In-ZrO2.potku/Sample_02-Imp/Measurement_02-Xe-Imp/tof_in/tof.in_2024-09-06_07.31.14.bak
+2024-09-06 07:31:14 - INFO - Generated tof.in with params> 0
+2024-09-06 07:33:26 - INFO - Backed up old tof.in file to /mnt/StorageVolume/Dropbox/work-UU/DATA_ANALYSIS/analysis_ToF-ERDA/20240304_ToF-ERDA_Nils/20240304-KrXe-In-ZrO2.potku/Sample_02-Imp/Measurement_02-Xe-Imp/tof_in/tof.in_2024-09-06_07.33.26.bak
+2024-09-06 07:33:26 - INFO - Generated tof.in with params> 0
+2024-09-06 07:45:37 - INFO - Saving single cut finished in 0.025792360305786133 seconds.
+2024-09-06 07:45:37 - INFO - Saving single cut finished in 0.06627869606018066 seconds.
+2024-09-06 07:45:37 - INFO - Saving single cut finished in 0.01854085922241211 seconds.
+2024-09-06 07:45:37 - INFO - Saving single cut finished in 0.01941657066345215 seconds.
+2024-09-06 07:45:37 - INFO - Saving single cut finished in 0.013998746871948242 seconds.
+2024-09-06 07:45:37 - INFO - Saving single cut finished in 0.023942232131958008 seconds.
+2024-09-06 07:45:37 - INFO - Saving single cut finished in 0.04941201210021973 seconds.
+2024-09-06 07:45:37 - INFO - Saving single cut finished in 0.008734703063964844 seconds.
+2024-09-06 07:45:38 - INFO - Saving single cut finished in 0.02373337745666504 seconds.
+2024-09-06 07:45:45 - INFO - Saving finished in 0.23534560203552246 seconds.
+2024-09-06 07:47:05 - INFO - Saving single cut finished in 0.0251772403717041 seconds.
+2024-09-06 07:47:06 - INFO - Saving finished in 0.24101972579956055 seconds.
+2024-09-06 07:47:32 - INFO - Saving finished in 0.224409818649292 seconds.
+2024-09-06 07:47:54 - INFO - Saving finished in 0.2170560359954834 seconds.
+2024-09-06 07:49:02 - INFO - Saving finished in 0.19939851760864258 seconds.
+2024-09-06 07:49:32 - INFO - Saving finished in 0.19689464569091797 seconds.
+2024-09-27 10:18:28 - INFO - Selection file C:\Users\nilsw\Dropbox\Nils_Files\Tof_ERDA_Files\requests\20240304-KrXe-In-ZrO2.potku\Sample_02-Imp\Measurement_02-Xe-Imp\Data\Xe-Imp.selections was read successfully!
+2024-09-27 10:18:29 - INFO - Backed up old tof.in file to C:\Users\nilsw\Dropbox\Nils_Files\Tof_ERDA_Files\requests\20240304-KrXe-In-ZrO2.potku\Sample_02-Imp\Measurement_02-Xe-Imp\tof_in\tof.in_2024-09-27_10.18.29.bak
+2024-09-27 10:18:29 - INFO - Generated tof.in with params> 0
+2024-09-27 10:18:31 - ERROR - Could not create a depth profile: tofe_list reports an error 1, see C:\Users\nilsw\Dropbox\Nils_Files\Tof_ERDA_Files\requests\20240304-KrXe-In-ZrO2.potku\Sample_02-Imp\Measurement_02-Xe-Imp\Depth_profiles\tofe_list_log.txt for more information.
+2024-09-27 10:23:14 - INFO - Backed up old tof.in file to C:\Users\nilsw\Dropbox\Nils_Files\Tof_ERDA_Files\requests\20240304-KrXe-In-ZrO2.potku\Sample_02-Imp\Measurement_02-Xe-Imp\tof_in\tof.in_2024-09-27_10.23.14.bak
+2024-09-27 10:23:14 - INFO - Generated tof.in with params> 0
+2024-09-27 10:24:05 - INFO - Selection file C:\Users\nilsw\Dropbox\Nils_Files\Tof_ERDA_Files\requests\20240304-KrXe-In-ZrO2.potku\Sample_02-Imp\Measurement_02-Xe-Imp\Data\Xe-Imp.selections was read successfully!
+2024-09-27 10:24:32 - INFO - Created Element Losses. Splits: 10 Reference cut: C:\Users\nilsw\Dropbox\Nils_Files\Tof_ERDA_Files\requests\20240304-KrXe-In-ZrO2.potku\Sample_02-Imp\Measurement_02-Xe-Imp\Data\Cuts\Xe-Imp.Zr.ERD.0.cut List of cuts: [WindowsPath('C:/Users/nilsw/Dropbox/Nils_Files/Tof_ERDA_Files/requests/20240304-KrXe-In-ZrO2.potku/Sample_02-Imp/Measurement_02-Xe-Imp/Data/Cuts/Xe-Imp.Xe.ERD.0.cut')]
+2024-09-27 10:24:32 - INFO - Elemental Losses split counts:
+Xe.ERD.0: 132, 123, 118, 121, 145, 122, 101, 113, 122, 112
+2024-09-27 10:24:42 - INFO - Created Element Losses. Splits: 20 Reference cut: C:\Users\nilsw\Dropbox\Nils_Files\Tof_ERDA_Files\requests\20240304-KrXe-In-ZrO2.potku\Sample_02-Imp\Measurement_02-Xe-Imp\Data\Cuts\Xe-Imp.Zr.ERD.0.cut List of cuts: [WindowsPath('C:/Users/nilsw/Dropbox/Nils_Files/Tof_ERDA_Files/requests/20240304-KrXe-In-ZrO2.potku/Sample_02-Imp/Measurement_02-Xe-Imp/Data/Cuts/Xe-Imp.Xe.ERD.0.cut')]
+2024-09-27 10:24:42 - INFO - Elemental Losses split counts:
+Xe.ERD.0: 66, 66, 63, 58, 69, 51, 65, 56, 73, 72, 61, 61, 48, 53, 53, 60, 66, 56, 54, 57
+2024-09-27 10:25:13 - INFO - Created Element Losses. Splits: 3 Reference cut: C:\Users\nilsw\Dropbox\Nils_Files\Tof_ERDA_Files\requests\20240304-KrXe-In-ZrO2.potku\Sample_02-Imp\Measurement_02-Xe-Imp\Data\Cuts\Xe-Imp.Zr.ERD.0.cut List of cuts: [WindowsPath('C:/Users/nilsw/Dropbox/Nils_Files/Tof_ERDA_Files/requests/20240304-KrXe-In-ZrO2.potku/Sample_02-Imp/Measurement_02-Xe-Imp/Data/Cuts/Xe-Imp.Xe.ERD.0.cut')]
+2024-09-27 10:25:13 - INFO - Elemental Losses split counts:
+Xe.ERD.0: 414, 417, 378
+2024-09-27 10:25:38 - INFO - Created Element Losses. Splits: 20 Reference cut: C:\Users\nilsw\Dropbox\Nils_Files\Tof_ERDA_Files\requests\20240304-KrXe-In-ZrO2.potku\Sample_02-Imp\Measurement_02-Xe-Imp\Data\Cuts\Xe-Imp.Zr.ERD.0.cut List of cuts: [WindowsPath('C:/Users/nilsw/Dropbox/Nils_Files/Tof_ERDA_Files/requests/20240304-KrXe-In-ZrO2.potku/Sample_02-Imp/Measurement_02-Xe-Imp/Data/Cuts/Xe-Imp.Xe.ERD.0.cut')]
+2024-09-27 10:25:38 - INFO - Elemental Losses split counts:
+Xe.ERD.0: 66, 66, 63, 58, 69, 51, 65, 56, 73, 72, 61, 61, 48, 53, 53, 60, 66, 56, 54, 57
+2024-09-27 10:27:13 - INFO - Created Element Losses. Splits: 99 Reference cut: C:\Users\nilsw\Dropbox\Nils_Files\Tof_ERDA_Files\requests\20240304-KrXe-In-ZrO2.potku\Sample_02-Imp\Measurement_02-Xe-Imp\Data\Cuts\Xe-Imp.Zr.ERD.0.cut List of cuts: [WindowsPath('C:/Users/nilsw/Dropbox/Nils_Files/Tof_ERDA_Files/requests/20240304-KrXe-In-ZrO2.potku/Sample_02-Imp/Measurement_02-Xe-Imp/Data/Cuts/Xe-Imp.Xe.ERD.0.cut')]
+2024-09-27 10:27:13 - INFO - Elemental Losses split counts:
+Xe.ERD.0: 17, 12, 11, 16, 10, 18, 14, 12, 17, 6, 16, 8, 12, 11, 15, 9, 14, 13, 11, 15, 13, 13, 15, 14, 12, 11, 7, 7, 9, 16, 15, 14, 10, 16, 12, 4, 16, 15, 11, 11, 19, 15, 16, 12, 16, 8, 11, 20, 18, 13, 13, 12, 13, 12, 15, 11, 10, 9, 14, 14, 14, 10, 5, 6, 9, 14, 15, 13, 6, 5, 10, 13, 13, 9, 14, 8, 9, 19, 10, 8, 14, 17, 13, 17, 5, 11, 17, 13, 5, 14, 12, 8, 13, 11, 14, 15, 9, 8, 13
+2024-09-27 10:32:35 - INFO - Selection file C:\Users\nilsw\Dropbox\Nils_Files\Tof_ERDA_Files\requests\20240304-KrXe-In-ZrO2.potku\Sample_02-Imp\Measurement_02-Xe-Imp\Data\Xe-Imp.selections was read successfully!
+2024-09-27 10:35:32 - INFO - Selection file C:\Users\nilsw\Dropbox\Nils_Files\Tof_ERDA_Files\requests\20240304-KrXe-In-ZrO2.potku\Sample_02-Imp\Measurement_02-Xe-Imp\Data\Xe-Imp.selections was read successfully!
+2024-09-27 10:35:33 - INFO - Backed up old tof.in file to C:\Users\nilsw\Dropbox\Nils_Files\Tof_ERDA_Files\requests\20240304-KrXe-In-ZrO2.potku\Sample_02-Imp\Measurement_02-Xe-Imp\tof_in\tof.in_2024-09-27_10.35.33.bak
+2024-09-27 10:35:33 - INFO - Generated tof.in with params> 0
+2024-09-27 10:37:08 - INFO - Selection file C:\Users\nilsw\Dropbox\Nils_Files\Tof_ERDA_Files\requests\20240304-KrXe-In-ZrO2.potku\Sample_02-Imp\Measurement_02-Xe-Imp\Data\Xe-Imp.selections was read successfully!
+2024-09-27 10:51:17 - INFO - Selection file C:\Users\nilsw\Dropbox\Nils_Files\Tof_ERDA_Files\requests\20240304-KrXe-In-ZrO2.potku\Sample_02-Imp\Measurement_02-Xe-Imp\Data\Xe-Imp.selections was read successfully!
+2024-09-27 10:51:56 - INFO - Saving finished in 0.5222642421722412 seconds.
+2024-09-27 10:52:01 - INFO - Created Element Losses. Splits: 99 Reference cut: C:\Users\nilsw\Dropbox\Nils_Files\Tof_ERDA_Files\requests\20240304-KrXe-In-ZrO2.potku\Sample_02-Imp\Measurement_02-Xe-Imp\Data\Cuts\Xe-Imp.Zr.ERD.0.cut List of cuts: [WindowsPath('C:/Users/nilsw/Dropbox/Nils_Files/Tof_ERDA_Files/requests/20240304-KrXe-In-ZrO2.potku/Sample_02-Imp/Measurement_02-Xe-Imp/Data/Cuts/Xe-Imp.Xe.ERD.0.cut')]
+2024-09-27 10:52:01 - INFO - Elemental Losses split counts:
+Xe.ERD.0: 17, 12, 11, 16, 10, 18, 14, 12, 17, 6, 16, 8, 12, 11, 15, 9, 14, 13, 11, 15, 13, 13, 15, 14, 12, 11, 7, 7, 9, 16, 15, 14, 10, 16, 12, 4, 16, 15, 11, 11, 19, 15, 16, 12, 16, 8, 11, 20, 18, 13, 13, 12, 13, 12, 15, 11, 10, 9, 14, 14, 14, 10, 5, 6, 9, 14, 15, 13, 6, 5, 10, 13, 13, 9, 14, 8, 9, 19, 10, 8, 14, 17, 13, 17, 5, 11, 17, 13, 5, 14, 12, 8, 13, 11, 14, 15, 9, 8, 13
+2025-03-05 14:01:25 - INFO - Selection file C:\Users\nilsw\Dropbox\Nils_Files\Tof_ERDA_Files\requests\20240304-KrXe-In-ZrO2.potku\Sample_02-Imp\Measurement_02-Xe-Imp\Data\Xe-Imp.selections was read successfully!
+2025-03-05 14:01:31 - ERROR - Could not create Depth Profile graph: [Errno 2] No such file or directory: 'C:\\Users\\nilsw\\Dropbox\\Nils_Files\\Tof_ERDA_Files\\requests\\20240304-KrXe-In-ZrO2.potku\\Sample_02-Imp\\Measurement_02-Xe-Imp\\Data\\Cuts\\Xe-Imp.Fe.ERD.0.cut'
+2025-03-05 14:23:44 - INFO - Selection file C:\Users\nilsw\Dropbox\Nils_Files\Tof_ERDA_Files\requests\20240304-KrXe-In-ZrO2.potku\Sample_02-Imp\Measurement_02-Xe-Imp\Data\Xe-Imp.selections was read successfully!
+2025-03-05 14:23:49 - ERROR - Could not create Depth Profile graph: [Errno 2] No such file or directory: 'C:\\Users\\nilsw\\Dropbox\\Nils_Files\\Tof_ERDA_Files\\requests\\20240304-KrXe-In-ZrO2.potku\\Sample_02-Imp\\Measurement_02-Xe-Imp\\Data\\Cuts\\Xe-Imp.Fe.ERD.0.cut'
+2025-03-05 14:24:33 - INFO - Backed up old tof.in file to C:\Users\nilsw\Dropbox\Nils_Files\Tof_ERDA_Files\requests\20240304-KrXe-In-ZrO2.potku\Sample_02-Imp\Measurement_02-Xe-Imp\tof_in\tof.in_2025-03-05_14.24.33.bak
+2025-03-05 14:24:33 - INFO - Generated tof.in with params> 0
+2025-03-05 14:38:15 - INFO - Selection file C:\Users\nilsw\Dropbox\Nils_Files\Tof_ERDA_Files\requests\20240304-KrXe-In-ZrO2.potku\Sample_02-Imp\Measurement_02-Xe-Imp\Data\Xe-Imp.selections was read successfully!

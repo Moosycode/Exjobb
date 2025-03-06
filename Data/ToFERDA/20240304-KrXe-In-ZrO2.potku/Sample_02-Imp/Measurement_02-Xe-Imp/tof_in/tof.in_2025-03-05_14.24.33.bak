@@ -1,0 +1,16 @@
+Beam: 197Au
+Energy: 40.0
+Detector angle: 45.0
+Target angle: 22.5
+Toflen: 0.37
+Carbon foil thickness: 2.92501718043426
+Target density: 6.05
+TOF calibration: 2.2517879e-10 -1.8515380231e-07
+Angle calibration: 0.0 0.0
+Number of depth steps: 75
+Depth step for stopping: 50
+Depth step for output: 50
+Depths for concentration scaling: 50.0 1200.0
+Cross section: 1
+Number of iterations: 4
+Efficiency directory: C:\Users\nilsw\Dropbox\Nils_Files\Tof_ERDA_Files\requests\20240304-KrXe-In-ZrO2.potku\Default\Detector\Efficiency_files\Used_efficiencies

@@ -1,0 +1,93 @@
+erd_depth run on 2024-09-27T10:40:23+02:00
+001 C:\Users\nilsw\Desktop\potku\_internal\external\bin\erd_depth.exe C:\Users\nilsw\Dropbox\Nils_Files\Tof_ERDA_Files\requests\20240304-KrXe-In-ZrO2.potku\Sample_02-Imp\Measurement_03-Kr-Imp\Depth_profiles\depth C:\Users\nilsw\Dropbox\Nils_Files\Tof_ERDA_Files\requests\20240304-KrXe-In-ZrO2.potku\Sample_02-Imp\Measurement_03-Kr-Imp\tof_in\tof.in
+002 Using setup file C:\Users\nilsw\Dropbox\Nils_Files\Tof_ERDA_Files\requests\20240304-KrXe-In-ZrO2.potku\Sample_02-Imp\Measurement_03-Kr-Imp\tof_in\tof.in
+003 Allocating stuff. 100 300 75
+004 erd_depth is using Rutherford cross sections
+005 83622 events read
+006 
+007 List of assigned stopping and straggling files:
+008   Z1=6 (C), Z2=6 (C): Stopping file srim2013. Straggling file yang.
+009   Z1=6 (C), Z2=8 (O): Stopping file srim2013. Straggling file yang.
+010   Z1=6 (C), Z2=13 (Al): Stopping file srim2013. Straggling file yang.
+011   Z1=6 (C), Z2=36 (Kr): Stopping file srim2013. Straggling file yang.
+012   Z1=6 (C), Z2=40 (Zr): Stopping file srim2013. Straggling file yang.
+013   Z1=6 (C), Z2=72 (Hf): Stopping file srim2013. Straggling file yang.
+014   Z1=6 (C), Z2=79 (Au): Stopping file srim2013. Straggling file yang.
+015   Z1=8 (O), Z2=6 (C): Stopping file srim2013. Straggling file yang.
+016   Z1=8 (O), Z2=8 (O): Stopping file srim2013. Straggling file yang.
+017   Z1=8 (O), Z2=13 (Al): Stopping file srim2013. Straggling file yang.
+018   Z1=8 (O), Z2=36 (Kr): Stopping file srim2013. Straggling file yang.
+019   Z1=8 (O), Z2=40 (Zr): Stopping file srim2013. Straggling file yang.
+020   Z1=8 (O), Z2=72 (Hf): Stopping file srim2013. Straggling file yang.
+021   Z1=8 (O), Z2=79 (Au): Stopping file srim2013. Straggling file yang.
+022   Z1=13 (Al), Z2=6 (C): Stopping file srim2013. Straggling file yang.
+023   Z1=13 (Al), Z2=8 (O): Stopping file srim2013. Straggling file yang.
+024   Z1=13 (Al), Z2=13 (Al): Stopping file srim2013. Straggling file yang.
+025   Z1=13 (Al), Z2=36 (Kr): Stopping file srim2013. Straggling file yang.
+026   Z1=13 (Al), Z2=40 (Zr): Stopping file srim2013. Straggling file yang.
+027   Z1=13 (Al), Z2=72 (Hf): Stopping file srim2013. Straggling file yang.
+028   Z1=13 (Al), Z2=79 (Au): Stopping file srim2013. Straggling file yang.
+029   Z1=36 (Kr), Z2=6 (C): Stopping file srim2013. Straggling file yang.
+030   Z1=36 (Kr), Z2=8 (O): Stopping file srim2013. Straggling file yang.
+031   Z1=36 (Kr), Z2=13 (Al): Stopping file srim2013. Straggling file yang.
+032   Z1=36 (Kr), Z2=36 (Kr): Stopping file srim2013. Straggling file yang.
+033   Z1=36 (Kr), Z2=40 (Zr): Stopping file srim2013. Straggling file yang.
+034   Z1=36 (Kr), Z2=72 (Hf): Stopping file srim2013. Straggling file yang.
+035   Z1=36 (Kr), Z2=79 (Au): Stopping file srim2013. Straggling file yang.
+036   Z1=40 (Zr), Z2=6 (C): Stopping file srim2013. Straggling file yang.
+037   Z1=40 (Zr), Z2=8 (O): Stopping file srim2013. Straggling file yang.
+038   Z1=40 (Zr), Z2=13 (Al): Stopping file srim2013. Straggling file yang.
+039   Z1=40 (Zr), Z2=36 (Kr): Stopping file srim2013. Straggling file yang.
+040   Z1=40 (Zr), Z2=40 (Zr): Stopping file srim2013. Straggling file yang.
+041   Z1=40 (Zr), Z2=72 (Hf): Stopping file srim2013. Straggling file yang.
+042   Z1=40 (Zr), Z2=79 (Au): Stopping file srim2013. Straggling file yang.
+043   Z1=72 (Hf), Z2=6 (C): Stopping file srim2013. Straggling file yang.
+044   Z1=72 (Hf), Z2=8 (O): Stopping file srim2013. Straggling file yang.
+045   Z1=72 (Hf), Z2=13 (Al): Stopping file srim2013. Straggling file yang.
+046   Z1=72 (Hf), Z2=36 (Kr): Stopping file srim2013. Straggling file yang.
+047   Z1=72 (Hf), Z2=40 (Zr): Stopping file srim2013. Straggling file yang.
+048   Z1=72 (Hf), Z2=72 (Hf): Stopping file srim2013. Straggling file yang.
+049   Z1=72 (Hf), Z2=79 (Au): Stopping file srim2013. Straggling file yang.
+050   Z1=79 (Au), Z2=6 (C): Stopping file srim2013. Straggling file yang.
+051   Z1=79 (Au), Z2=8 (O): Stopping file srim2013. Straggling file yang.
+052   Z1=79 (Au), Z2=13 (Al): Stopping file srim2013. Straggling file yang.
+053   Z1=79 (Au), Z2=36 (Kr): Stopping file srim2013. Straggling file yang.
+054   Z1=79 (Au), Z2=40 (Zr): Stopping file srim2013. Straggling file yang.
+055   Z1=79 (Au), Z2=72 (Hf): Stopping file srim2013. Straggling file yang.
+056   Z1=79 (Au), Z2=79 (Au): Stopping file srim2013. Straggling file yang.
+057 
+058 List of used GSTO files:
+059 1: srim2013,
+060 	type: electronic
+061 	filename: C:\Users\nilsw\Desktop\potku\_internal\external\share\jibal\srim2013.ele
+062 	data source: SRIM
+063 	49 assignments,
+064 	1 (H) <= Z1 <= 92 (U),
+065 	1 (H) <= Z2 <= 92 (U),
+066 	x-points=201
+067 	x-scale=log10
+068 	x-unit=keV/u (converted to J/kg)
+069 	x-min=9.648533e+10
+070 	x-max=9.648533e+14
+071 	stopping unit=eV/(1e15 atoms/cm2) (converted to Jm2)
+072 	format=ascii
+073 3: yang,
+074 	type: stragg
+075 	filename: C:\Users\nilsw\Desktop\potku\_internal\external\share\jibal\yang.stg
+076 	data source: Yang
+077 	49 assignments,
+078 	1 (H) <= Z1 <= 92 (U),
+079 	2 (He) <= Z2 <= 97 (Bk),
+080 	x-points=101
+081 	x-scale=log10
+082 	x-unit=keV/u (converted to J/kg)
+083 	x-min=9.648533e+10
+084 	x-max=9.648533e+14
+085 	straggling unit=bohr (converted to J2m2)
+086 	format=ascii
+087 Writing output to file C:\Users\nilsw\Dropbox\Nils_Files\Tof_ERDA_Files\requests\20240304-KrXe-In-ZrO2.potku\Sample_02-Imp\Measurement_03-Kr-Imp\Depth_profiles\depth.C
+088 Writing output to file C:\Users\nilsw\Dropbox\Nils_Files\Tof_ERDA_Files\requests\20240304-KrXe-In-ZrO2.potku\Sample_02-Imp\Measurement_03-Kr-Imp\Depth_profiles\depth.O
+089 Writing output to file C:\Users\nilsw\Dropbox\Nils_Files\Tof_ERDA_Files\requests\20240304-KrXe-In-ZrO2.potku\Sample_02-Imp\Measurement_03-Kr-Imp\Depth_profiles\depth.Al
+090 Writing output to file C:\Users\nilsw\Dropbox\Nils_Files\Tof_ERDA_Files\requests\20240304-KrXe-In-ZrO2.potku\Sample_02-Imp\Measurement_03-Kr-Imp\Depth_profiles\depth.Kr
+091 Writing output to file C:\Users\nilsw\Dropbox\Nils_Files\Tof_ERDA_Files\requests\20240304-KrXe-In-ZrO2.potku\Sample_02-Imp\Measurement_03-Kr-Imp\Depth_profiles\depth.Zr
+092 Writing output to file C:\Users\nilsw\Dropbox\Nils_Files\Tof_ERDA_Files\requests\20240304-KrXe-In-ZrO2.potku\Sample_02-Imp\Measurement_03-Kr-Imp\Depth_profiles\depth.Hf

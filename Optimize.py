@@ -118,8 +118,8 @@ Na = 6.022e23 # avogadros number [atoms/mole]
 #-------------------------------------
 
 #GENERAL FILEPATHS-----------------------------------------------------------------
-root = '/Users/nilsw/Dropbox/Nils_files/Srim_Results/Xe300keV_in_ZrO2_range.txt' 
-potku_path = '/Users/nilsw/Dropbox/Nils_Files/Tof_ERDA_Files/requests/20240304-KrXe-In-ZrO2.potku'
+root = 'Data/SRIM/Xe300keV_in_ZrO2_range.txt' 
+potku_path = 'Data/ToFERDA/20240304-KrXe-In-ZrO2.potku'
 # root = '/Users/nilsw/Dropbox/Nils_files/Srim_Results/Xe300keV_in_UN_Range.txt'
 # # potku_path = '/Users/niwi9751/potku/requests/20240410-Zr-in-UN.potku'
 # potku_path = '/Users/niwi9751/potku/requests/20240506-UNUO2Samples.potku'
@@ -133,6 +133,9 @@ Times_in = 9 #simtime in hrs
 Temp = 1473.15 #Target emperature [K] 
 fluence = 1e17# Input fluence of implantation [atoms/cm^2]
 Concentrations = []#Result list
+plot = True
+plt.rc('text', usetex=True)
+plt.rc('font', family='serif',size=20)
 #---------------------------------------------------------------------------------
 T = Times_in*3600 #Convert to seconds
 #---------------------------------------------------------------------------------
@@ -141,7 +144,7 @@ T = Times_in*3600 #Convert to seconds
 elementdict = {
     'Fe_ZrO2':{'D0':2.26e-6,'Ea':2.3, 'rho':6.025, 'Ma': 123.218}, #Data from Springer
     'Kr_ZrO2':{'D0':8.11e-7,'Ea':2.53, 'rho':6.025, 'Ma': 123.218},
-    'Xe_ZrO2':{'D0':1.83e-6,'Ea':2.91, 'rho':6.025, 'Ma': 123.218},
+    'Xe_ZrO2':{'D0':37.3e-7,'Ea':2.91, 'rho':6.025, 'Ma': 123.218},
     'Zr_UN':{'D0':6.9e-7,'Ea':2.7, 'rho':14.05, 'Ma': 252.036}, 
     'Kr_UN':{'D0':8.11e-7,'Ea':2.53, 'rho':14.05, 'Ma': 252.036},
     'Xe_UN':{'D0':1.83e-6,'Ea':2.91, 'rho':14.05, 'Ma': 252.036},
@@ -156,16 +159,16 @@ potku_data = Initialize_Profile(potku_path)
 x_pot = potku_data['Samples'][f'{sample}-Imp'][sample]['x']
 c_pot = potku_data['Samples'][f'{sample}-Imp'][sample]['C']
 c_pot,x_pot = rebin(c_pot,x_pot)
-c_pot,x_pot = rebin(c_pot,x_pot)
-c_pot,x_pot = rebin(c_pot,x_pot)
+# c_pot,x_pot = rebin(c_pot,x_pot)
+# c_pot,x_pot = rebin(c_pot,x_pot)
 
-potku_path2 = '/Users/nilsw/Dropbox/Nils_Files/Tof_ERDA_Files/requests/20240521-PostAnnealZrO2.potku'
+potku_path2 = 'Data/ToFERDA/20240521-PostAnnealZrO2.potku'
 data2 = Initialize_Profile(potku_path2)
 x2 = data2['Samples'][f'{sample}-Imp'][sample]['x']
 c2 = data2['Samples'][f'{sample}-Imp'][sample]['C']
 c2,x2 = rebin(c2,x2)
 c2,x2 = rebin(c2,x2)
-c2,x2 = rebin(c2,x2)
+# c2,x2 = rebin(c2,x2)
 
 #Constants--------------------------------------------------------
 rho = elementdict[element]['rho']# density of target [g/cm^3]
@@ -174,7 +177,7 @@ n_atoms = rho*Na/m_a #atomic density of target [atoms/cm^3]
 Nx = len(x_pot)  # Number of spatial points per micrometer
 Nt = int(T/60) # Number of time steps, can be anything really, code finds this for you but do not start lower than this.
 x_pot = [3*1e21*x/(n_atoms) for x in x_pot] #Convert to micrometer
-Extendby = 1
+Extendby = 2
 L = int(x_pot[-1])*Extendby
 studyL = int(x_pot[-1])
 dx = L / (L*Nx - 1) # Spatial step size
@@ -182,7 +185,7 @@ dt = T / Nt # Time step size
 x2 = [3*1e21*x/(n_atoms) for x in x2]
 
 def optifunc(vars,plot = False):
-    D0, Ea, q = vars
+    D0, Ea = vars
     # Create spatial grid
     x = np.linspace(0, L, Nx*Extendby)
     # Initialize solution matrix
@@ -207,21 +210,19 @@ def optifunc(vars,plot = False):
         c_pot2 = [c*100 for c in c_pot]
         Cres = [c*100 for c in C[-1,:]]
         Cmeas = [c*100 for c in c2]
-        plt.step(x_pot,c_pot2)
-        plt.step(x,Cres)
-        plt.step(x,Cmeas)
+        plt.step(x_pot,c_pot2, label = 'measured post')
+        plt.step(x,Cres, label = 'opti')
+        plt.step(x2,Cmeas, label = 'measured')
         plt.xlabel('Depth [nm]', fontsize = 18)
         plt.ylabel('Concentration [at. %]', fontsize = 18)
         plt.grid(True)
-        plt.rcParams.update({'font.size':18})
         plt.tight_layout()
         plt.show()
     return score
 
-initial_guess = [elementdict[element]['D0']*1e8, elementdict[element]['Ea'], 0.5]
-# bounders = [(None,None),(None,None),(0,None)]
+initial_guess = [elementdict[element]['D0']*1e8,elementdict[element]['Ea']]
 
-result = minimize(optifunc, initial_guess)
+result = minimize(optifunc, initial_guess, method="Nelder-Mead")
 
 print(result)
 optivals = []

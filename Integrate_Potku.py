@@ -67,22 +67,23 @@ def  read_columns(root):
     return columns
 
 #Parameters 
-potku_path = '/Users/niwi9751/potku/requests/20240410-Zr-in-UN.potku' #Folder path to potku file (ends with .potku)
+potku_path = '/Users/nilsw/Dropbox/Nils_Files/Tof_ERDA_Files/requests/20240304-KrXe-In-ZrO2.potku' #Folder path to potku file (ends with .potku)
 x_start = 0 #Start value of integral (in 10^15 at/cm^2)
-x_end = 1000 # stop value of integral (in 10^15 at/cm^2)
+x_end = 4000 # stop value of integral (in 10^15 at/cm^2)
+
+Na = 6.022e23
+rho = 6.025
+Ma = 123.218
+n_atoms = rho*Na/Ma
 
 #-------------------Example usage-------------------------
 data = Initialize_Profile(potku_path)
+sample = 'Xe'
 
-x = data['Samples']['UN-AimedLow']['U']['x']
-C = data['Samples']['UN-AimedLow']['U']['C']
+x = data['Samples'][f'{sample}-Imp'][f'{sample}']['x']
+C = data['Samples'][f'{sample}-Imp'][f'{sample}']['C']
+x_ = [3*1e21*x/(n_atoms) for x in x]
 binwidth = x[1]-x[0]
-
-plt.step(x,C)
-plt.xlabel('depth [10$^{15}$ atoms/cm$^2$]')
-plt.ylabel('atomic fraction')
-plt.grid(linestyle='--')
-plt.show()
 
 diffarray1 = [abs(x - x_start) for x in x]
 diffarray1 = np.array(diffarray1)
@@ -91,6 +92,11 @@ diffarray2 = np.array(diffarray2)
 start_index = diffarray1.argmin()
 stop_index = diffarray2.argmin()
 
-integral = hist_integral(C[start_index:stop_index],binwidth)
+integral = hist_integral(C[start_index:stop_index],binwidth)*10**15
 
 print(f'Integral between {x[start_index]} and {x[stop_index]} is: {integral}')
+plt.step(x,C)
+plt.xlabel('depth [10$^{15}$ atoms/cm$^2$]')
+plt.ylabel('atomic fraction')
+plt.grid(linestyle='--')
+plt.show()

@@ -81,43 +81,58 @@ def rebinn(N):
 def plot_profiles(data):
     i = 0
     for sample in data['Samples']:
-        plt.figure(i)
+        plt.figure(i,figsize=(11,4))
         # plt.title(sample)
         for depth in data['Samples'][sample]:
-            x = data['Samples'][sample][depth]['x']
-            x = [3*1e21*x/(n_atoms) for x in x]
-            C = data['Samples'][sample][depth]['C']
-            C,x = rebin(C,x)
-            C,x = rebin(C,x)
-            C,x = rebin(C,x)
-            C = [c*100 for c in C]
-            plt.yscale('log')
-            plt.ylim(0.1,100)
-            plt.xlim([-50,400])
-            plt.rcParams.update({'font.size':18})
-            plt.plot(x,C, label = depth, color = color_dict[depth])
-            plt.xlabel('Depth [nm]',fontsize = 18)
-            plt.ylabel('Concentration [at. %]',fontsize = 18)
-            plt.grid(linestyle='--')
-            plt.legend(loc = 'upper right')
-            plt.tight_layout()
+            if depth in plot_elements:
+                x = data['Samples'][sample][depth]['x']
+                x = [3*1e21*x/(n_atoms) for x in x]
+                C = data['Samples'][sample][depth]['C']
+                N = data['Samples'][sample][depth]['N']
+                N = rebinn(rebinn(N))
+                C,x = rebin(C,x)
+                C,x = rebin(C,x)
+                C = [c*100 for c in C]
+                N = [c/n**(1/2) if n != 0 else 0 for c,n in zip(C,N)]
+                plt.yscale('log')
+                plt.ylim(0.1,100)
+                plt.xlim([-50,300])
+                plt.errorbar(x,C, yerr = N, fmt='.k', capsize= 2,capthick=1, ecolor = color_dict[depth])
+                plt.plot(x,C, label = depth, color = color_dict[depth])
+                plt.xlabel('Depth [nm]',fontsize = 18)
+                plt.ylabel(r'Concentration [at.\%]',fontsize = 18)
+                plt.grid(linestyle='--')
+                plt.legend(loc = 'upper right')
+                plt.tight_layout()
         i = i+1
 
-def normalize_potku(data):
+def find_closest_index(arr, target):
+    # Use the min function with a custom key to find the closest value in the array
+    closest_value = min(arr, key=lambda x: abs(x - target))
+    # Find the index of the closest value
+    index = arr.index(closest_value)
+    return index
+
+def normalize_potku(data,x_start=0,x_stop=250):
     for sample in data['Samples']:
         summ = [0 for i in range(data['Settings']['Num_step']+10)]
         for element in data['Samples'][sample]:
             C = data['Samples'][sample][element]['C']
             summ = [c1 + c2 for c1,c2 in zip(C,summ)]
         for element in data['Samples'][sample]:
+            x = data['Samples'][sample][element]['x']
+            x = [3*1e21*x/(n_atoms) for x in x]
+            x_start_ind = find_closest_index(x,x_start)
+            x_stop_ind = find_closest_index(x,x_stop)
             C = data['Samples'][sample][element]['C']
-            C = [c1/c2 if c2 != 0 else 0 for c1,c2 in zip(C,summ) ]
+            for i in range(x_start_ind,x_stop_ind):
+                C[i] = C[i]/summ[i]
             data['Samples'][sample][element]['C'] = C
     return data
 
 def normalize_potku_2(data):
     for sample in data['Samples']:
-        summ = [0 for i in range(data['Settings']['Num_step']+10)]
+        summ = [0 for i in range(data['Settings']['Num_step'])]
         for element in data['Samples'][sample]:
             C = data['Samples'][sample][element]['NoNormC']
             summ = [c1 + c2 for c1,c2 in zip(C,summ)]
@@ -130,42 +145,13 @@ def normalize_potku_2(data):
 
 color_dict = {'Zr':'r','O':'b', 'Fe':'gray', 'Xe': 'c', 'Kr':'g', 'Hf': 'y', 'Al':'m', 'C':'k', 'Cr': 'silver'}
 # color_dict = {'U':'r','N':'deepskyblue', 'O': 'b','Zr':'gray', 'Xe': 'orange', 'Kr':'g', 'Hf': 'y', 'Al':'m', 'C':'k', 'Ru': 'y', 'Ba':'g', 'H':'y'}
+plot_elements = ['C', 'Al', 'O', 'Kr', 'Xe', 'Zr', 'Hf', 'Cr']
 
-# potku_path = '/Users/niwi9751/potku/requests/20240410-Zr-in-UN.potku'
-# potku_path = '/Users/niwi9751/potku/requests/20240506-UNUO2Samples.potku'
-# potku_path = '/Users/niwi9751/potku/requests/20240304-KrXe-In-ZrO2.potku'
-# potku_path = '/Users/niwi9751/potku/requests/20230205_KrXe_in_ZrO2.potku'
-# potku_path = '/Users/niwi9751/potku/requests/20240521-PostAnnealZrO2.potku'
-# potku_path = '/Users/niwi9751/potku/requests/20240319-Fe-In-ZrO2.potku'
-# potku_path = '/Users/nilsw/potku/requests/20240611UN.potku'
-# potku_path = '/Users/nilsw/potku/requests/20240611UNAuBeam.potku'
-potku_path = '/Users/nilsw/Dropbox/Nils_Files/Tof_ERDA_Files/requests/20240304-KrXe-In-ZrO2.potku'
+potku_path = 'Data/ToFERDA/20240304-KrXe-In-ZrO2.potku'
 
 data = Initialize_Profile(potku_path)
-# data = normalize_potku(data)
+data = normalize_potku(data)
+plt.rc('text', usetex=True)
+plt.rc('font', family='serif',size=20)
 plot_profiles(data)
 plt.show()
-# samples = ['UN-AimedLow','UN-AimedHigh','UN-1-MIT','UN-02','UN-2-MIT','UN-05']
-
-# x = data['Samples']['UN-1-MIT']['U']['x']
-# C1 = data['Samples']['UN-1-MIT']['U']['C']
-# C1,x = rebin(C1,x)
-# C1,x = rebin(C1,x)
-# C2 = data['Samples']['UN-1-MIT']['N']['C']
-# C2,x2 = rebin(C2,x)
-# C2,x2 = rebin(C2,x)
-# C_rat1 = [c1/c2 if c2 != 0 else 0 for c1,c2 in zip(C1,C2)]
-# C3 = data['Samples']['UN-02']['U']['C']
-# C3,x3 = rebin(C3,x)
-# C3,x3 = rebin(C3,x)
-# C4 = data['Samples']['UN-02']['N']['C']
-# C4,x4 = rebin(C4,x)
-# C4,x4 = rebin(C4,x)
-# C_rat2 = [c1/c2 if c2 != 0 else 0 for c1,c2 in zip(C3,C4)]
-
-# plt.plot(x,C1,label ='Implanted')
-# plt.plot(x,C2,label ='Implanted')
-# plt.plot(x,C3,label ='UnImplanted')
-# plt.plot(x,C4,label ='UNImplanted')
-# plt.legend()
-# plt.show()
