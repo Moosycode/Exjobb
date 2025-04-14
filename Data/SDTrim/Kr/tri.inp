@@ -1,0 +1,45 @@
+SDTrimSP - Sat Apr 5 11:46:41 2025
+&TRI_INP
+text='---elements---'
+	ncp = 3
+	symbol = "Kr", "Zr", "O"
+	!occurrence = 10, 01, 01
+	!globaldensity = False, 6.08
+	inel0 = 3, 3, 3
+
+text='---general---'
+	nh = 100
+	idout = 10
+	nr_pproj = 100
+	flc = 10.0
+	idrel = 0
+	ipot = 1
+	iintegral = 2
+	isbv = 1
+
+text='---beam---'
+	qubeam = 1.0, 0.0, 0.0
+	case_e0 = 0
+	e0 = 300000.0, 0.0, 0.0
+	case_alpha = 0
+	alpha0 = 0.0, 0.0, 0.0
+
+text='---target---'
+	qu = 0.0, 0.33333, 0.66667
+	qumax = 1.0, 1.0, 1.0
+	ttarget = 6000
+	nqx = 30
+	iq0 = 0
+
+text='---output options---'
+	lparticle_p = .false.
+	lparticle_r = .false.
+	lmatrices = .false.
+
+text='---extra---'
+	tableinp = "/home/rob/SDTrimSP/SDTrimSP_6.09e/tables"
+	loutgas = .true.
+	diff_koeff1 = 5.00e6 , 0.0
+	diff_koeff2 = 1.00e2 , 0.0
+
+/

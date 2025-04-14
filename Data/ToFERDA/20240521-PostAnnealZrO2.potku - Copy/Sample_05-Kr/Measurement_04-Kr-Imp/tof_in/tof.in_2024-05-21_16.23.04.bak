@@ -1,0 +1,16 @@
+Beam: 197Au
+Energy: 40.0
+Detector angle: 45.0
+Target angle: 22.5
+Toflen: 0.4
+Carbon foil thickness: 9.000052862874645
+Target density: 3.0
+TOF calibration: 2.3588831e-10 -1.9082515199e-07
+Angle calibration: 0.0 0.0
+Number of depth steps: 50
+Depth step for stopping: 60
+Depth step for output: 60
+Depths for concentration scaling: 200.0 400.0
+Cross section: 1
+Number of iterations: 4
+Efficiency directory: C:\Users\niwi9751\potku\requests\20240521-PostAnnealZrO2.potku\Default\Detector\Efficiency_files\Used_efficiencies

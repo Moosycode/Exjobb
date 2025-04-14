@@ -82,7 +82,11 @@ def plot_profiles(data):
     i = 0
     for sample in data['Samples']:
         plt.figure(i,figsize=(11,4))
-        # plt.title(sample)
+        plt.title(sample)
+        if 'Xe' in sample:
+            plt.axvline(75, color='b', linestyle='--',label= 'SRIM Peak')
+        elif 'Kr' in sample:
+            plt.axvline(105,color='b', linestyle='--',label= 'SRIM Peak')
         for depth in data['Samples'][sample]:
             if depth in plot_elements:
                 x = data['Samples'][sample][depth]['x']
@@ -92,6 +96,7 @@ def plot_profiles(data):
                 N = rebinn(rebinn(N))
                 C,x = rebin(C,x)
                 C,x = rebin(C,x)
+                print(x)
                 C = [c*100 for c in C]
                 N = [c/n**(1/2) if n != 0 else 0 for c,n in zip(C,N)]
                 plt.yscale('log')
@@ -147,11 +152,11 @@ color_dict = {'Zr':'r','O':'b', 'Fe':'gray', 'Xe': 'c', 'Kr':'g', 'Hf': 'y', 'Al
 # color_dict = {'U':'r','N':'deepskyblue', 'O': 'b','Zr':'gray', 'Xe': 'orange', 'Kr':'g', 'Hf': 'y', 'Al':'m', 'C':'k', 'Ru': 'y', 'Ba':'g', 'H':'y'}
 plot_elements = ['C', 'Al', 'O', 'Kr', 'Xe', 'Zr', 'Hf', 'Cr']
 
-potku_path = 'Data/ToFERDA/20240304-KrXe-In-ZrO2.potku'
+potku_path = 'Data/ToFERDA/20240521-PostAnnealZrO2.potku - Copy'
 
 data = Initialize_Profile(potku_path)
 data = normalize_potku(data)
 plt.rc('text', usetex=True)
-plt.rc('font', family='serif',size=20)
+plt.rc('font', family='serif',size=16)
 plot_profiles(data)
 plt.show()

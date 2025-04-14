@@ -1,0 +1,16 @@
+2024-05-21 15:43:07 - INFO - There was no old selection file to add to this request.
+2024-05-22 09:20:10 - INFO - There was no old selection file to add to this request.
+2024-05-22 09:20:33 - INFO - Chosen selections were read successfully!
+2024-05-22 09:21:00 - INFO - Chosen selections were read successfully!
+2024-05-22 09:21:06 - INFO - Saving finished in 0.2732386589050293 seconds.
+2024-05-22 09:21:14 - INFO - Generated tof.in with params> 0
+2024-05-22 09:42:32 - INFO - Selection file C:\Users\niwi9751\potku\requests\20240521-PostAnnealZrO2.potku\Sample_07-XeKr\Measurement_01-XeKr-Imp\Data\XeKr-Imp.selections was read successfully!
+2024-05-22 09:45:17 - INFO - Chosen selections were read successfully!
+2024-05-22 09:45:20 - INFO - Saving finished in 0.2742655277252197 seconds.
+2024-05-22 14:35:39 - INFO - Selection file C:\Users\niwi9751\potku\requests\20240521-PostAnnealZrO2.potku\Sample_07-XeKr\Measurement_01-XeKr-Imp\Data\XeKr-Imp.selections was read successfully!
+2024-05-30 09:49:01 - INFO - Selection file C:\Users\niwi9751\potku\requests\20240521-PostAnnealZrO2.potku\Sample_07-XeKr\Measurement_01-XeKr-Imp\Data\XeKr-Imp.selections was read successfully!
+2024-08-01 10:08:10 - INFO - Selection file C:\Users\nilsw\Dropbox\Nils_Files\Tof_ERDA_Files\requests\20240521-PostAnnealZrO2.potku\Sample_07-XeKr\Measurement_01-XeKr-Imp\Data\XeKr-Imp.selections was read successfully!
+2024-08-01 10:08:13 - INFO - Backed up old tof.in file to C:\Users\nilsw\Dropbox\Nils_Files\Tof_ERDA_Files\requests\20240521-PostAnnealZrO2.potku\Sample_07-XeKr\Measurement_01-XeKr-Imp\tof_in\tof.in_2024-08-01_10.08.13.bak
+2024-08-01 10:08:13 - INFO - Generated tof.in with params> 0
+2024-08-01 10:08:14 - ERROR - Could not create Depth Profile graph: [Errno 2] No such file or directory: 'C:\\Users\\niwi9751\\potku\\requests\\20240521-PostAnnealZrO2.potku\\Sample_07-XeKr\\Measurement_01-XeKr-Imp\\Data\\Cuts\\XeKr-Imp.Al.ERD.0.cut'
+2024-09-27 10:29:32 - INFO - Selection file C:\Users\nilsw\Dropbox\Nils_Files\Tof_ERDA_Files\requests\20240521-PostAnnealZrO2.potku\Sample_07-XeKr\Measurement_01-XeKr-Imp\Data\XeKr-Imp.selections was read successfully!

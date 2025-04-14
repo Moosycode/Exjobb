@@ -1,0 +1,12 @@
+{
+    "name": "Default",
+    "description": "These are default recoil settings.",
+    "modification_time": "Tue Mar 25 12:48:58 2025 +0100 W. Europe Standard Time",
+    "modification_time_unix": 1742903338.1467874,
+    "simulation_type": "recoil",
+    "element": "4He",
+    "reference_density": 4.982e+22,
+    "multiplier": 1,
+    "profile": [],
+    "color": "#0000ff"
+}

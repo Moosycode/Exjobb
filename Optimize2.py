@@ -6,7 +6,6 @@ import datetime
 import json
 import os
 import re
-from scipy.optimize import differential_evolution
 
 def  read_columns(root):
     columns =  []
@@ -82,11 +81,6 @@ def find_start(filename):
         print("An error occurred while reading the file:", e)
         return 0
 
-# Diffusion coefficient dependant on temperature
-def D(D0, Ea, Temp):
-    D = D0*np.exp(-Ea/(k*Temp))
-    return D
-    
 def excel_time_to_hours(excel_time):
     # Extracting the integer part as days
     days = int(excel_time)
@@ -111,6 +105,13 @@ def hist_integral(n, width):
     n = [item*width for item in n]
     return sum(n)#Definition of integrals :))
 
+def V(x,b, v):
+    return b*np.exp(v*x) 
+
+def D(x, D0, Ea, Temp):
+    D = D0*np.exp(-Ea/(k*Temp))
+    damage_factor = np.exp(-(x-1)**2)
+    return D*damage_factor
 
 
 #Constants----------------------------
@@ -144,7 +145,7 @@ T = Times_in*3600 #Convert to seconds
 #Dictionary with needed values of each element
 elementdict = {
     'Fe_ZrO2':{'D0':2.26e-6,'Ea':2.3, 'rho':6.025, 'Ma': 123.218}, #Data from Springer
-    'Kr_ZrO2':{'D0':8.11e-7,'Ea':2.53, 'rho':6.025, 'Ma': 123.218},
+    'Kr_ZrO2':{'D0':8.11e-7,'Ea':2.3, 'rho':6.025, 'Ma': 123.218},
     'Xe_ZrO2':{'D0':37.3e-7,'Ea':2.91, 'rho':6.025, 'Ma': 123.218},
     'Zr_UN':{'D0':6.9e-7,'Ea':2.7, 'rho':14.05, 'Ma': 252.036}, 
     'Kr_UN':{'D0':8.11e-7,'Ea':2.53, 'rho':14.05, 'Ma': 252.036},
@@ -160,6 +161,7 @@ potku_data = Initialize_Profile(potku_path)
 x_pot = potku_data['Samples'][f'{sample}-Imp'][sample]['x']
 c_pot = potku_data['Samples'][f'{sample}-Imp'][sample]['C']
 c_pot,x_pot = rebin(c_pot,x_pot)
+print(x_pot)
 # c_pot,x_pot = rebin(c_pot,x_pot)
 # c_pot,x_pot = rebin(c_pot,x_pot)
 
@@ -187,6 +189,8 @@ x2 = [3*1e21*x/(n_atoms) for x in x2]
 
 def optifunc(vars,plot = False):
     D0, Ea = vars
+    b = 1e-5
+    v = 1e-2
     # Create spatial grid
     x = np.linspace(0, L, Nx*Extendby)
     # Initialize solution matrix
@@ -194,16 +198,24 @@ def optifunc(vars,plot = False):
     # Apply initial condition 
     C[0, :] = c_pot
     C = np.hstack((C, np.zeros((Nt,(Extendby-1)*Nx)))) #Add zeros to desired length
-
+    # Time-stepping loop
+    D_x = np.array([D(i * dx, D0, Ea, Temp) for i in range(Nx*Extendby)])
+    V_x = np.array([V(i * dx, b, v) for i in range(Nx*Extendby)])  # Leftward drift field
     # Time-stepping loop
     for n in range(0, Nt - 1):
-        # Update interior points using forward difference in time and central difference in space
-        Diff = D(D0, Ea, Temp) #calculate diffusion coefficient
-        C[n+1, 0] = C[n, 0] + Diff * dt / dx**2 * (C[n, 1] - 2*C[n, 0])
+        for i in range(1, Extendby*Nx - 1): #Update interior points 
+            D_left = D_x[i-1]
+            D_right = D_x[i+1]
+            D_center = D_x[i]
+            diffusion_term = (D_right * (C[n, i+1] - C[n, i]) - D_left * (C[n, i] - C[n, i-1])) / dx**2
+            C[n+1, i] = C[n, i] + dt * (diffusion_term)
         for i in range(1, Extendby*Nx - 1): #Update interior points
-            C[n+1, i] = C[n, i] + Diff * dt / dx**2 * (C[n, i+1] - 2*C[n, i] + C[n, i-1])
-        # Apply Neumann boundary condition to boundaries
-        C[n+1, -1] = C[n+1,-2] 
+            # C[n+1, i] = C[n+1, i]*V_x[i]
+            pass
+        C[n+1,:] -= C[n,:]*V_x*dt
+        C[n+1, -1] = C[n+1,-2]
+        C[n+1, 0] = 0
+    Concentrations.append(C[-1,:])
 
     score = sum([(c-c_)**2 for c,c_ in zip(C[-1,:],c2)])
     
@@ -218,13 +230,14 @@ def optifunc(vars,plot = False):
         plt.ylabel('Concentration [at. %]', fontsize = 18)
         plt.grid(True)
         plt.tight_layout()
+        plt.legend()
         plt.show()
     return score
 
 initial_guess = [elementdict[element]['D0']*1e8,elementdict[element]['Ea']]
+bounds = bounds = [(1e-15, None)] * 2
 
-# result = minimize(optifunc, initial_guess)
-result = differential_evolution(optifunc,[(0,1e4),(2,3)])
+result = minimize(optifunc, initial_guess, method="Nelder-Mead",bounds=bounds)
 
 print(result)
 optivals = []

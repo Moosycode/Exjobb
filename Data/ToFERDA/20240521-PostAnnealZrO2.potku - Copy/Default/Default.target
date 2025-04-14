@@ -1,0 +1,17 @@
+{
+    "name": "Default",
+    "description": "These are default target parameters.",
+    "modification_time": "Tue Mar 25 12:48:58 2025 +0100 W. Europe Standard Time",
+    "modification_time_unix": 1742903338.136992,
+    "target_type": "AFM",
+    "scattering_element": "4He 3.0",
+    "image_size": [
+        1024,
+        1024
+    ],
+    "image_file": "",
+    "layers": [],
+    "target_theta": 22.5,
+    "manual_reference_density": 0.0,
+    "use_manual_reference_density": false
+}

@@ -1,0 +1,193 @@
+ start:
+ default_init_0
+ init_parallel_environment
+ title:
+ SDTrimSP - Sat Apr 5 11:46:41 2025                                             
+  
+ ===read all table===
+    read:/home/rob/SDTrimSP/SDTrimSP_6.09e/tables/table1
+    read:/home/rob/SDTrimSP/SDTrimSP_6.09e/tables/table7_ck
+    ck_elec(i,j):ck a2-a5
+    Xe   -> Xe        1.00000
+    Xe   -> Zr        1.00000
+    Xe   -> O         1.00000
+    Zr   -> Xe        1.00000
+    Zr   -> Zr        1.00000
+    Zr   -> O         1.00000
+    O    -> Xe        1.00000
+    O    -> Zr        1.00000
+    O    -> O         1.00000
+ ===Calculation of amplitude (Debye-Waller)
+    dx=f(T,bulk-debye-Temp(element)
+             Nr        Z     T [K] x_deb_wal [A]
+   x_deb_wal  1 Xe    54    300.00   0.29243
+   x_deb_wal  2 Zr    40    300.00   0.08380
+   x_deb_wal  3 O      8    300.00   0.59540
+ ---
+ start-seed:
+  pid          seed
+   0                        1
+ INFO:  allocate(task_queue) memory:   14.84 MByt
+ start history ihist=           0
+ history: start time:21:16:26
+ INFO: Fluence step:  0.100000000000000      [ions/A**2]
+ INFO: time    step:  0.100000000000000      [s]
+           1 ihist:           1 %, time:21:16:26         100
+ INFO: PID=           0  dbl: try new ntqmax =      200000
+         new allocate(task_queue) memory:   29.68 MByt
+ INFO: PID=           0  dbl: try new ntqmax =      300000
+         new allocate(task_queue) memory:   44.52 MByt
+ INFO: PID=           0  dbl: try new ntqmax =      400000
+         new allocate(task_queue) memory:   59.36 MByt
+ INFO: PID=           0  dbl: try new ntqmax =      500000
+         new allocate(task_queue) memory:   74.20 MByt
+ INFO: PID=           0  dbl: try new ntqmax =      600000
+         new allocate(task_queue) memory:   89.04 MByt
+ INFO: PID=           0  dbl: try new ntqmax =      700000
+         new allocate(task_queue) memory:  103.88 MByt
+ INFO: PID=           0  dbl: try new ntqmax =      800000
+         new allocate(task_queue) memory:  118.72 MByt
+ INFO: PID=           0  dbl: try new ntqmax =      900000
+         new allocate(task_queue) memory:  133.56 MByt
+ INFO: PID=           0  dbl: try new ntqmax =     1000000
+         new allocate(task_queue) memory:  148.40 MByt
+ INFO: PID=           0  dbl: try new ntqmax =     1100000
+         new allocate(task_queue) memory:  163.24 MByt
+INFO   :  chamax:   7.69918 %   
+WARNING:  chamax:   7.69918 %   max:   7.69918
+           2 ihist:           2 %, time:21:16:36         100
+ INFO: PID=           0  dbl: try new ntqmax =     1200000
+         new allocate(task_queue) memory:  178.08 MByt
+           3 ihist:           3 %, time:21:16:46         100
+ INFO: PID=           0  dbl: try new ntqmax =     1300000
+         new allocate(task_queue) memory:  192.92 MByt
+WARNING:  chamax:   7.73324 %   max:   7.73324
+           4 ihist:           4 %, time:21:16:56         100
+WARNING:  chamax:   8.52751 %   max:   8.52751
+           5 ihist:           5 %, time:21:17:06         100
+WARNING:  chamax:  12.77147 %   max:  12.77147
+           6 ihist:           6 %, time:21:17:16         100
+           7 ihist:           7 %, time:21:17:26         100
+           8 ihist:           8 %, time:21:17:36         100
+           9 ihist:           9 %, time:21:17:46         100
+          10 ihist:          10 %, time:21:17:55         100
+  1 flc:     1.0 E:300000. a:  0.0 dz:     38.17 dz/dt  22.56078 Ysum: 0.047465 0.898000 3.773000 Y2/Y3  0.23801  4.67100
+          11 ihist:          11 %, time:21:18:05         100
+          12 ihist:          12 %, time:21:18:16         100
+          13 ihist:          13 %, time:21:18:26         100
+          14 ihist:          14 %, time:21:18:36         100
+          15 ihist:          15 %, time:21:18:47         100
+          16 ihist:          16 %, time:21:18:58         100
+          17 ihist:          17 %, time:21:19:09         100
+          18 ihist:          18 %, time:21:19:20         100
+WARNING:  chamax:  12.75847 %   max:  11.03022
+          19 ihist:          19 %, time:21:19:32         100
+          20 ihist:          20 %, time:21:19:42         100
+WARNING:  chamax:  12.75647 %   max:  10.12584
+  2 flc:     2.0 E:300000. a:  0.0 dz:    106.37 dz/dt  32.20738 Ysum: 0.214866 1.176000 4.251000 Y2/Y3  0.27664  5.42700
+          21 ihist:          21 %, time:21:19:54         100
+WARNING:  chamax:  12.75547 %   max:  11.70765
+          22 ihist:          22 %, time:21:20:05         100
+WARNING:  chamax:  12.75447 %   max:  11.47559
+          23 ihist:          23 %, time:21:20:16         100
+          24 ihist:          24 %, time:21:20:26         100
+          25 ihist:          25 %, time:21:20:37         100
+          26 ihist:          26 %, time:21:20:47         100
+          27 ihist:          27 %, time:21:20:58         100
+          28 ihist:          28 %, time:21:21:08         100
+          29 ihist:          29 %, time:21:21:18         100
+          30 ihist:          30 %, time:21:21:29         100
+  3 flc:     3.0 E:300000. a:  0.0 dz:    186.25 dz/dt  40.15613 Ysum: 0.488043 1.315000 3.744000 Y2/Y3  0.35123  5.05900
+          31 ihist:          31 %, time:21:21:39         100
+          32 ihist:          32 %, time:21:21:50         100
+          33 ihist:          33 %, time:21:22:01         100
+WARNING:  chamax:  12.74347 %   max:  10.40699
+          34 ihist:          34 %, time:21:22:11         100
+WARNING:  chamax:  12.74247 %   max:  11.19735
+          35 ihist:          35 %, time:21:22:21         100
+          36 ihist:          36 %, time:21:22:32         100
+          37 ihist:          37 %, time:21:22:42         100
+          38 ihist:          38 %, time:21:22:53         100
+          39 ihist:          39 %, time:21:23:04         100
+          40 ihist:          40 %, time:21:23:14         100
+  4 flc:     4.0 E:300000. a:  0.0 dz:    277.19 dz/dt  39.47179 Ysum: 0.627104 1.463000 3.628000 Y2/Y3  0.40325  5.09100
+          41 ihist:          41 %, time:21:23:25         100
+WARNING:  chamax:  12.73547 %   max:  12.58985
+          42 ihist:          42 %, time:21:23:35         100
+          43 ihist:          43 %, time:21:23:46         100
+          44 ihist:          44 %, time:21:23:56         100
+          45 ihist:          45 %, time:21:24:07         100
+          46 ihist:          46 %, time:21:24:18         100
+          47 ihist:          47 %, time:21:24:28         100
+          48 ihist:          48 %, time:21:24:39         100
+          49 ihist:          49 %, time:21:24:50         100
+          50 ihist:          50 %, time:21:25:00         100
+WARNING:  chamax:  12.72647 %   max:  11.81429
+  5 flc:     5.0 E:300000. a:  0.0 dz:    382.88 dz/dt  47.43659 Ysum: 0.738596 1.633000 3.736000 Y2/Y3  0.43710  5.36900
+          51 ihist:          51 %, time:21:25:11         100
+          52 ihist:          52 %, time:21:25:22         100
+WARNING:  chamax:  12.72978 %   max:  12.72978
+          53 ihist:          53 %, time:21:25:33         100
+          54 ihist:          54 %, time:21:25:43         100
+          55 ihist:          55 %, time:21:25:54         100
+          56 ihist:          56 %, time:21:26:05         100
+          57 ihist:          57 %, time:21:26:16         100
+          58 ihist:          58 %, time:21:26:26         100
+          59 ihist:          59 %, time:21:26:37         100
+          60 ihist:          60 %, time:21:26:48         100
+  6 flc:     6.0 E:300000. a:  0.0 dz:    481.07 dz/dt  47.03082 Ysum: 0.815098 1.499000 3.305000 Y2/Y3  0.45356  4.80400
+          61 ihist:          61 %, time:21:26:58         100
+          62 ihist:          62 %, time:21:27:09         100
+WARNING:  chamax:  12.71978 %   max:  12.29779
+          63 ihist:          63 %, time:21:27:20         100
+          64 ihist:          64 %, time:21:27:31         100
+WARNING:  chamax:  12.80596 %   max:  12.80596
+          65 ihist:          65 %, time:21:27:42         100
+          66 ihist:          66 %, time:21:27:52         100
+          67 ihist:          67 %, time:21:28:03         100
+          68 ihist:          68 %, time:21:28:14         100
+          69 ihist:          69 %, time:21:28:25         100
+          70 ihist:          70 %, time:21:28:36         100
+  7 flc:     7.0 E:300000. a:  0.0 dz:    591.69 dz/dt  62.70293 Ysum: 0.875737 1.621000 3.523000 Y2/Y3  0.46012  5.14400
+          71 ihist:          71 %, time:21:28:47         100
+          72 ihist:          72 %, time:21:28:58         100
+          73 ihist:          73 %, time:21:29:09         100
+WARNING:  chamax:  15.98086 %   max:  15.98086
+          74 ihist:          74 %, time:21:29:19         100
+          75 ihist:          75 %, time:21:29:30         100
+          76 ihist:          76 %, time:21:29:41         100
+          77 ihist:          77 %, time:21:29:52         100
+          78 ihist:          78 %, time:21:30:03         100
+          79 ihist:          79 %, time:21:30:14         100
+          80 ihist:          80 %, time:21:30:25         100
+  8 flc:     8.0 E:300000. a:  0.0 dz:    712.50 dz/dt  65.38463 Ysum: 1.052365 1.624000 3.395000 Y2/Y3  0.47835  5.01900
+          81 ihist:          81 %, time:21:30:36         100
+          82 ihist:          82 %, time:21:30:47         100
+          83 ihist:          83 %, time:21:30:58         100
+          84 ihist:          84 %, time:21:31:08         100
+          85 ihist:          85 %, time:21:31:19         100
+WARNING:  chamax:  15.96886 %   max:  11.85578
+          86 ihist:          86 %, time:21:31:30         100
+          87 ihist:          87 %, time:21:31:41         100
+          88 ihist:          88 %, time:21:31:52         100
+          89 ihist:          89 %, time:21:32:03         100
+          90 ihist:          90 %, time:21:32:14         100
+  9 flc:     9.0 E:300000. a:  0.0 dz:    820.15 dz/dt  47.86545 Ysum: 0.974362 1.563000 3.140000 Y2/Y3  0.49777  4.70300
+          91 ihist:          91 %, time:21:32:25         100
+          92 ihist:          92 %, time:21:32:36         100
+WARNING:  chamax:  15.96186 %   max:  10.43416
+          93 ihist:          93 %, time:21:32:47         100
+          94 ihist:          94 %, time:21:32:58         100
+          95 ihist:          95 %, time:21:33:08         100
+WARNING:  chamax:  15.95886 %   max:  10.92799
+          96 ihist:          96 %, time:21:33:19         100
+          97 ihist:          97 %, time:21:33:30         100
+          98 ihist:          98 %, time:21:33:41         100
+          99 ihist:          99 %, time:21:33:52         100
+         100 ihist:         100 %, time:21:34:03         100
+ 10 flc:    10.0 E:300000. a:  0.0 dz:    938.55 dz/dt  56.56399 Ysum: 0.974362 1.776000 3.388000 Y2/Y3  0.52420  5.16400
+ ihist: end history of projectile_loop
+ end history
+ start gsum_stat
+ end gsum_stat
+ end outp

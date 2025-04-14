@@ -1,0 +1,31 @@
+2024-05-21 15:42:47 - INFO - There was no old selection file to add to this request.
+2024-05-21 16:26:17 - INFO - There was no old selection file to add to this request.
+2024-05-22 09:13:56 - INFO - There was no old selection file to add to this request.
+2024-05-22 09:14:23 - INFO - Chosen selections were read successfully!
+2024-05-22 09:16:23 - INFO - Saving single cut finished in 0.02193927764892578 seconds.
+2024-05-22 09:18:50 - INFO - Saving finished in 0.25032973289489746 seconds.
+2024-05-22 09:18:52 - INFO - Saving single cut finished in 0.03490638732910156 seconds.
+2024-05-22 09:19:14 - INFO - Generated tof.in with params> 0
+2024-05-22 09:42:37 - INFO - Selection file C:\Users\niwi9751\potku\requests\20240521-PostAnnealZrO2.potku\Sample_06-Xe\Measurement_01-Xe-Imp\Data\Xe-Imp.selections was read successfully!
+2024-05-22 09:44:13 - INFO - Chosen selections were read successfully!
+2024-05-22 09:44:15 - INFO - Saving finished in 0.267284631729126 seconds.
+2024-05-22 09:44:55 - INFO - Saving finished in 0.2732405662536621 seconds.
+2024-05-22 14:34:33 - INFO - Selection file C:\Users\niwi9751\potku\requests\20240521-PostAnnealZrO2.potku\Sample_06-Xe\Measurement_01-Xe-Imp\Data\Xe-Imp.selections was read successfully!
+2024-05-22 14:34:46 - INFO - Saving finished in 0.3310379981994629 seconds.
+2024-05-30 09:47:09 - INFO - Selection file C:\Users\niwi9751\potku\requests\20240521-PostAnnealZrO2.potku\Sample_06-Xe\Measurement_01-Xe-Imp\Data\Xe-Imp.selections was read successfully!
+2024-08-01 10:07:31 - INFO - Selection file C:\Users\nilsw\Dropbox\Nils_Files\Tof_ERDA_Files\requests\20240521-PostAnnealZrO2.potku\Sample_06-Xe\Measurement_01-Xe-Imp\Data\Xe-Imp.selections was read successfully!
+2024-08-01 10:07:33 - INFO - Backed up old tof.in file to C:\Users\nilsw\Dropbox\Nils_Files\Tof_ERDA_Files\requests\20240521-PostAnnealZrO2.potku\Sample_06-Xe\Measurement_01-Xe-Imp\tof_in\tof.in_2024-08-01_10.07.33.bak
+2024-08-01 10:07:33 - INFO - Generated tof.in with params> 0
+2024-08-01 10:07:35 - ERROR - Could not create Depth Profile graph: [Errno 2] No such file or directory: 'C:\\Users\\niwi9751\\potku\\requests\\20240521-PostAnnealZrO2.potku\\Sample_06-Xe\\Measurement_01-Xe-Imp\\Data\\Cuts\\Xe-Imp.Al.ERD.0.cut'
+2024-08-13 08:13:39 - INFO - Selection file C:\Users\nilsw\Dropbox\Nils_Files\Tof_ERDA_Files\requests\20240521-PostAnnealZrO2.potku\Sample_06-Xe\Measurement_01-Xe-Imp\Data\Xe-Imp.selections was read successfully!
+2025-03-05 14:02:18 - INFO - Selection file C:\Users\nilsw\Dropbox\Nils_Files\Tof_ERDA_Files\requests\20240521-PostAnnealZrO2.potku\Sample_06-Xe\Measurement_01-Xe-Imp\Data\Xe-Imp.selections was read successfully!
+2025-03-05 14:02:19 - INFO - Backed up old tof.in file to C:\Users\nilsw\Dropbox\Nils_Files\Tof_ERDA_Files\requests\20240521-PostAnnealZrO2.potku\Sample_06-Xe\Measurement_01-Xe-Imp\tof_in\tof.in_2025-03-05_14.02.19.bak
+2025-03-05 14:02:19 - INFO - Generated tof.in with params> 0
+2025-03-25 12:41:03 - INFO - Selection file C:\Users\nilsw\Dropbox\ThesisFiles\Nils_Files\Tof_ERDA_Files\20240521-PostAnnealZrO2.potku\Sample_06-Xe\Measurement_01-Xe-Imp\Data\Xe-Imp.selections was read successfully!
+2025-03-25 12:41:04 - INFO - Backed up old tof.in file to C:\Users\nilsw\Dropbox\ThesisFiles\Nils_Files\Tof_ERDA_Files\20240521-PostAnnealZrO2.potku\Sample_06-Xe\Measurement_01-Xe-Imp\tof_in\tof.in_2025-03-25_12.41.04.bak
+2025-03-25 12:41:04 - INFO - Generated tof.in with params> 0
+2025-03-25 12:41:58 - INFO - Chosen selections were read successfully!
+2025-03-25 12:42:07 - INFO - Saving finished in 0.2909979820251465 seconds.
+2025-03-25 12:49:02 - INFO - Selection file C:\Users\nilsw\Dropbox\ThesisFiles\Nils_Files\Tof_ERDA_Files\20240521-PostAnnealZrO2.potku - Copy\Sample_06-Xe\Measurement_01-Xe-Imp\Data\Xe-Imp.selections was read successfully!
+2025-03-25 12:49:03 - INFO - Backed up old tof.in file to C:\Users\nilsw\Dropbox\ThesisFiles\Nils_Files\Tof_ERDA_Files\20240521-PostAnnealZrO2.potku - Copy\Sample_06-Xe\Measurement_01-Xe-Imp\tof_in\tof.in_2025-03-25_12.49.03.bak
+2025-03-25 12:49:03 - INFO - Generated tof.in with params> 0

@@ -109,7 +109,6 @@ def hist_integral(n, width):
     n = [item*width for item in n]
     return sum(n)#Definition of integrals :))
 
-
 #Constants----------------------------
 k = 8.6e-5 # boltzmann constant [ev/K]
 Na = 6.022e23 # avogadros number [atoms/mole]

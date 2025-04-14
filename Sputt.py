@@ -1,14 +1,14 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import os
-
-#Values for 135-Xe in ZrO2
+import pandas as pd
+# #Values for 135-Xe in ZrO2
 Y1 = 4.78
 Y2 = 3.97
 
-#Values for 84-Kr in ZrO2
-# Y1 = 3.51
-# Y2 = 2.92
+# Values for 84-Kr in ZrO2
+Y1 = 3.51
+Y2 = 2.92
 
 
 
@@ -30,68 +30,17 @@ dist = dist_TFU*Ma/(3*rho*Na)
 print(dist*1e-2/(1e-9))
 
 root = 'Data/SRIM/Kr300keV_in_ZrO2_Range.txt'
-def  read_columns(root):
-    columns =  []
-    with open(root,'r') as depthprofiles:
-        lines = depthprofiles.readlines()
-        for line in lines:
-            column_data = line.split()
-            for i,  column_data in enumerate(column_data):
-                if len(columns) <= i:
-                    columns.append([])
-                columns[i].append(float(column_data.strip()))
-    return columns
 
-def Initialize_Profile(folder_path):
-    if '.potku' in folder_path:                     #Check if potku is in the path name
-        print('Folder is compatible, proceeding')   
-        files = os.listdir(folder_path)
-        possible_files = [folder_path] #Make list of folders in the request
-    else:                                           
-        print('Searching directory for potku files') #Search for potku files
-        possible_files = [file for file in os.listdir(folder_path) if '.potku' in file] #make list of possible files
-        
-    if len(possible_files) == 0:                #if none are found, tell you
-        print('Could not find .potku file, please try again')
-    
-    elif len(possible_files) > 1:
-        print('Found compatible files: ')       
-        [print(str(i + 1) + '.' + possible_files[i]) for i in range(len(possible_files))] #print list of possible files
-        choise = possible_files[int(input('Chose the file you want (1 - ' + str(len(possible_files)) + ')'))-1]
-        folder_path = folder_path + choise #chose one of them
-    
-    dict = {'Beam':{}, 'Samples':{}, 'Settings':{}} #Create dictionary
-    
-    try:
-        beamdata = json.load(open(folder_path +'/Default/Default.measurement')) #Load info from folders
-        beamprofile = json.load(open(folder_path+'/Default/Default.profile'))
-        dict['Beam']['Ion'] = re.sub(r'\d+', '', beamdata['beam']['ion']) #Assign data
-        dict['Beam']['Mass'] = re.sub(r'[a-zA-z]',  '' , beamdata['beam']['ion'])
-        dict['Beam']['Energy'] = beamdata['beam']['energy']
-        dict['Settings']['Num_step'] = beamprofile['depth_profiles']['number_of_depth_steps']
-        dict['Settings']['Stop_step'] = beamprofile['depth_profiles']['depth_step_for_stopping']
-        dict['Settings']['Out_step'] = beamprofile['depth_profiles']['depth_step_for_output']
-    except:
-        print('Corrupt Default.profile or Default.measurement file, please check them')
-    
-    for root, dirs, files in os.walk(folder_path):#Check all files in folder path
-        for file in files:
-            if file.endswith('.info'): #If infofile, we are in the right directory, keep looking here!!!
-                currentsample = file.removesuffix('.info')
-                dict['Samples'][currentsample] = {}  #Make it a sample
-            if file.startswith('depth.') and 'total' not  in file: #Find the corresponding depht profiles, and save them.
-                newroot = root.replace(os.path.sep,  '/') + '/' + file
-                depthprofile = file.removeprefix('depth.')
-                columns =  read_columns(newroot)
-                if len(columns)== 7:
-                    dict['Samples'][currentsample][depthprofile] = {'x': columns[0], 'C': columns[3],'NoNormC': columns[4],'N': columns[6]}
-    return dict
+# pre_data_path = 'Data/ToFERDA/Data/pre-anneal_Xe-imp.csv'
+# post_data_path = 'Data/ToFERDA/Data/post-anneal_Xe-imp.csv'
+pre_data_path = 'Data/ToFERDA/Data/pre-anneal_Kr-imp_corrected.csv'
+post_data_path = 'Data/ToFERDA/Data/post-anneal_Kr-imp_corrected.csv'
 
 def hist_integral(n, width):
     n = [item*width for item in n]
     return sum(n[0:1])#Definition of integrals :))
 
-def shift_and_average(data, num_copies=5):
+def shift_and_average(data, num_copies=4):
     """
     Copies the dataset `num_copies` times, shifts each copy incrementally to the right,
     sums them, and then averages the values.
@@ -165,7 +114,7 @@ conc = height/(height + n_atoms) #Calculate concentration from number density of
 conc_shift = shift_and_average(conc)
 # conc_shift = [c*100/sum(conc_shift) for c in conc_shift]
 conc_shift = [c*100 for c in conc_shift]
-x_shift = np.linspace(0,1.04,104)
+x_shift = np.linspace(0,1.03,103)
 x_shift = [(x-0.04)*1000 for x in x_shift]
 x_shift = np.array(x_shift)
 # conc = [c*100/sum(conc) for c in conc]
@@ -173,8 +122,8 @@ conc = [c*100 for c in conc]
 x = np.linspace(0,1000,100)
 plt.figure('Xe',figsize=(7,5))
 plt.rc('text', usetex=True)
-plt.rc('font', family='serif',size=20)
-plt.title('Kr')
+plt.rc('font', family='serif',size=16)
+plt.title(r'\textbf{Kr}')
 plt.plot(x_shift,conc_shift,label='Corrected')
 plt.plot(x,conc, label = 'SRIM')
 plt.axvline(x = 0, label = 'Surface', color = 'g',linestyle = '--')
@@ -184,21 +133,21 @@ Sputt = sum(conc_shift[0:4])
 print(Sputt)
 
 sample ='Kr'
-potku_path = 'Data/ToFERDA/20240304-KrXe-In-ZrO2.potku'
-potku_data = Initialize_Profile(potku_path)
-potku_data = normalize_potku(potku_data)
-x_pot = potku_data['Samples'][f'{sample}-Imp'][sample]['x']
-c_pot = potku_data['Samples'][f'{sample}-Imp'][sample]['C']
-N = potku_data['Samples'][f'{sample}-Imp'][sample]['N']
-N = rebinn(N)
-c_pot = [c*100 for c in c_pot]
-x_pot = [3*1e21*a/(n_atoms) for a in x_pot]
-# N = [c/n**(1/2) if n != 0 else 0 for c,n in zip(c_pot,N)]
-# print(N)
-c_pot,x_pot = rebin(c_pot,x_pot)
-# c_pot,x_pot = rebin(c_pot,x_pot)
-# plt.errorbar(x_pot,c_pot, yerr = N, fmt='.k', capsize= 2,capthick=1, ecolor = 'g')
-plt.plot(x_pot,c_pot,label = 'ToF-ERDA')
+df_pre = pd.read_csv(pre_data_path)
+df_pre = df_pre[df_pre['depth'] <= 3000]
+c_pre = df_pre[sample]
+err_pre = df_pre[f'{sample}_sd']
+tot_err_pre = (sum([e**2 for e in err_pre]))**0.5
+x_pre = df_pre['depth']
+df_post = pd.read_csv(post_data_path)
+df_post = df_post[df_post['depth'] <= 3000]
+c_post = df_post[sample]
+err_post = df_post[f'{sample}']
+c_pre = [c*100 for c in c_pre]
+x_pre = [3*1e21*a/(n_atoms) for a in x_pre]
+err_pre = [e*100 for e in err_pre]
+
+plt.errorbar(x_pre,c_pre,yerr= err_pre, ecolor='green', label = 'ToF-ERDA', color ='green')
 plt.xlabel('Depth [nm]')
 plt.ylabel(r'Concentration [at.\%]')
 plt.tight_layout()

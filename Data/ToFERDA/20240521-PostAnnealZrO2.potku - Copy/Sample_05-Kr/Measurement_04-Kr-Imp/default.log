@@ -1,0 +1,35 @@
+2024-05-21 15:44:54 - INFO - There was no old selection file to add to this request.
+2024-05-21 16:05:02 - INFO - There was no old selection file to add to this request.
+2024-05-21 16:05:25 - INFO - Chosen selections were read successfully!
+2024-05-21 16:05:30 - INFO - Saving finished in 0.2233726978302002 seconds.
+2024-05-21 16:08:12 - INFO - Saving finished in 0.24636459350585938 seconds.
+2024-05-21 16:11:27 - INFO - Saving single cut finished in 0.029937028884887695 seconds.
+2024-05-21 16:11:28 - INFO - Saving finished in 0.24434590339660645 seconds.
+2024-05-21 16:11:34 - INFO - Generated tof.in with params> 0
+2024-05-21 16:11:59 - INFO - Backed up old tof.in file to C:\Users\niwi9751\potku\requests\20240521-PostAnnealZrO2.potku\Sample_05-Kr\Measurement_04-Kr-Imp\tof_in\tof.in_2024-05-21_16.11.59.bak
+2024-05-21 16:11:59 - INFO - Generated tof.in with params> 0
+2024-05-21 16:23:04 - INFO - Backed up old tof.in file to C:\Users\niwi9751\potku\requests\20240521-PostAnnealZrO2.potku\Sample_05-Kr\Measurement_04-Kr-Imp\tof_in\tof.in_2024-05-21_16.23.04.bak
+2024-05-21 16:23:04 - INFO - Generated tof.in with params> 0
+2024-05-22 09:42:14 - INFO - Selection file C:\Users\niwi9751\potku\requests\20240521-PostAnnealZrO2.potku\Sample_05-Kr\Measurement_04-Kr-Imp\Data\Kr-Imp.selections was read successfully!
+2024-05-22 09:43:17 - INFO - Chosen selections were read successfully!
+2024-05-22 09:43:25 - INFO - Saving finished in 0.2803928852081299 seconds.
+2024-05-22 14:34:16 - INFO - Selection file C:\Users\niwi9751\potku\requests\20240521-PostAnnealZrO2.potku\Sample_05-Kr\Measurement_04-Kr-Imp\Data\Kr-Imp.selections was read successfully!
+2024-05-22 14:43:49 - INFO - Chosen selections were read successfully!
+2024-05-22 14:50:22 - INFO - Chosen selections were read successfully!
+2024-05-22 14:50:27 - INFO - Saving finished in 0.3051483631134033 seconds.
+2024-05-22 15:41:37 - INFO - Selection file C:\Users\niwi9751\potku\requests\20240521-PostAnnealZrO2.potku\Sample_05-Kr\Measurement_04-Kr-Imp\Data\Kr-Imp.selections was read successfully!
+2024-05-23 14:58:55 - INFO - Selection file C:\Users\niwi9751\potku\requests\20240521-PostAnnealZrO2.potku\Sample_05-Kr\Measurement_04-Kr-Imp\Data\Kr-Imp.selections was read successfully!
+2024-05-24 11:55:13 - INFO - Selection file C:\Users\niwi9751\potku\requests\20240521-PostAnnealZrO2.potku\Sample_05-Kr\Measurement_04-Kr-Imp\Data\Kr-Imp.selections was read successfully!
+2024-05-30 09:44:57 - INFO - Selection file C:\Users\niwi9751\potku\requests\20240521-PostAnnealZrO2.potku\Sample_05-Kr\Measurement_04-Kr-Imp\Data\Kr-Imp.selections was read successfully!
+2024-05-30 09:46:36 - INFO - Selection file C:\Users\niwi9751\potku\requests\20240521-PostAnnealZrO2.potku\Sample_05-Kr\Measurement_04-Kr-Imp\Data\Kr-Imp.selections was read successfully!
+2024-08-01 10:06:19 - INFO - Selection file C:\Users\nilsw\Dropbox\Nils_Files\Tof_ERDA_Files\requests\20240521-PostAnnealZrO2.potku\Sample_05-Kr\Measurement_04-Kr-Imp\Data\Kr-Imp.selections was read successfully!
+2024-08-01 10:06:37 - INFO - Backed up old tof.in file to C:\Users\nilsw\Dropbox\Nils_Files\Tof_ERDA_Files\requests\20240521-PostAnnealZrO2.potku\Sample_05-Kr\Measurement_04-Kr-Imp\tof_in\tof.in_2024-08-01_10.06.37.bak
+2024-08-01 10:06:37 - INFO - Generated tof.in with params> 0
+2024-08-01 10:06:39 - ERROR - Could not create Depth Profile graph: [Errno 2] No such file or directory: 'C:\\Users\\niwi9751\\potku\\requests\\20240521-PostAnnealZrO2.potku\\Sample_05-Kr\\Measurement_04-Kr-Imp\\Data\\Cuts\\Kr-Imp.Al.ERD.0.cut'
+2024-08-01 10:07:02 - INFO - Backed up old tof.in file to C:\Users\nilsw\Dropbox\Nils_Files\Tof_ERDA_Files\requests\20240521-PostAnnealZrO2.potku\Sample_05-Kr\Measurement_04-Kr-Imp\tof_in\tof.in_2024-08-01_10.07.02.bak
+2024-08-01 10:07:02 - INFO - Generated tof.in with params> 0
+2024-08-13 08:12:44 - INFO - Selection file C:\Users\nilsw\Dropbox\Nils_Files\Tof_ERDA_Files\requests\20240521-PostAnnealZrO2.potku\Sample_05-Kr\Measurement_04-Kr-Imp\Data\Kr-Imp.selections was read successfully!
+2024-08-20 14:53:15 - INFO - Selection file C:\Users\nilsw\Dropbox\Nils_Files\Tof_ERDA_Files\requests\20240521-PostAnnealZrO2.potku\Sample_05-Kr\Measurement_04-Kr-Imp\Data\Kr-Imp.selections was read successfully!
+2025-03-25 12:39:50 - INFO - Selection file C:\Users\nilsw\Dropbox\ThesisFiles\Nils_Files\Tof_ERDA_Files\20240521-PostAnnealZrO2.potku\Sample_05-Kr\Measurement_04-Kr-Imp\Data\Kr-Imp.selections was read successfully!
+2025-03-25 12:39:52 - INFO - Backed up old tof.in file to C:\Users\nilsw\Dropbox\ThesisFiles\Nils_Files\Tof_ERDA_Files\20240521-PostAnnealZrO2.potku\Sample_05-Kr\Measurement_04-Kr-Imp\tof_in\tof.in_2025-03-25_12.39.52.bak
+2025-03-25 12:39:52 - INFO - Generated tof.in with params> 0

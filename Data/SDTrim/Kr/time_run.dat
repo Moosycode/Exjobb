@@ -1,0 +1,178 @@
+ start:
+ default_init_0
+ init_parallel_environment
+ title:
+ SDTrimSP - Sat Apr 5 11:46:41 2025                                             
+  
+ ===read all table===
+    read:/home/rob/SDTrimSP/SDTrimSP_6.09e/tables/table1
+    read:/home/rob/SDTrimSP/SDTrimSP_6.09e/tables/table7_ck
+    ck_elec(i,j):ck a2-a5
+    Kr   -> Kr        1.00000
+    Kr   -> Zr        1.00000
+    Kr   -> O         1.00000
+    Zr   -> Kr        1.00000
+    Zr   -> Zr        1.00000
+    Zr   -> O         1.00000
+    O    -> Kr        1.00000
+    O    -> Zr        1.00000
+    O    -> O         1.00000
+ ===Calculation of amplitude (Debye-Waller)
+    dx=f(T,bulk-debye-Temp(element)
+             Nr        Z     T [K] x_deb_wal [A]
+   x_deb_wal  1 Kr    36    300.00   0.32638
+   x_deb_wal  2 Zr    40    300.00   0.08380
+   x_deb_wal  3 O      8    300.00   0.59540
+ ---
+ start-seed:
+  pid          seed
+   0                        1
+ INFO:  allocate(task_queue) memory:   14.84 MByt
+ start history ihist=           0
+ history: start time:21:09:45
+ INFO: Fluence step:  0.100000000000000      [ions/A**2]
+ INFO: time    step:  0.100000000000000      [s]
+           1 ihist:           1 %, time:21:09:45         100
+ INFO: PID=           0  dbl: try new ntqmax =      200000
+         new allocate(task_queue) memory:   29.68 MByt
+ INFO: PID=           0  dbl: try new ntqmax =      300000
+         new allocate(task_queue) memory:   44.52 MByt
+ INFO: PID=           0  dbl: try new ntqmax =      400000
+         new allocate(task_queue) memory:   59.36 MByt
+ INFO: PID=           0  dbl: try new ntqmax =      500000
+         new allocate(task_queue) memory:   74.20 MByt
+ INFO: PID=           0  dbl: try new ntqmax =      600000
+         new allocate(task_queue) memory:   89.04 MByt
+ INFO: PID=           0  dbl: try new ntqmax =      700000
+         new allocate(task_queue) memory:  103.88 MByt
+ INFO: PID=           0  dbl: try new ntqmax =      800000
+         new allocate(task_queue) memory:  118.72 MByt
+ INFO: PID=           0  dbl: try new ntqmax =      900000
+         new allocate(task_queue) memory:  133.56 MByt
+ INFO: PID=           0  dbl: try new ntqmax =     1000000
+         new allocate(task_queue) memory:  148.40 MByt
+ INFO: PID=           0  dbl: try new ntqmax =     1100000
+         new allocate(task_queue) memory:  163.24 MByt
+INFO   :  chamax:   3.43609 %   
+           2 ihist:           2 %, time:21:09:54         100
+           3 ihist:           3 %, time:21:10:02         100
+           4 ihist:           4 %, time:21:10:11         100
+           5 ihist:           5 %, time:21:10:19         100
+           6 ihist:           6 %, time:21:10:28         100
+ INFO: PID=           0  dbl: try new ntqmax =     1200000
+         new allocate(task_queue) memory:  178.08 MByt
+           7 ihist:           7 %, time:21:10:37         100
+WARNING:  chamax:   6.60540 %   max:   6.60540
+           8 ihist:           8 %, time:21:10:45         100
+           9 ihist:           9 %, time:21:10:54         100
+          10 ihist:          10 %, time:21:11:03         100
+WARNING:  chamax:   7.17443 %   max:   7.17443
+  1 flc:     1.0 E:300000. a:  0.0 dz:     14.99 dz/dt   5.71721 Ysum: 0.009079 0.581000 2.515000 Y2/Y3  0.23101  3.09600
+          11 ihist:          11 %, time:21:11:11         100
+          12 ihist:          12 %, time:21:11:20         100
+WARNING:  chamax:   8.81488 %   max:   8.81488
+          13 ihist:          13 %, time:21:11:30         100
+          14 ihist:          14 %, time:21:11:39         100
+          15 ihist:          15 %, time:21:11:48         100
+          16 ihist:          16 %, time:21:11:56         100
+          17 ihist:          17 %, time:21:12:05         100
+          18 ihist:          18 %, time:21:12:14         100
+          19 ihist:          19 %, time:21:12:23         100
+          20 ihist:          20 %, time:21:12:31         100
+  2 flc:     2.0 E:300000. a:  0.0 dz:     37.79 dz/dt  11.53867 Ysum: 0.060875 0.681000 2.622000 Y2/Y3  0.25973  3.30300
+          21 ihist:          21 %, time:21:12:40         100
+          22 ihist:          22 %, time:21:12:49         100
+          23 ihist:          23 %, time:21:12:58         100
+          24 ihist:          24 %, time:21:13:07         100
+          25 ihist:          25 %, time:21:13:15         100
+          26 ihist:          26 %, time:21:13:24         100
+          27 ihist:          27 %, time:21:13:33         100
+          28 ihist:          28 %, time:21:13:42         100
+          29 ihist:          29 %, time:21:13:51         100
+          30 ihist:          30 %, time:21:14:00         100
+  3 flc:     3.0 E:300000. a:  0.0 dz:     62.48 dz/dt  11.86164 Ysum: 0.106011 0.778000 2.495000 Y2/Y3  0.31182  3.27300
+          31 ihist:          31 %, time:21:14:09         100
+          32 ihist:          32 %, time:21:14:18         100
+          33 ihist:          33 %, time:21:14:27         100
+          34 ihist:          34 %, time:21:14:36         100
+          35 ihist:          35 %, time:21:14:45         100
+          36 ihist:          36 %, time:21:14:54         100
+          37 ihist:          37 %, time:21:15:04         100
+          38 ihist:          38 %, time:21:15:13         100
+          39 ihist:          39 %, time:21:15:22         100
+          40 ihist:          40 %, time:21:15:31         100
+  4 flc:     4.0 E:300000. a:  0.0 dz:     95.87 dz/dt  16.84298 Ysum: 0.299112 0.767000 2.401000 Y2/Y3  0.31945  3.16800
+          41 ihist:          41 %, time:21:15:40         100
+          42 ihist:          42 %, time:21:15:49         100
+          43 ihist:          43 %, time:21:15:59         100
+          44 ihist:          44 %, time:21:16:08         100
+          45 ihist:          45 %, time:21:16:17         100
+          46 ihist:          46 %, time:21:16:26         100
+          47 ihist:          47 %, time:21:16:36         100
+          48 ihist:          48 %, time:21:16:45         100
+          49 ihist:          49 %, time:21:16:54         100
+          50 ihist:          50 %, time:21:17:03         100
+  5 flc:     5.0 E:300000. a:  0.0 dz:    134.29 dz/dt  17.23478 Ysum: 0.303068 0.843000 2.531000 Y2/Y3  0.33307  3.37400
+          51 ihist:          51 %, time:21:17:13         100
+          52 ihist:          52 %, time:21:17:22         100
+          53 ihist:          53 %, time:21:17:32         100
+          54 ihist:          54 %, time:21:17:41         100
+          55 ihist:          55 %, time:21:17:50         100
+          56 ihist:          56 %, time:21:18:00         100
+          57 ihist:          57 %, time:21:18:09         100
+          58 ihist:          58 %, time:21:18:19         100
+          59 ihist:          59 %, time:21:18:28         100
+          60 ihist:          60 %, time:21:18:37         100
+ INFO: PID=           0  dbl: try new ntqmax =     1300000
+         new allocate(task_queue) memory:  192.92 MByt
+  6 flc:     6.0 E:300000. a:  0.0 dz:    181.17 dz/dt  21.89893 Ysum: 0.507306 0.884000 2.348000 Y2/Y3  0.37649  3.23200
+          61 ihist:          61 %, time:21:18:47         100
+          62 ihist:          62 %, time:21:18:56         100
+          63 ihist:          63 %, time:21:19:06         100
+          64 ihist:          64 %, time:21:19:15         100
+          65 ihist:          65 %, time:21:19:25         100
+          66 ihist:          66 %, time:21:19:34         100
+          67 ihist:          67 %, time:21:19:44         100
+          68 ihist:          68 %, time:21:19:53         100
+          69 ihist:          69 %, time:21:20:03         100
+          70 ihist:          70 %, time:21:20:13         100
+  7 flc:     7.0 E:300000. a:  0.0 dz:    228.74 dz/dt  19.64595 Ysum: 0.475165 0.935000 2.406000 Y2/Y3  0.38861  3.34100
+          71 ihist:          71 %, time:21:20:22         100
+          72 ihist:          72 %, time:21:20:32         100
+          73 ihist:          73 %, time:21:20:42         100
+          74 ihist:          74 %, time:21:20:51         100
+          75 ihist:          75 %, time:21:21:01         100
+          76 ihist:          76 %, time:21:21:10         100
+          77 ihist:          77 %, time:21:21:20         100
+          78 ihist:          78 %, time:21:21:30         100
+          79 ihist:          79 %, time:21:21:40         100
+          80 ihist:          80 %, time:21:21:49         100
+  8 flc:     8.0 E:300000. a:  0.0 dz:    283.89 dz/dt  25.88819 Ysum: 0.676266 0.967000 2.202000 Y2/Y3  0.43935  3.16800
+          81 ihist:          81 %, time:21:21:59         100
+          82 ihist:          82 %, time:21:22:09         100
+          83 ihist:          83 %, time:21:22:19         100
+          84 ihist:          84 %, time:21:22:28         100
+          85 ihist:          85 %, time:21:22:38         100
+          86 ihist:          86 %, time:21:22:48         100
+          87 ihist:          87 %, time:21:22:57         100
+          88 ihist:          88 %, time:21:23:07         100
+          89 ihist:          89 %, time:21:23:17         100
+WARNING:  chamax:  10.13300 %   max:  10.13300
+          90 ihist:          90 %, time:21:23:27         100
+  9 flc:     9.0 E:300000. a:  0.0 dz:    345.23 dz/dt  25.76391 Ysum: 0.643606 1.102000 2.413000 Y2/Y3  0.45669  3.51500
+          91 ihist:          91 %, time:21:23:37         100
+          92 ihist:          92 %, time:21:23:46         100
+          93 ihist:          93 %, time:21:23:56         100
+          94 ihist:          94 %, time:21:24:06         100
+          95 ihist:          95 %, time:21:24:16         100
+          96 ihist:          96 %, time:21:24:26         100
+          97 ihist:          97 %, time:21:24:36         100
+          98 ihist:          98 %, time:21:24:45         100
+          99 ihist:          99 %, time:21:24:55         100
+         100 ihist:         100 %, time:21:25:05         100
+ 10 flc:    10.0 E:300000. a:  0.0 dz:    416.20 dz/dt  34.14658 Ysum: 0.789358 1.114000 2.454000 Y2/Y3  0.45395  3.56800
+ ihist: end history of projectile_loop
+ end history
+ start gsum_stat
+ end gsum_stat
+ end outp

@@ -107,3 +107,4 @@ Kr.ERD.0: 20, 25, 15, 16, 13, 27, 19, 28, 18, 17, 19, 27, 20, 20, 22, 18, 17, 16
 2025-03-05 14:28:52 - INFO - Backed up old tof.in file to C:\Users\nilsw\Dropbox\Nils_Files\Tof_ERDA_Files\requests\20240304-KrXe-In-ZrO2.potku\Sample_02-Imp\Measurement_03-Kr-Imp\tof_in\tof.in_2025-03-05_14.28.52.bak
 2025-03-05 14:28:52 - INFO - Generated tof.in with params> 0
 2025-03-05 14:38:22 - INFO - Selection file C:\Users\nilsw\Dropbox\Nils_Files\Tof_ERDA_Files\requests\20240304-KrXe-In-ZrO2.potku\Sample_02-Imp\Measurement_03-Kr-Imp\Data\Kr-Imp.selections was read successfully!
+2025-03-21 14:39:41 - INFO - Selection file C:\Users\nilsw\Dropbox\Nils_Files\Tof_ERDA_Files\requests\20240304-KrXe-In-ZrO2.potku\Sample_02-Imp\Measurement_03-Kr-Imp\Data\Kr-Imp.selections was read successfully!

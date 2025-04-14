@@ -92,3 +92,5 @@ Xe.ERD.0: 17, 12, 11, 16, 10, 18, 14, 12, 17, 6, 16, 8, 12, 11, 15, 9, 14, 13, 1
 2025-03-05 14:24:33 - INFO - Backed up old tof.in file to C:\Users\nilsw\Dropbox\Nils_Files\Tof_ERDA_Files\requests\20240304-KrXe-In-ZrO2.potku\Sample_02-Imp\Measurement_02-Xe-Imp\tof_in\tof.in_2025-03-05_14.24.33.bak
 2025-03-05 14:24:33 - INFO - Generated tof.in with params> 0
 2025-03-05 14:38:15 - INFO - Selection file C:\Users\nilsw\Dropbox\Nils_Files\Tof_ERDA_Files\requests\20240304-KrXe-In-ZrO2.potku\Sample_02-Imp\Measurement_02-Xe-Imp\Data\Xe-Imp.selections was read successfully!
+2025-03-19 07:29:20 - INFO - Selection file C:\Users\nilsw\Dropbox\Nils_Files\Tof_ERDA_Files\requests\20240304-KrXe-In-ZrO2.potku\Sample_02-Imp\Measurement_02-Xe-Imp\Data\Xe-Imp.selections was read successfully!
+2025-03-21 14:39:30 - INFO - Selection file C:\Users\nilsw\Dropbox\Nils_Files\Tof_ERDA_Files\requests\20240304-KrXe-In-ZrO2.potku\Sample_02-Imp\Measurement_02-Xe-Imp\Data\Xe-Imp.selections was read successfully!

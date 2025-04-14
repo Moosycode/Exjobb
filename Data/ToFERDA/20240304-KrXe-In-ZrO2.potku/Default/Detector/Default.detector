@@ -1,19 +1,19 @@
 {
     "tof_offset": -1.8515380231e-07,
-    "angle_slope": 0.0,
-    "modification_time": "Wed Mar  5 14:38:13 2025 +0100 W. Europe Standard Time",
+    "timeres": 300.0,
     "tof_slope": 2.2517879e-10,
+    "name": "ERDA-T4-chamber2",
     "virtual_size": [
         2.0,
         5.0
     ],
-    "detector_theta": 45.0,
-    "angle_offset": 0.0,
-    "energyres": 25.0,
-    "timeres": 300.0,
-    "detector_type": "TOF",
-    "name": "ERDA-T4-chamber2",
     "description": "Gas detector system",
+    "modification_time": "Fri Mar 21 14:39:26 2025 +0100 W. Europe Standard Time",
+    "detector_theta": 45.0,
+    "detector_type": "TOF",
+    "angle_slope": 0.0,
+    "energyres": 25.0,
+    "angle_offset": 0.0,
     "foils": [
         {
             "name": "Foil1",
@@ -96,5 +96,5 @@
         1,
         2
     ],
-    "modification_time_unix": 1741181893.127761
+    "modification_time_unix": 1742564366.7510457
 }

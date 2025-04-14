@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib.lines import Line2D
 from scipy.optimize import curve_fit
 import json
 import os
@@ -78,13 +79,14 @@ roots = ['Data/SRIM/Xe300keV_in_ZrO2_range.txt', 'Data/SRIM/Kr300keV_in_ZrO2_ran
 
 Names = ['Xe-concentration', 'Kr-concentration']
 Names2 = ['Xe-damage', 'Kr-damage']
+colors= ['c','g']
 
 
 fluences = [1e17,1e17]
 i = 0
 plts = []
 plt.rc('text', usetex=True)
-plt.rc('font', family='serif',size=20)
+plt.rc('font', family='serif',size=16)
 fig, ax1 = plt.subplots(figsize=(7,5))
 for root in roots:
     depth, height = np.loadtxt(root,usecols=(0,1),unpack=True,encoding='cp437')
@@ -93,7 +95,7 @@ for root in roots:
     N = N_a*rho/M_a
     conc = height/(height + N)
     conc = [c*100 for c in conc]
-    temp = ax1.plot(depth/10,conc,label=Names[i])
+    temp = ax1.plot(depth/10,conc,label=Names[i],color = colors[i])
     plts.append(temp)
     i = i+1
     
@@ -115,7 +117,7 @@ for root in roots2:
 
     N = N_a*rho/M_a
     dpa = [x*fluence/(N) for x in totvac]
-    temp = ax2.plot(depth/10,dpa,'-.',label=Names2[i])
+    temp = ax2.plot(depth/10,dpa,'--',label=Names2[i],color = colors[i])
     plts.append(temp)
     i = i+1
 
@@ -123,8 +125,15 @@ ax2.set_ylabel('Concentration [at. %]')
 ax2.set_xlabel('Damage [dpa]')
 ax2.set_xlim([0,300])
 ax2.set_ylim([0,1400])
-fig.legend(plts, labels= ['Xe-concentration','Kr-concentration','Xe-damage','Kr-damage'],loc = 'upper center',bbox_to_anchor = (0.6,0.94))
+legend_lines = [
+    Line2D([0], [0], color="cyan", linestyle="-", label="Xe"),
+    Line2D([0], [0], color="green", linestyle="-", label="Kr"),
+    Line2D([0], [0], color="black", linestyle="-", label="Conc."),
+    Line2D([0], [0], color="black", linestyle="--", label="Damage")
+]
+# fig.legend(plts, labels= ['Xe-concentration','Kr-concentration','Xe-damage','Kr-damage'],loc = 'upper center',bbox_to_anchor = (0.67,0.94))
 plt.xlabel('Depth [micrometer]')
 plt.ylabel('Damage [dpa]')
+plt.legend(handles=legend_lines, loc="best",ncol=2)
 plt.tight_layout()
 plt.show()

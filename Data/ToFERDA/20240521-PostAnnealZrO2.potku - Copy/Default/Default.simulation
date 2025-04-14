@@ -1,0 +1,8 @@
+{
+    "name": "Default",
+    "description": "This is a default simulation.",
+    "modification_time": "Tue Mar 25 12:48:58 2025 +0100 W. Europe Standard Time",
+    "modification_time_unix": 1742903338.1467874,
+    "use_request_settings": false,
+    "element_simulations": []
+}
